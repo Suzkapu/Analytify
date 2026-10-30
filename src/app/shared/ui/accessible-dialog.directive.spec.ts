@@ -6,9 +6,9 @@ import { AccessibleDialogDirective } from './accessible-dialog.directive';
 @Component({
     template: `
     <button id="trigger" (click)="open = true">Open</button>
-    <main id="page">Page content</main>
+    <main id="page" tabindex="-1">Page content</main>
     @if (open) {
-      <section appAccessibleDialog role="dialog" aria-modal="true"
+      <section appAccessibleDialog [modalFocusReturnFallback]="focusFallback" [modalFocusReturnTarget]="focusTarget" role="dialog" aria-modal="true"
         (modalEscape)="open = false">
         <button id="first">First</button>
         <button id="safe" appModalInitialFocus (click)="open = false">Cancel</button>
@@ -21,6 +21,8 @@ import { AccessibleDialogDirective } from './accessible-dialog.directive';
 })
 class TestHostComponent {
     open = false;
+    focusFallback: HTMLElement | null = null;
+    focusTarget: HTMLElement | null = null;
 }
 
 describe('AccessibleDialogDirective', () => {
@@ -110,4 +112,48 @@ describe('AccessibleDialogDirective', () => {
         expect((fixture.nativeElement.querySelector('#page') as HTMLElement).inert).not.toBe(true);
         expect(fixture.nativeElement.querySelector('#page').hasAttribute('aria-hidden')).toBe(false);
     });
+    it('returns focus to the inventory when deletion removes the original trigger', async () => {
+        const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement;
+        const inventory = fixture.nativeElement.querySelector('#page') as HTMLElement;
+        fixture.componentInstance.focusFallback = inventory;
+        trigger.focus(); await openDialog();
+        trigger.remove();
+        (fixture.nativeElement.querySelector('#safe') as HTMLButtonElement).click();
+        fixture.detectChanges();
+        expect(inventory.inert).not.toBe(true);
+        expect(document.activeElement).toBe(inventory);
+    });
+
+    it('prefers the original connected trigger over the fallback after cancellation', async () => {
+        const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement;
+        fixture.componentInstance.focusFallback = fixture.nativeElement.querySelector('#page');
+        trigger.focus(); await openDialog();
+        (fixture.nativeElement.querySelector('#safe') as HTMLButtonElement).click();
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(trigger);
+    });
+
+    it('does not move focus to a disconnected fallback after navigation removes the old view', async () => {
+        const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement;
+        const inventory = fixture.nativeElement.querySelector('#page') as HTMLElement;
+        fixture.componentInstance.focusFallback = inventory;
+        trigger.focus(); await openDialog(); trigger.remove(); inventory.remove();
+        const destination = document.createElement('button'); document.body.append(destination); destination.focus();
+        (fixture.nativeElement.querySelector('#safe') as HTMLButtonElement).click(); fixture.detectChanges();
+        expect(document.activeElement).toBe(destination); destination.remove();
+    });
+
+    it('restores an explicit opener after its busy disabled state clears in the closing render', async () => {
+        const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLButtonElement;
+        const inventory = fixture.nativeElement.querySelector('#page') as HTMLElement;
+        fixture.componentInstance.focusTarget = trigger;
+        fixture.componentInstance.focusFallback = inventory;
+        trigger.disabled = true; inventory.focus();
+        fixture.componentInstance.open = true; fixture.detectChanges(); await vi.advanceTimersByTimeAsync(0);
+        (fixture.nativeElement.querySelector('#safe') as HTMLButtonElement).click(); fixture.detectChanges();
+        trigger.disabled = false;
+        await vi.advanceTimersByTimeAsync(0);
+        expect(document.activeElement).toBe(trigger);
+    });
+
 });

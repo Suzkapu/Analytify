@@ -1,0 +1,226 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/transient-participant-auth.service.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [5.709 seconds] - 2026-10-24T06:50:40.962Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > fails closed when browser request storage becomes inaccessible
+Error: expected [Function] to throw error including 'Storage disabled' but got 'The Compare Room authorization reques…'
+    at Assertion.__VITEST_REJECTS__ (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1747:17)
+    at Assertion.propertyGetter (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1607:27)
+    at Reflect.get (<anonymous>)
+    at Object.proxyGetter [as get] (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1696:22)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:183:65
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:181:83 {
+  actual: 'The Compare Room authorization request is missing or expired.',
+  expected: 'Storage disabled',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not resurrect credentials when a held rotating refresh returns after clear
+AssertionError: expected true to be false // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:194:31
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: true,
+  expected: false,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not resurrect a temporary session when a held callback returns after clear
+AssertionError: expected true to be false // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:205:31
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: true,
+  expected: false,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not overwrite a replacement session when an old refresh returns after clear and reconnect
+AssertionError: expected 'old-refreshed-access' to be 'replacement-access' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:217:41
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 'old-refreshed-access',
+  expected: 'replacement-access',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > rejects a successful HTTP refresh without an access token and permits a later valid retry
+AssertionError: expected { value: undefined } to have property "error"
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:225:27
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: undefined,
+  showDiff: false
+}
+
+ ❯ |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts (18 tests | 5 failed) 170ms
+     × fails closed when browser request storage becomes inaccessible 10ms
+     × does not resurrect credentials when a held rotating refresh returns after clear 6ms
+     × does not resurrect a temporary session when a held callback returns after clear 5ms
+     × does not overwrite a replacement session when an old refresh returns after clear and reconnect 5ms
+     × rejects a successful HTTP refresh without an access token and permits a later valid retry 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > fails closed when browser request storage becomes inaccessible
+AssertionError: expected [Function] to throw error including 'Storage disabled' but got 'The Compare Room authorization reques…'
+
+Expected: "Storage disabled"
+Received: "The Compare Room authorization request is missing or expired."
+
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:183:65
+    181|   it('fails closed when browser request storage becomes inaccessible',…
+    182|     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {t…
+    183|     await expect(auth.handleCallback('code', 'single-use-state')).reje…
+       |                                                                 ^
+    184|     expect(auth.hasSession()).toBe(false);
+    185|   });
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:181:83
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not resurrect credentials when a held rotating refresh returns after clear
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:194:31
+    192|     held.flush({access_token: 'stale-access', refresh_token: 'stale-re…
+    193|     await refresh;
+    194|     expect(auth.hasSession()).toBe(false);
+       |                               ^
+    195|     await expect(auth.getAccessToken()).rejects.toThrow(/no longer ava…
+    196|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not resurrect a temporary session when a held callback returns after clear
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:205:31
+    203|     held.flush({access_token: 'stale-access', refresh_token: 'stale-re…
+    204|     await callback;
+    205|     expect(auth.hasSession()).toBe(false);
+       |                               ^
+    206|     await expect(auth.getAccessToken()).rejects.toThrow(/no longer ava…
+    207|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > does not overwrite a replacement session when an old refresh returns after clear and reconnect
+AssertionError: expected 'old-refreshed-access' to be 'replacement-access' // Object.is equality
+
+Expected: "replacement-access"
+Received: "old-refreshed-access"
+
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:217:41
+    215|     held.flush({access_token: 'old-refreshed-access', refresh_token: '…
+    216|     await old;
+    217|     expect(await auth.getAccessToken()).toBe('replacement-access');
+       |                                         ^
+    218|   });
+    219|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > rejects a successful HTTP refresh without an access token and permits a later valid retry
+AssertionError: expected { value: undefined } to have property "error"
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:225:27
+    223|     const outcome = refresh.then(value => ({value}), error => ({error}…
+    224|     http.expectOne(tokenUrl).flush({expires_in: 3600});
+    225|     expect(await outcome).toHaveProperty('error');
+       |                           ^
+    226|     const retry = auth.getAccessToken();
+    227|     http.expectOne(tokenUrl).flush({access_token: 'valid-retry'});
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 13 passed (18)
+   Start at  08:50:41
+   Duration  1.82s (transform 214ms, setup 594ms, import 194ms, tests 170ms, environment 631ms)
+

@@ -1,0 +1,23 @@
+{
+  "checkpoint": "99315ee7c844d5d9c6955a9d2d7973df4932fbd2",
+  "passed": 52,
+  "exit": 0,
+  "command": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npx playwright test --config=playwright.navigation.config.ts",
+  "log": "navigation-modern-full.log",
+  "sourceHashes": "navigation-modern-full-source-hashes.json",
+  "currentSourceDrift": [],
+  "approvedBaselineLedger": "navigation-modern-reviewed-candidates.json",
+  "canonicalRead": "navigation-modern-fresh-canonical.json",
+  "scope": [
+    "4browser projects",
+    "20strict component goldens",
+    "both motion modes",
+    "responsive geometry widths320through1920 and short/tall windows",
+    "nativefocus/keyboard and local preference persistence/recovery"
+  ],
+  "limitations": [
+    "Component parity; not a claim of full-page canonical parity",
+    "Remote Ubuntu visual environment not certified",
+    "Original planned full-scope migration incomplete"
+  ]
+}

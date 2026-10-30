@@ -1,0 +1,217 @@
+npm notice run spoti-front@0.0.0 verify:ci
+npm notice run npm run content:check && npm run architecture:check && npm run retention:check && npm run share-refresh:check && npm run song-league-invites:check && npm run song-league-rules:check && npm run song-league-notifications:check && npm run push-security:check && npm run cloud-capabilities:check && npm run catalog-security:check && npm run dataset-integrity:check && npm run song-league-sync:check && npm run stats-calendars:check && npm run stats-sharing:check && npm run stats-history-search:check && npm run loading-feedback:check && npm run accessibility:check && npm run lint && npm run performance:check && npm run design-v2-parity:check && npm run design-v2-quality:check && npm run api-usage:check && npm run admin:check && npm run deployment-pipeline:check && npm run supply-chain:check && npm run edge-dependencies:check && npm run storage-policy:check && npm run privacy-notice:check && npm run spotify-policy:check && npm run data-retention:check && npm run sync-service:check && npm run edge-functions:check && npm run typecheck && npm run typecheck:tests && npm run test:ci && npm run build:production
+npm notice run spoti-front@0.0.0 content:check
+npm notice run node --test scripts/content-copy.test.mjs
+✔ README leads with user features and sends development details to CONTRIBUTING (7.576144ms)
+✔ logged-out copy plainly describes the currently enabled Spotify features (6.661514ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.757157
+npm notice run spoti-front@0.0.0 architecture:check
+npm notice run node scripts/check-architecture.mjs
+Architecture boundaries are valid.
+npm notice run spoti-front@0.0.0 retention:check
+npm notice run node scripts/check-playlist-share-retention.mjs
+Playlist-share retention contracts are present.
+npm notice run spoti-front@0.0.0 share-refresh:check
+npm notice run node scripts/check-playlist-share-refresh.mjs
+Playlist-share refresh performance contracts are present.
+npm notice run spoti-front@0.0.0 song-league-invites:check
+npm notice run node scripts/check-song-league-invites.mjs
+Song League invite links are truthful, token-safe, visible, and revocable.
+npm notice run spoti-front@0.0.0 song-league-rules:check
+npm notice run node scripts/check-song-league-rules.mjs
+Song League supports two members while preserving discovery validation.
+npm notice run spoti-front@0.0.0 song-league-notifications:check
+npm notice run node --test supabase/functions/song-league-notifications/delivery-state.test.mjs && node scripts/check-song-league-notifications.mjs
+✔ surfaces an error when a successful push cannot be marked sent (1.63149ms)
+✔ surfaces an error when a failed push cannot be marked for retry (0.287838ms)
+✔ surfaces an error when an expired subscription cannot be removed (0.9306ms)
+✔ the shared expired-subscription cleanup rejects failed admin-test writes (0.214441ms)
+✔ updates the dedicated new-song delivery table (0.182151ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 383.352173
+Song League PWA notification contracts and encrypted Web Push request are valid.
+npm notice run spoti-front@0.0.0 push-security:check
+npm notice run node scripts/check-push-security.mjs
+Web Push SSRF and shared-device lifecycle contracts are valid.
+npm notice run spoti-front@0.0.0 cloud-capabilities:check
+npm notice run node scripts/check-cloud-capabilities.mjs
+Cloud identity, backup, and scheduled Spotify capabilities are separated.
+npm notice run spoti-front@0.0.0 catalog-security:check
+npm notice run node scripts/check-catalog-security.mjs
+Spotify catalog is browser-read-only and trusted-worker writable.
+npm notice run spoti-front@0.0.0 dataset-integrity:check
+npm notice run node scripts/check-dataset-integrity.mjs
+Stats and catalog replacements are atomic, idempotent, and compare-and-swap guarded.
+npm notice run spoti-front@0.0.0 song-league-sync:check
+npm notice run node scripts/check-song-league-sync-security.mjs
+Song League playlist sync uses one lease-bound, revision-safe mutation authority.
+npm notice run spoti-front@0.0.0 stats-calendars:check
+npm notice run node scripts/check-stats-calendars.mjs
+Both stats comparison sides use the shared availability calendar.
+npm notice run spoti-front@0.0.0 stats-sharing:check
+npm notice run node scripts/check-stats-sharing.mjs
+Stats sharing consent and isolation checks passed.
+npm notice run spoti-front@0.0.0 stats-history-search:check
+npm notice run node scripts/check-stats-history-search.mjs
+Historical Top Songs, Top Artists, and Top Genres search contracts are valid.
+npm notice run spoti-front@0.0.0 loading-feedback:check
+npm notice run node scripts/check-loading-feedback.mjs
+Loading feedback is immediate, non-blocking, and preserves parallel loaders.
+npm notice run spoti-front@0.0.0 accessibility:check
+npm notice run node scripts/check-accessible-dialogs.mjs && node --test scripts/interaction-cursor.test.mjs
+All custom modals use the shared accessible dialog behavior.
+✔ interactive controls expose a pointer without overriding text selection (1.383978ms)
+✔ disabled and aria-disabled controls expose a blocked cursor (0.484005ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 68.176203
+npm notice run spoti-front@0.0.0 lint
+npm notice run eslint .
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/compare-guest-source-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/compare-guest-source-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/compare-guest-source-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/coordinator-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-auth-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-image-healing-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/frontend-loader-parallel-followup-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/participant-spotify-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/prettify.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+/mnt/Storage/ProgrammingProjects/Analytify/docs/testing-evidence/design-v2/sharing-parallel-coverage/sorter.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+✖ 24 problems (0 errors, 24 warnings)
+  0 errors and 24 warnings potentially fixable with the `--fix` option.
+
+npm notice run spoti-front@0.0.0 performance:check
+npm notice run node scripts/check-performance-contracts.mjs
+Startup and statistics performance contracts are valid.
+npm notice run spoti-front@0.0.0 design-v2-parity:check
+npm notice run node scripts/check-design-v2-parity.mjs
+Design v2 UI parity inventory and single-renderer contract are complete.
+npm notice run spoti-front@0.0.0 design-v2-quality:check
+npm notice run node --test scripts/design-v2-test-policy.test.mjs scripts/friends-contract-workflow.test.mjs scripts/router-transition-policy.test.mjs scripts/native-transition-observer.test.mjs && node scripts/check-design-v2-quality.mjs
+✔ keeps native component checks separate from ordinary unit coverage (7.143206ms)
+✔ native visual checks reject updates and compare all three browser engines strictly (789.009752ms)
+✔ native screenshot paths keep independent component suites and existing Friends goldens separate (0.446665ms)
+✔ preview verification requires native component checks after installing browser engines (0.51897ms)
+✔ bounds concurrent test environments without weakening deadlines or coverage (2.168765ms)
+✔ includes Insights, new v2 helpers, shared primitives, ambient, and design navigation (0.396421ms)
+✔ requires evidence for every source, including a newly added file (0.328855ms)
+✔ a new source must have no uncovered code in any metric (0.312514ms)
+✔ absolute uncovered counts cannot be diluted by adding covered code (0.274253ms)
+✔ supports absolute Windows and Unix report paths (0.33693ms)
+✔ fails closed for malformed coverage counters (0.225402ms)
+✔ isolates the browser fixture entry point and disables its service worker (0.393586ms)
+✔ documents only the two non-production browser fixture exclusions (763.439204ms)
+✔ requires the dedicated Friends browser suite in preview CI (0.31515ms)
+✔ isolates Admin regression fixtures and requires their browser checks before handoff (0.399537ms)
+✔ requires isolated real Friends HTTP verification before preview deployment (0.788484ms)
+✔ registered preview dispatch defaults to a required boolean test-only mode (3.674401ms)
+✔ actual job conditions prevent test-only deployment and preserve ordinary release boundaries (48.936476ms)
+✔ test-only mode preserves the real isolated contract and failure behavior (1.401541ms)
+✔ isolated job uses only pinned reviewed actions and retains evidence on failure (1.676144ms)
+✔ hosted runner hardens only the fixed PostgreSQL share chain and control before dependencies run (2.084096ms)
+(node:27897) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/native-transitions.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /mnt/Storage/ProgrammingProjects/Analytify/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ superseding an animation still requires every DOM update and finished promise to complete (5.339263ms)
+✔ timeouts, failed DOM callbacks, unknown skips and rejection of the latest transition fail recovery (0.587238ms)
+✔ uncaptured errors and incomplete DOM/finished records cannot appear settled (0.626571ms)
+✔ recognizes the actual configured public provider feature (13.541809ms)
+✔ rejects removed motion, first-render animation and misleading text (16.851067ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2671.791715
+Design v2 quality contracts cover 51 behavioral sources and route isolation.
+npm notice run spoti-front@0.0.0 api-usage:check
+npm notice run node scripts/check-api-on-demand.mjs
+API-on-demand decision and implementation contracts are valid.
+npm notice run spoti-front@0.0.0 admin:check
+npm notice run node scripts/check-admin-control-plane.mjs && node --test scripts/operational-policy.test.mjs
+Admin control-plane contract failed:
+- every schedule supports minutes, hours, and days

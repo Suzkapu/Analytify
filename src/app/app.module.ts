@@ -12,9 +12,9 @@ import {CoreModule} from '@core/core.module';
     BrowserModule,
     CoreModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('/new/ngsw-worker.js', {
-      // A separate scope and cache namespace; never replace the stable worker.
-      scope: '/new/',
+    ServiceWorkerModule.register('/ngsw-worker.js', {
+      // The selected branch owns the root frontend and its service worker.
+      scope: '/',
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     })

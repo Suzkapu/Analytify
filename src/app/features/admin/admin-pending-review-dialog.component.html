@@ -1,0 +1,31 @@
+<div class="review-overlay">
+  <section #panel class="review-panel" role="dialog" aria-modal="true" aria-labelledby="admin-pending-review-title"
+    aria-describedby="admin-pending-review-description" appAccessibleDialog [modalEscapeDisabled]="busy"
+    [modalFocusReturnFallback]="focusReturnFallback" [modalFocusReturnTarget]="focusReturnTarget" (modalEscape)="dismiss()" [attr.aria-busy]="busy || view.phase === 'reviewing' ? 'true' : null">
+    <div #body class="review-body" role="region" aria-label="Registration review details" tabindex="-1">
+      <h2 id="admin-pending-review-title">{{ title }}</h2>
+      <p id="admin-pending-review-description">{{ description }}</p>
+      <div class="review-details" [attr.role]="isError ? 'alert' : 'status'" aria-live="polite" aria-atomic="true">
+        @if (view.phase === 'reviewing') {
+          <p>Reviewing {{ view.spotifyId }}…</p>
+        } @else {
+          <p>{{ view.spotifyId }}</p>
+          @if (view.phase === 'eligible' && createdAt; as registeredAt) {
+            <p>Registered <time [attr.datetime]="registeredAt">{{ registeredAt | date:'d MMM yyyy, HH:mm':'UTC' }} UTC.</time></p>
+          }
+          @for (blocker of view.blockers; track $index) { <p>{{ blocker }}</p> }
+          @if (view.phase === 'deleting') { <p>Deletion is in progress.</p> }
+          @else if (view.phase === 'deleted-read-error' || view.phase === 'deleted-refreshing') { <p>Other users’ unsaved changes are kept.</p> }
+          @else if (view.phase === 'reconciling') { <p>No additional deletion will be sent.</p> }
+          @else if ((view.phase === 'review-error' || view.phase === 'delete-error') && view.message) { <p>{{ view.message }}</p> }
+        }
+      </div>
+    </div>
+    <footer class="review-actions">
+      @if (view.phase === 'eligible') { <button type="button" v2Button="danger" (click)="confirm()">Delete registration</button> }
+      @if (view.phase === 'review-error') { <button type="button" v2Button="secondary" (click)="retry()">Try review again</button> }
+      @if (view.phase === 'delete-error' || view.phase === 'deleted-read-error') { <button type="button" v2Button="secondary" (click)="refresh()">Refresh user list</button> }
+      <button type="button" v2Button="secondary" appModalInitialFocus [disabled]="busy" (click)="dismiss()">{{ closeLabel }}</button>
+    </footer>
+  </section>
+</div>

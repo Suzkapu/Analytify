@@ -1,0 +1,66 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.350 seconds] - 2026-10-26T21:19:17.678Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts (22 tests | 2 failed) 580ms
+     × preserves another report unsaved decision while reading back one saved moderation report 22ms
+     × removes only the confirmed absent pending profile while preserving another user unsaved timezone 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > preserves another report unsaved decision while reading back one saved moderation report
+AssertionError: expected 'Older server decision' to be 'Unsaved independent review' // Object.is equality
+
+Expected: "Unsaved independent review"
+Received: "Older server decision"
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:197:106
+    195|     expect(service.updateModerationReport).toHaveBeenCalledExactlyOnce…
+    196|     expect(component.moderationReports.find(value => value.reportId ==…
+    197|     expect(component.moderationReports.find(value => value.reportId ==…
+       |                                                                                                          ^
+    198|   });
+    199|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > removes only the confirmed absent pending profile while preserving another user unsaved timezone
+AssertionError: expected 'UTC' to be 'Europe/Vienna' // Object.is equality
+
+Expected: "Europe/Vienna"
+Received: "UTC"
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:209:84
+    207|     expect(service.deleteReviewedPendingProfile).toHaveBeenCalledExact…
+    208|     expect(component.users.some(value => value.userId === user.userId)…
+    209|     expect(component.users.find(value => value.userId === draft.userId…
+       |                                                                                    ^
+    210|   });
+    211|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 20 passed (22)
+   Start at  22:19:17
+   Duration  1.37s (transform 126ms, setup 215ms, import 167ms, tests 580ms, environment 303ms)
+

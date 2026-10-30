@@ -1,0 +1,1044 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/admin/admin-policy-validation.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.903 seconds] - 2026-10-26T20:49:29.283Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects missing value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": null,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects not a number without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": NaN,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects infinite value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": Infinity,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects zero without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 0,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects negative value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": -1,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional minute without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional hour without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional day without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "days",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many minutes without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 10081,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many hours without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": 169,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many days without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "days",
+        "intervalValue": 8,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects unknown unit without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "weeks",
+        "intervalValue": 1,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:40:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > allows correction after validation failure and reports a subsequent service denial without retaining busy state
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 0,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1467:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:71:50
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > preserves a different policy draft while replacing only the acknowledged saved row
+AssertionError: expected { taskKey: 'stats_short_term', …(3) } to be { taskKey: 'stats_short_term', …(3) } // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:97:83
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: {
+    taskKey: 'stats_short_term',
+    available: true,
+    intervalValue: 60,
+    intervalUnit: 'minutes'
+  },
+  expected: {
+    taskKey: 'stats_short_term',
+    available: true,
+    intervalValue: 5,
+    intervalUnit: 'days'
+  },
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > recovers an acknowledged write after failed policy inventory using read-only refresh
+TypeError: Cannot read properties of undefined (reading 'has')
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:118:43
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+stderr | src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > recovers an acknowledged write after failed user inventory using read-only refresh
+AssertionError: expected [ { …(4) }, { …(4) } ] to deeply equal [ { …(4) }, { …(4) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-policy-validation.spec.ts:117:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      taskKey: 'listening_history',
+      available: true,
+      intervalValue: 120,
+      intervalUnit: 'minutes'
+    },
+    {
+      taskKey: 'stats_short_term',
+      available: true,
+      intervalValue: 60,
+      intervalUnit: 'minutes'
+    }
+  ],
+  expected: [
+    {
+      taskKey: 'listening_history',
+      available: true,
+      intervalValue: 2,
+      intervalUnit: 'hours'
+    },
+    {
+      taskKey: 'stats_short_term',
+      available: true,
+      intervalValue: 5,
+      intervalUnit: 'days'
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts (22 tests | 16 failed) 44ms
+     × rejects missing value without writing or refreshing inventories 13ms
+     × rejects not a number without writing or refreshing inventories 3ms
+     × rejects infinite value without writing or refreshing inventories 2ms
+     × rejects zero without writing or refreshing inventories 6ms
+     × rejects negative value without writing or refreshing inventories 1ms
+     × rejects fractional minute without writing or refreshing inventories 1ms
+     × rejects fractional hour without writing or refreshing inventories 1ms
+     × rejects fractional day without writing or refreshing inventories 1ms
+     × rejects too many minutes without writing or refreshing inventories 1ms
+     × rejects too many hours without writing or refreshing inventories 1ms
+     × rejects too many days without writing or refreshing inventories 1ms
+     × rejects unknown unit without writing or refreshing inventories 1ms
+     × allows correction after validation failure and reports a subsequent service denial without retaining busy state 1ms
+     × preserves a different policy draft while replacing only the acknowledged saved row 4ms
+     × recovers an acknowledged write after failed policy inventory using read-only refresh 2ms
+     × recovers an acknowledged write after failed user inventory using read-only refresh 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects missing value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": null,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects not a number without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": NaN,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects infinite value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": Infinity,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects zero without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 0,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects negative value without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": -1,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional minute without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional hour without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects fractional day without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "days",
+        "intervalValue": 1.5,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many minutes without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 10081,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many hours without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "hours",
+        "intervalValue": 169,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects too many days without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "days",
+        "intervalValue": 8,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > rejects unknown unit without writing or refreshing inventories
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "weeks",
+        "intervalValue": 1,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:40:50
+     38|     component.successMessage = 'Previous save succeeded.';
+     39|     await component.saveSchedulePolicy(policy(value, unit));
+     40|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     41|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+     42|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > allows correction after validation failure and reports a subsequent service denial without retaining busy state
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "available": true,
+        "intervalUnit": "minutes",
+        "intervalValue": 0,
+        "taskKey": "listening_history",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:71:50
+     69|     const selected = policy(0);
+     70|     await component.saveSchedulePolicy(selected);
+     71|     expect(service.updateSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                  ^
+     72|     selected.intervalValue = 30;
+     73|     service.updateSyncSchedulePolicy.mockRejectedValueOnce(new Error('…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > preserves a different policy draft while replacing only the acknowledged saved row
+AssertionError: expected { taskKey: 'stats_short_term', …(3) } to be { taskKey: 'stats_short_term', …(3) } // Object.is equality
+
+- Expected
++ Received
+
+  {
+    "available": true,
+-   "intervalUnit": "days",
+-   "intervalValue": 5,
++   "intervalUnit": "minutes",
++   "intervalValue": 60,
+    "taskKey": "stats_short_term",
+  }
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:97:83
+     95|     expect(service.updateSyncSchedulePolicy).toHaveBeenCalledExactlyOn…
+     96|     expect(component.schedulePolicies.find(row => row.taskKey === sele…
+     97|     expect(component.schedulePolicies.find(row => row.taskKey === draf…
+       |                                                                                   ^
+     98|     expect(draft).toEqual({taskKey: 'stats_short_term', available: tru…
+     99|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > recovers an acknowledged write after failed policy inventory using read-only refresh
+TypeError: Cannot read properties of undefined (reading 'has')
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:118:43
+    116|     expect(service.updateSyncSchedulePolicy).toHaveBeenCalledExactlyOn…
+    117|     expect(component.schedulePolicies).toEqual([selected, otherDraft]);
+    118|     expect(recovery.policyRefreshRequired.has(selected.taskKey)).toBe(…
+       |                                           ^
+    119|     expect(recovery.policyMessages.get(selected.taskKey)).toMatch(/sav…
+    120|     expect(recovery.policyMessages.get(selected.taskKey)).toMatch(/ref…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-policy-validation.spec.ts > administrator schedule policy validation > recovers an acknowledged write after failed user inventory using read-only refresh
+AssertionError: expected [ { …(4) }, { …(4) } ] to deeply equal [ { …(4) }, { …(4) } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "available": true,
+-     "intervalUnit": "hours",
+-     "intervalValue": 2,
++     "intervalUnit": "minutes",
++     "intervalValue": 120,
+      "taskKey": "listening_history",
+    },
+    {
+      "available": true,
+-     "intervalUnit": "days",
+-     "intervalValue": 5,
++     "intervalUnit": "minutes",
++     "intervalValue": 60,
+      "taskKey": "stats_short_term",
+    },
+  ]
+
+ ❯ src/app/features/admin/admin-policy-validation.spec.ts:117:40
+    115|     await component.saveSchedulePolicy(selected);
+    116|     expect(service.updateSyncSchedulePolicy).toHaveBeenCalledExactlyOn…
+    117|     expect(component.schedulePolicies).toEqual([selected, otherDraft]);
+       |                                        ^
+    118|     expect(recovery.policyRefreshRequired.has(selected.taskKey)).toBe(…
+    119|     expect(recovery.policyMessages.get(selected.taskKey)).toMatch(/sav…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed | 6 passed (22)
+   Start at  21:49:29
+   Duration  1.11s (transform 169ms, setup 282ms, import 203ms, tests 44ms, environment 394ms)
+

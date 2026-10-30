@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-24",
+  "scope": "Remove intentionally excluded frontend admin runtime-health surface after root canonical correction; retained administration regression only.",
+  "commitAtVerification": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "productionEditsUncommitted": true,
+  "canonicalEvidence": "Root verified and corrected desktop Operations27:1429 and mobile35:2107 before these website edits; no full Administration visual parity claim.",
+  "red": {
+    "log": "admin-exclusion-red.log",
+    "exit": 1,
+    "passed": 1,
+    "failed": 2,
+    "failures": [
+      "Excluded runtime health error fails retained administration loading",
+      "Actual template still renders excluded Runtime health heading"
+    ]
+  },
+  "green": {
+    "log": "admin-exclusion-green.log",
+    "exit": 0,
+    "files": 4,
+    "passed": 24,
+    "newTests": 3,
+    "commands": [
+      "npx ng test --watch=false --progress=false --include=src/app/features/admin/admin-retained-boundaries.spec.ts --include=src/app/features/admin/admin.component.spec.ts --include=src/app/core/admin/admin.service.spec.ts --include=src/app/core/admin/admin.guard.spec.ts"
+    ]
+  },
+  "otherChecks": {
+    "admin-exclusion-lint": 0,
+    "admin-exclusion-types": 0,
+    "admin-exclusion-test-types": 0,
+    "admin-exclusion-policy": 0
+  },
+  "deletedTests": "Exactly six cases for intentionally removed feature: four component runtime/release-health cases and two service health mapping cases. All retained cases preserved.",
+  "preserved": [
+    "Admin route and authorization guards",
+    "Site settings, schedules/policies and users",
+    "Recent audit runs and errors/recovery",
+    "Moderation reports and appeals",
+    "Per-user backup/credential status (.user-health)",
+    "All backend migrations, worker runtime infrastructure and shared production services"
+  ],
+  "coverage": "No coverage includes/excludes/thresholds changed; no fresh application-wide coverage claimed.",
+  "limitations": [
+    "No full Administration redesign or canonical pixel-parity verification",
+    "Full CI not run by this agent",
+    "No backend changes, notifications, commits, pushes or deployments",
+    "Browser regression is currently failing strict axe on retained Recent runs nested controls; not verified complete."
+  ],
+  "sourceSha256": {
+    "src/app/features/admin/admin.component.ts": "c1557e02f131e9a66ab19ea9b275881305e5ecaa6d7cf0e29946d518a982a1f7",
+    "src/app/features/admin/admin.component.html": "4c315520ce91eb2ca0d5ff835417cc2f280beba2401a7c6b3e645302d956827f",
+    "src/app/features/admin/admin.component.scss": "19244e959884f7dfdfad9fc10131c5a0408b2514dde0e11a7aadfd7a58fece8b",
+    "src/app/features/admin/admin-retained-boundaries.spec.ts": "c88ed6da8a336c5fe31f77106fd5d4425d26408ba72e7a344e6a133476602ee7",
+    "src/app/features/admin/admin.component.spec.ts": "35a727e63ed866c7517d2de6a06a7c8a5d7358577b5a771abd45a8f7a2efd7f0",
+    "src/app/core/admin/admin.service.ts": "10b11bffe7f4cea5153bfad2d286a21479269ac9b89c473a904f6be65cb81df3",
+    "src/app/core/admin/admin.service.spec.ts": "c7b4026a3183da77b03ac61caec0719f04e79fb815839507c0df73b1c337b63e",
+    "src/app/core/admin/admin.models.ts": "1b84282774543f4f40a852f153654fc0cfe0a2a812a1e847dae9c0c03e485e82"
+  },
+  "browserRegressionPending": {
+    "config": "playwright.admin-exclusion.config.ts",
+    "spec": "e2e/design-v2-admin-exclusion.spec.ts",
+    "port": 4216,
+    "firstSandboxAttempt": "Server EPERM binding loopback; no tests ran.",
+    "authorizedFirst": "2 locator harness failures, 1 non-admin guard pass; exact appeal locator corrected.",
+    "authorizedSecond": {
+      "log": "admin-exclusion-browser-second.log",
+      "exit": 1,
+      "passed": 1,
+      "failed": 2,
+      "finding": "Actual Recent runs heading role=button wraps Refresh/Collapse buttons; strict axe nested-interactive serious violation. No rule suppression. Awaiting root confirmation for semantic fix."
+    }
+  }
+}

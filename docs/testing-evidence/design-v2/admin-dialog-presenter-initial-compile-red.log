@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-pending-review-dialog.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [1.686 seconds] - 2026-10-30T11:42:08.382Z
+
+✘ [ERROR] Could not resolve "./admin-pending-review-dialog.component"
+
+    src/app/features/admin/admin-pending-review-dialog.component.spec.ts:3:50:
+      3 │ ...ewDialogComponent } from './admin-pending-review-dialog.component';
+        ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module './admin-pending-review-dialog.component' or its corresponding type declarations. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-dialog.component.spec.ts:3:48:
+      3 │ ...iewDialogComponent} from './admin-pending-review-dialog.component';
+        ╵                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2307: Cannot find module './admin-pending-review-state' or its corresponding type declarations. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-dialog.component.spec.ts:4:37:
+      4 │ import {AdminPendingReviewView} from './admin-pending-review-state';
+        ╵                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS18046: 'fixture.componentInstance' is of type 'unknown'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-dialog.component.spec.ts:13:68:
+      13 │ ... typeof events)[]) fixture.componentInstance[key].subscribe(eve...
+         ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

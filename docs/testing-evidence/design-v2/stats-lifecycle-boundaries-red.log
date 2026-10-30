@@ -1,0 +1,196 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.999 seconds] - 2026-10-24T12:05:24.362Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after spotify access changes and permits recovery
+AssertionError: expected [ { …(10) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:40:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'former-owner-private-history',
+      kind: 'track',
+      name: 'former-owner-private-history',
+      subtitle: '',
+      imageUrl: '',
+      spotifyUrl: '',
+      bestRank: 2,
+      firstSeen: '',
+      lastSeen: '',
+      appearances: 1
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after cloud access changes and permits recovery
+AssertionError: expected [ { …(10) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:40:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'former-owner-private-history',
+      kind: 'track',
+      name: 'former-owner-private-history',
+      subtitle: '',
+      imageUrl: '',
+      spotifyUrl: '',
+      bestRank: 2,
+      firstSeen: '',
+      lastSeen: '',
+      appearances: 1
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stderr | src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after backup access changes and permits recovery
+AssertionError: expected [ { …(10) } ] to deeply equal []
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:40:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [
+    {
+      id: 'former-owner-private-history',
+      kind: 'track',
+      name: 'former-owner-private-history',
+      subtitle: '',
+      imageUrl: '',
+      spotifyUrl: '',
+      bestRank: 2,
+      firstSeen: '',
+      lastSeen: '',
+      appearances: 1
+    }
+  ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+stdout | src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > does not restart private history after late account hydration in a destroyed view
+[Analytify][0001][+00000ms][Personal Stats][STEP] Cache and database snapshot missing/expired. Loading stats for short_term from Spotify API...
+
+stderr | src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > does not restart private history after late account hydration in a destroyed view
+AssertionError: expected "vi.fn()" to be called 2 times, but got 4 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:76:39
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 4,
+  expected: 2,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts (7 tests | 4 failed) 66ms
+     × rejects pending private search after spotify access changes and permits recovery 32ms
+     × rejects pending private search after cloud access changes and permits recovery 3ms
+     × rejects pending private search after backup access changes and permits recovery 2ms
+     × does not restart private history after late account hydration in a destroyed view 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after spotify access changes and permits recovery
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after cloud access changes and permits recovery
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > rejects pending private search after backup access changes and permits recovery
+AssertionError: expected [ { …(10) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "appearances": 1,
++     "bestRank": 2,
++     "firstSeen": "",
++     "id": "former-owner-private-history",
++     "imageUrl": "",
++     "kind": "track",
++     "lastSeen": "",
++     "name": "former-owner-private-history",
++     "spotifyUrl": "",
++     "subtitle": "",
++   },
++ ]
+
+ ❯ src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:40:40
+     38|     else h.account[identity] = 'replacement';
+     39|     old.resolve([former('former-owner-private-history')]); await settl…
+     40|     expect(h.component.pastTopResults).toEqual([]);
+       |                                        ^
+     41|     expect(h.component.pastStatsSearchError).toBe('');
+     42|     expect(h.component.isSearchingPastStats).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts > Stats public lifecycle and historical-search boundaries > does not restart private history after late account hydration in a destroyed view
+AssertionError: expected "vi.fn()" to be called 2 times, but got 4 times
+ ❯ src/app/features/insights/user-stats/user-stats-lifecycle-boundaries.spec.ts:76:39
+     74|     const beforeReads = h.storage.getStatsHistory.mock.calls.length;
+     75|     h.account.backup = true; h.initialSync.resolve(); await settle(); …
+     76|     expect(h.storage.getStatsHistory).toHaveBeenCalledTimes(beforeRead…
+       |                                       ^
+     77|     expect(h.sdk.loadAllStatsSnapshotsMetadata).not.toHaveBeenCalled();
+     78|     expect(h.sdk.saveStatsSnapshot).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  14:05:24
+   Duration  1.00s (transform 194ms, setup 244ms, import 240ms, tests 66ms, environment 334ms)
+

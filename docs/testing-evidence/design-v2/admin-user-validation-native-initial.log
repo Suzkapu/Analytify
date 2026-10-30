@@ -1,0 +1,219 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-feedback.native.ts --filter=validation
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [3.637 seconds] - 2026-10-29T18:54:29.127Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |chromium| e2e/components/admin-user-feedback.native.ts (16 tests | 2 failed | 14 skipped) 843ms
+     × renders validation feedback at 900px 523ms
+     × renders validation feedback at 358px 310ms
+ ❯ |webkit| e2e/components/admin-user-feedback.native.ts (16 tests | 2 failed | 14 skipped) 921ms
+     × renders validation feedback at 900px 580ms
+     × renders validation feedback at 358px 333ms
+ ❯ |firefox| e2e/components/admin-user-feedback.native.ts (16 tests | 2 failed | 14 skipped) 603ms
+     × renders validation feedback at 900px 329ms
+     × renders validation feedback at 358px 271ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-feedback.native.ts/user-validation-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts:40:58
+     38|         expect(status.querySelector('button, a, input, select')).toBeN…
+     39|         expect(status.getAttribute('aria-busy') === 'true').toBe(['sav…
+     40|         await expect.element(page.elementLocator(status)).toMatchScree…
+       |                                                          ^
+     41|         fixture.destroy();
+     42|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-feedback.native.ts/user-validation-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts:40:58
+     38|         expect(status.querySelector('button, a, input, select')).toBeN…
+     39|         expect(status.getAttribute('aria-busy') === 'true').toBe(['sav…
+     40|         await expect.element(page.elementLocator(status)).toMatchScree…
+       |                                                          ^
+     41|         fixture.destroy();
+     42|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 900px
+ FAIL  |firefox| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-feedback.native.ts/user-validation-900-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts/</</< e2e/components/admin-user-feedback.native.ts:40:58
+     38|         expect(status.querySelector('button, a, input, select')).toBeN…
+     39|         expect(status.getAttribute('aria-busy') === 'true').toBe(['sav…
+     40|         await expect.element(page.elementLocator(status)).toMatchScree…
+       |                                                          ^
+     41|         fixture.destroy();
+     42|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-feedback.native.ts/ready/< e2e/components/admin-user-feedback.native.ts:19:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-feedback.native.ts/ready/< e2e/components/admin-user-feedback.native.ts:19:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 900px
+ FAIL  |webkit| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders validation feedback at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-feedback.native.ts/user-validation-900-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts:40:76
+     38|         expect(status.querySelector('button, a, input, select')).toBeN…
+     39|         expect(status.getAttribute('aria-busy') === 'true').toBe(['sav…
+     40|         await expect.element(page.elementLocator(status)).toMatchScree…
+       |                                                                            ^
+     41|         fixture.destroy();
+     42|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  6 failed | 42 skipped (48)
+   Start at  19:54:29
+   Duration  6.32s (transform 0ms, setup 3.78s, import 861ms, tests 2.37s, environment 0ms)
+

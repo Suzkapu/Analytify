@@ -1,0 +1,73 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.navigation.config.ts --output=docs/testing-evidence/design-v2/navigation-modern-full-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:144879) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:144879) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 52 tests using 1 worker
+
+(node:144997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout (3.8s)
+  ✓   2 [desktop] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (no-preference) (8.2s)
+  ✓   3 [desktop] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (no-preference) (6.9s)
+  ✓   4 [desktop] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (6.6s)
+  ✓   5 [desktop] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (no-preference) (4.7s)
+  ✓   6 [desktop] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (5.7s)
+  ✓   7 [desktop] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (8.2s)
+  ✓   8 [desktop] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (reduce) (5.6s)
+  ✓   9 [desktop] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (reduce) (5.3s)
+  ✓  10 [desktop] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (5.5s)
+  ✓  11 [desktop] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (reduce) (4.9s)
+  ✓  12 [desktop] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (5.4s)
+  ✓  13 [desktop] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (8.9s)
+(node:153428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [mobile] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout (3.9s)
+  ✓  15 [mobile] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (no-preference) (7.2s)
+  ✓  16 [mobile] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (no-preference) (8.1s)
+  ✓  17 [mobile] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (7.3s)
+  ✓  18 [mobile] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (no-preference) (6.3s)
+  ✓  19 [mobile] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (6.0s)
+  ✓  20 [mobile] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (8.9s)
+  ✓  21 [mobile] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (reduce) (6.3s)
+  ✓  22 [mobile] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (reduce) (7.0s)
+  ✓  23 [mobile] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (6.3s)
+  ✓  24 [mobile] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (reduce) (5.3s)
+  ✓  25 [mobile] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (5.0s)
+  ✓  26 [mobile] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (7.9s)
+(node:160094) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  27 [firefox-stats] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout (4.0s)
+  ✓  28 [firefox-stats] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (no-preference) (6.2s)
+  ✓  29 [firefox-stats] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (no-preference) (6.0s)
+  ✓  30 [firefox-stats] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (6.3s)
+  ✓  31 [firefox-stats] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (no-preference) (5.2s)
+  ✓  32 [firefox-stats] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (5.7s)
+  ✓  33 [firefox-stats] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (9.3s)
+  ✓  34 [firefox-stats] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (reduce) (6.1s)
+  ✓  35 [firefox-stats] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (reduce) (4.8s)
+  ✓  36 [firefox-stats] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (6.7s)
+  ✓  37 [firefox-stats] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (reduce) (5.0s)
+  ✓  38 [firefox-stats] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (5.3s)
+  ✓  39 [firefox-stats] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (7.1s)
+(node:165726) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  40 [webkit-stats] › e2e/design-v2-navigation.spec.ts:41:5 › Navigation preferences match canonical section typography and responsive layout (3.4s)
+  ✓  41 [webkit-stats] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (no-preference) (12.8s)
+  ✓  42 [webkit-stats] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (no-preference) (6.3s)
+  ✓  43 [webkit-stats] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (no-preference) (17.0s)
+  ✓  44 [webkit-stats] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (no-preference) (8.2s)
+  ✓  45 [webkit-stats] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (no-preference) (10.1s)
+  ✓  46 [webkit-stats] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (no-preference) (14.3s)
+  ✓  47 [webkit-stats] › e2e/design-v2-navigation.spec.ts:77:7 › Settings account and data actions stay reachable (reduce) (5.9s)
+  ✓  48 [webkit-stats] › e2e/design-v2-navigation.spec.ts:110:7 › Canonical app header, gutters and document footer (reduce) (5.9s)
+  ✓  49 [webkit-stats] › e2e/design-v2-navigation.spec.ts:200:7 › Desktop sidebar keeps geometry and mobile independence (reduce) (6.0s)
+  ✓  50 [webkit-stats] › e2e/design-v2-navigation.spec.ts:269:7 › Device shortcut read and write recovery (reduce) (5.5s)
+  ✓  51 [webkit-stats] › e2e/design-v2-navigation.spec.ts:375:7 › Device shortcut limits, responsive geometry and five-choice persistence (reduce) (5.5s)
+  ✓  52 [webkit-stats] › e2e/design-v2-navigation.spec.ts:438:7 › Empty shortcut persistence, reachable menu and focus recovery (reduce) (7.7s)
+
+  52 passed (6.2m)

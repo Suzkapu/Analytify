@@ -1,0 +1,45 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.275 seconds] - 2026-10-26T21:18:06.830Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts (20 tests | 1 failed) 561ms
+     × settles demo creation without stale navigation when a newer dashboard load takes ownership 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > settles demo creation without stale navigation when a newer dashboard load takes ownership
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:132:38
+    130|     created.resolve('synthetic-league'); await action;
+    131|     expect(router.navigate).not.toHaveBeenCalled();
+    132|     expect(component.isCreatingDemo).toBe(false);
+       |                                      ^
+    133|     expect(component.successMessage).toBe(''); expect(component.errorM…
+    134|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  22:18:06
+   Duration  1.34s (transform 125ms, setup 212ms, import 168ms, tests 561ms, environment 298ms)
+

@@ -1,0 +1,43 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-pending-review-dialog.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.069 seconds] - 2026-10-30T11:56:26.683Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-pending-review-dialog.component.spec.ts (18 tests | 1 failed) 459ms
+     × shows each actual blocked review reason once without duplicating the global kept feedback 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-dialog.component.spec.ts > incomplete registration review dialog > shows each actual blocked review reason once without duplicating the global kept feedback
+AssertionError: expected [ …(3) ] to have a length of 2 but got 3
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/app/features/admin/admin-pending-review-dialog.component.spec.ts:43:76
+     41|     const {root} = await mount('blocked', {blockers,
+     42|       message: 'This incomplete registration was kept: ' + blockers.jo…
+     43|     for (const reason of blockers) expect(root.textContent?.split(reas…
+       |                                                                            ^
+     44|     expect(root.textContent).not.toContain('This incomplete registrati…
+     45|     expect(root.querySelectorAll('.review-details p')).toHaveLength(3);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  12:56:26
+   Duration  1.63s (transform 90ms, setup 363ms, import 119ms, tests 459ms, environment 521ms)
+

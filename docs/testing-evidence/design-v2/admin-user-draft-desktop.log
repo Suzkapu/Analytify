@@ -1,0 +1,17 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop --grep (independent user drafts|older policy snapshot) --output=docs/testing-evidence/design-v2/admin-user-draft-desktop-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:140532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:140532) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:140845) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:532:5 › independent user drafts survive policy recovery and explicit dashboard refresh (5.5s)
+  ✓  2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:562:5 › an older policy snapshot cannot rewind a completed user save (4.1s)
+
+  2 passed (18.3s)

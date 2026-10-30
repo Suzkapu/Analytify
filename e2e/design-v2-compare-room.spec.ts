@@ -7,7 +7,7 @@ test.beforeEach(async ({page}) => {
 });
 
 test('v2 Compare Room presents the compact three-step host task', async ({page}) => {
-  await page.goto('/new/compare-room');
+  await page.goto('/compare-room');
   await expect(page.getByRole('main', {name: 'Compare Room content'})).toBeVisible();
   await expect(page.getByLabel(/Compare progress\. Step [123] of 3/)).toBeVisible();
   await expect(page.getByText('Guest logins are not saved')).toBeVisible();
@@ -18,7 +18,7 @@ test('v2 Compare Room presents the compact three-step host task', async ({page})
 
 test('v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
-  await page.goto('/new/compare-room');
+  await page.goto('/compare-room');
   await expect(page.getByLabel(/Compare progress\. Step [123] of 3/)).toBeVisible();
   await expect(page.getByText('Guest logins are not saved')).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -26,7 +26,7 @@ test('v2 Compare Room prioritizes progress and participant actions at 320 CSS pi
 });
 
 test('v2 join route stays inside the v2 shell and exposes a text invite flow', async ({page}) => {
-  await page.goto('/new/compare-room/join/room-1#invitation=invite&secret=secret');
+  await page.goto('/compare-room/join/room-1#invitation=invite&secret=secret');
   await expect(page.getByRole('heading', {name: 'Bring your playlists'})).toBeVisible();
   await expect(page.getByLabel('Compare progress. Step 1 of 3')).toBeVisible();
   await expect(page.getByRole('button', {name: 'Continue with Spotify'})).toBeVisible();

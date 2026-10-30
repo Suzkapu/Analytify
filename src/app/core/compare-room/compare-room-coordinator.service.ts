@@ -76,7 +76,7 @@ export class CompareRoomCoordinatorService {
     const roomId = this.roomId;
     const id = this.randomToken(10);
     const secret = this.randomToken(24);
-    const joinUrl = `${window.location.origin}/new/compare-room/join/${roomId}` +
+    const joinUrl = `${window.location.origin}/compare-room/join/${roomId}` +
       `#invitation=${encodeURIComponent(id)}&secret=${encodeURIComponent(secret)}`;
     // QR generation is only downloaded when the host actually opens an invite slot.
     const QRCode = resolveQrCodeApi(await import('qrcode') as LazyQrCodeModule);

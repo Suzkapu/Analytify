@@ -2,12 +2,13 @@ import {Injectable} from '@angular/core';
 
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {SpotifyAuthService} from '@core/auth/spotify-auth.service';
-import {AdminModerationReport, AdminOperationalHealth, AdminSyncRun, AdminUserSyncSettings, PendingProfileReview, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
+import {AdminModerationReport, AdminSyncRun, AdminUserSyncSettings, PendingProfileReview, SiteSettings, SyncSchedulePolicy, SyncTaskKey} from './admin.models';
 
 @Injectable({providedIn: 'root'})
 export class AdminService {
   private adminPromise: Promise<boolean> | null = null;
   private adminUserId: string | null = null;
+  private adminGeneration = 0;
 
   constructor(
     private supabase: SupabaseService,
@@ -19,15 +20,19 @@ export class AdminService {
     // have no trusted cloud identity. Avoid an RPC that can only return false.
     const userId = this.auth.getSupabaseUserId();
     if (!userId) {
+      this.adminGeneration++;
       this.adminUserId = null;
       this.adminPromise = Promise.resolve(false);
       return this.adminPromise;
     }
     if (!this.adminPromise || refresh || this.adminUserId !== userId) {
+      const generation = ++this.adminGeneration;
       this.adminUserId = userId;
-      this.adminPromise = this.supabase.getClient().then(client => client.rpc('is_app_admin')).then(({data, error}) => {
-        if (error) return false;
-        return data === true;
+      this.adminPromise = this.supabase.getClient().then(async client => {
+        const isCurrent = () => this.adminGeneration === generation && this.auth.getSupabaseUserId() === userId;
+        if (!isCurrent()) return false;
+        const {data, error} = await client.rpc('is_app_admin');
+        return !error && data === true && isCurrent();
       });
     }
     return this.adminPromise!;
@@ -45,10 +50,11 @@ export class AdminService {
   }
 
   async updateSiteSettings(settings: SiteSettings): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('admin_update_site_settings', {
+    const parameters = {
       p_announcement: settings.announcement,
       p_allow_song_league_creation: settings.allowSongLeagueCreation
-    });
+    };
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_site_settings', parameters);
     if (error) throw error;
   }
 
@@ -64,12 +70,13 @@ export class AdminService {
   }
 
   async updateSyncSchedulePolicy(policy: SyncSchedulePolicy): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_schedule_policy', {
+    const parameters = {
       p_task_key: policy.taskKey,
       p_available: policy.available,
       p_interval_value: policy.intervalValue,
       p_interval_unit: policy.intervalUnit
-    });
+    };
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_schedule_policy', parameters);
     if (error) throw error;
   }
 
@@ -126,7 +133,7 @@ export class AdminService {
   }
 
   async updateUser(settings: AdminUserSyncSettings): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_user', {
+    const parameters = {
       p_user_id: settings.userId,
       p_enabled: settings.enabled,
       p_timezone: settings.timezone,
@@ -149,7 +156,8 @@ export class AdminService {
       p_shared_playlists_enabled: settings.sharedPlaylistsEnabled,
       p_shared_playlist_interval_minutes: settings.sharedPlaylistIntervalMinutes,
       p_shared_playlist_interval_unit: settings.sharedPlaylistIntervalUnit
-    });
+    };
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_sync_user', parameters);
     if (error) throw error;
   }
 
@@ -171,7 +179,8 @@ export class AdminService {
     if (error) throw error;
   }
 
-  async enqueueUser(settings: AdminUserSyncSettings): Promise<number> {
+  async enqueueUser(settings: Pick<AdminUserSyncSettings, 'userId' | 'historyEnabled' | 'shortTermEnabled' |
+    'mediumTermEnabled' | 'longTermEnabled' | 'songLeaguePlaylistsEnabled' | 'sharedPlaylistsEnabled' | 'requiredTasks'>): Promise<number> {
     const tasks: SyncTaskKey[] = [];
     if (settings.historyEnabled) tasks.push('listening_history');
     if (settings.shortTermEnabled || settings.requiredTasks?.stats_short_term) tasks.push('stats_short_term');
@@ -229,44 +238,16 @@ export class AdminService {
   }
 
   async updateModerationReport(report: AdminModerationReport): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('admin_update_moderation_report', {
+    const parameters = {
       p_report_id: report.reportId,
       p_status: report.status,
       p_outcome: report.outcome || null,
       p_decision_reason: report.decisionReason || null,
       p_reporter_notice: report.reporterNotice || null,
       p_affected_notice: report.affectedNotice || null
-    });
-    if (error) throw error;
-  }
-
-  async loadOperationalHealth(): Promise<AdminOperationalHealth> {
-    const {data, error} = await (await this.supabase.getClient()).rpc('admin_operational_health');
-    if (error) throw error;
-    const value = data || {};
-    const workerRuntime = value.workerRuntime || {};
-    return {
-      syncQueueDepth: Number(value.syncQueueDepth || 0),
-      oldestSyncQueueAgeSeconds: Number(value.oldestSyncQueueAgeSeconds || 0),
-      notificationQueueDepth: Number(value.notificationQueueDepth || 0),
-      oldestNotificationQueueAgeSeconds: Number(value.oldestNotificationQueueAgeSeconds || 0),
-      expiredLeases: Number(value.expiredLeases || 0),
-      lastSuccessByFeature: value.lastSuccessByFeature || {},
-      releases: value.releases || {},
-      workerRuntime: {
-        state: workerRuntime.state || 'never_observed',
-        startedAt: workerRuntime.startedAt || null,
-        lastHeartbeatAt: workerRuntime.lastHeartbeatAt || null,
-        secondsSinceHeartbeat: workerRuntime.secondsSinceHeartbeat == null
-          ? null : Number(workerRuntime.secondsSinceHeartbeat),
-        lastPassStartedAt: workerRuntime.lastPassStartedAt || null,
-        lastPassSucceededAt: workerRuntime.lastPassSucceededAt || null,
-        lastFailureAt: workerRuntime.lastFailureAt || null,
-        lastError: workerRuntime.lastError || null,
-        commitSha: workerRuntime.commitSha || null
-      },
-      alerts: value.alerts || []
     };
+    const {error} = await (await this.supabase.getClient()).rpc('admin_update_moderation_report', parameters);
+    if (error) throw error;
   }
 
   async createDemoLeague(name: string, timezone: string): Promise<string> {

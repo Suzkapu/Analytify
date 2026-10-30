@@ -1,0 +1,49 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --grep (independent user drafts|older policy snapshot|policy save validates|user readback recovery|later edit matching current server|user save retains edits) --output=docs/testing-evidence/design-v2/admin-user-draft-current-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:142223) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:142223) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 1 worker
+
+(node:143380) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:190:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (10.3s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (2.8s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (12.6s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with reduce motion (11.2s)
+  ✓   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:508:5 › a later edit matching current server settings is saved without a redundant mutation (3.3s)
+  ✓   6 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:532:5 › independent user drafts survive policy recovery and explicit dashboard refresh (8.8s)
+  ✓   7 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:562:5 › an older policy snapshot cannot rewind a completed user save (7.3s)
+(node:148862) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:190:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (14.3s)
+  ✓   9 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (3.4s)
+  ✓  10 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (16.5s)
+  ✓  11 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with reduce motion (14.0s)
+  ✓  12 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:508:5 › a later edit matching current server settings is saved without a redundant mutation (3.3s)
+  ✓  13 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:532:5 › independent user drafts survive policy recovery and explicit dashboard refresh (6.4s)
+  ✓  14 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:562:5 › an older policy snapshot cannot rewind a completed user save (5.5s)
+(node:154459) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:190:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (11.9s)
+  ✓  16 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (2.7s)
+  ✓  17 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (15.9s)
+  ✓  18 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with reduce motion (14.8s)
+  ✓  19 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:508:5 › a later edit matching current server settings is saved without a redundant mutation (2.7s)
+  ✓  20 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:532:5 › independent user drafts survive policy recovery and explicit dashboard refresh (4.2s)
+  ✓  21 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:562:5 › an older policy snapshot cannot rewind a completed user save (2.9s)
+(node:159176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:190:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (19.0s)
+  ✓  23 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (5.7s)
+  ✓  24 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (27.0s)
+  ✓  25 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:421:7 › user readback recovery preserves drafts without repeating saves with reduce motion (13.2s)
+  ✓  26 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:508:5 › a later edit matching current server settings is saved without a redundant mutation (5.4s)
+  ✓  27 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:532:5 › independent user drafts survive policy recovery and explicit dashboard refresh (7.0s)
+  ✓  28 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:562:5 › an older policy snapshot cannot rewind a completed user save (6.1s)
+
+  28 passed (4.5m)

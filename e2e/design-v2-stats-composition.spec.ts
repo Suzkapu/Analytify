@@ -22,8 +22,8 @@ for (const shared of [false, true]) for (const reducedMotion of ['no-preference'
       }
       return route.fulfill({json: []});
     });
-    if (shared) { await page.goto('/new/stats'); await expect(page.getByRole('heading', {name: 'Your top listening', exact: true})).toBeVisible(); await expect(page.getByRole('main').getByText('Test Song', {exact: true})).toBeVisible(); }
-    await page.goto(shared ? '/new/stats/shared-owner' : '/new/stats');
+    if (shared) { await page.goto('/stats'); await expect(page.getByRole('heading', {name: 'Your top listening', exact: true})).toBeVisible(); await expect(page.getByRole('main').getByText('Test Song', {exact: true})).toBeVisible(); }
+    await page.goto(shared ? '/stats/shared-owner' : '/stats');
     const main = page.getByRole('main');
     await expect(main.locator('v2-stats-ranking-row')).toHaveCount(1);
     await page.evaluate(() => document.fonts.ready);
@@ -104,7 +104,7 @@ for (const shared of [false, true]) for (const reducedMotion of ['no-preference'
     await expectNoBlockingAxeViolations(page);
     if (shared) {
       await main.getByRole('button', {name: 'Back', exact: true}).press('Enter');
-      await expect(page).toHaveURL(/\/new\/stats$/);
+      await expect(page).toHaveURL(/\/stats$/);
       await expect(page.getByRole('heading', {name: 'Your top listening', exact: true})).toBeVisible();
       await expect(page.getByRole('main').getByText('Test Song', {exact: true})).toBeVisible();
     }
@@ -127,7 +127,7 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
       return route.fulfill({json: {ownerUserId: 'shared-owner', ownerDisplayName: 'Alex', snapshotDate: '2026-10-04',
         topTracks: [{id: 'shared-song', name: `Shared Song ${range}`, artists: [], album: {images: []}}], topArtists: [], topGenres: []}});
     });
-    await page.goto('/new/stats/shared-owner');
+    await page.goto('/stats/shared-owner');
     const main = page.getByRole('main'), period = page.getByRole('group', {name: 'Ranking period'});
     await expect(main.getByText('Shared Song short_term', {exact: true})).toBeVisible();
     await period.getByRole('button', {name: '6 months', exact: true}).click();

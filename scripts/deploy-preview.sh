@@ -10,8 +10,8 @@ done
 [[ "$DEPLOY_USER" =~ ^[A-Za-z_][A-Za-z0-9._-]*$ ]] || exit 1
 [[ "$DEPLOY_TARGET" =~ ^/[A-Za-z0-9._/-]+$ && "$DEPLOY_TARGET" != *..* && "$DEPLOY_TARGET" != / ]] || exit 1
 [[ -f dist/spoti-front/index.html && -f dist/spoti-front/version.json ]] || exit 1
-grep -q '<base href="/new/">' dist/spoti-front/index.html || exit 1
-node -e 'const manifest=require("./dist/spoti-front/ngsw.json");if(manifest.index!=="/new/index.html"||Object.keys(manifest.hashTable).some(path=>!path.startsWith("/new/")))throw Error("Preview worker assets must stay inside /new/")'
+grep -q '<base href="/">' dist/spoti-front/index.html || exit 1
+node -e 'const manifest=require("./dist/spoti-front/ngsw.json");if(manifest.index!=="/index.html"||Object.keys(manifest.hashTable).some(path=>!path.startsWith("/")||path.startsWith("/new/")))throw Error("Root frontend worker manifest is invalid")'
 current_sha="$(git ls-remote --exit-code origin refs/heads/codex/design-v2 | awk 'NR == 1 {print $1}')"
 [[ "$current_sha" == "$GITHUB_SHA" ]] || { echo 'Preview deployment was superseded.' >&2; exit 1; }
 
@@ -29,29 +29,29 @@ release="$preview_root/releases/$GITHUB_SHA"
 infra="$preview_root/.deploy-$GITHUB_SHA"
 ssh "${ssh_args[@]}" "$remote" "mkdir -p '$release' '$infra'"
 rsync -az -e "ssh -i $key -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts -o GlobalKnownHostsFile=/dev/null" dist/spoti-front/ "$remote:$release/"
-rsync -az -e "ssh -i $key -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts -o GlobalKnownHostsFile=/dev/null" scripts/preview-nginx.mjs "$remote:$infra/"
+rsync -az -e "ssh -i $key -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$known_hosts -o GlobalKnownHostsFile=/dev/null" scripts/root-frontend-nginx.mjs "$remote:$infra/"
 current_sha="$(git ls-remote --exit-code origin refs/heads/codex/design-v2 | awk 'NR == 1 {print $1}')"
 [[ "$current_sha" == "$GITHUB_SHA" ]] || { echo 'Preview was superseded during upload; leaving the live site unchanged.' >&2; exit 1; }
 
-ssh "${ssh_args[@]}" "$remote" bash -s -- "$preview_root" "$release" "$infra" "$GITHUB_SHA" <<'REMOTE'
+ssh "${ssh_args[@]}" "$remote" bash -s -- "$DEPLOY_TARGET" "$release" "$infra" "$GITHUB_SHA" <<'REMOTE'
 set -Eeuo pipefail
-preview_root="$1"; release="$2"; infra="$3"; sha="$4"
-[[ ! -e "$preview_root/new" || -L "$preview_root/new" ]] || { echo 'Preview mount is not a managed symlink.' >&2; exit 1; }
+web_target="${1%/}"; release="$2"; infra="$3"; sha="$4"
+[[ ! -e "$web_target" || -L "$web_target" ]] || { echo 'Preview mount is not a managed symlink.' >&2; exit 1; }
 mapfile -t sites < <(sudo -n grep -lE 'server_name[^;]*analytify[.]dynv6[.]net' /etc/nginx/sites-enabled/* /etc/nginx/conf.d/*.conf | xargs -r -n1 readlink -f | sort -u)
 [[ "${#sites[@]}" == 1 ]] || { echo 'Expected one application virtual-host file.' >&2; exit 1; }
 site="${sites[0]}"
 backup="$(mktemp -d /tmp/analytify-preview-config.XXXXXX)"
 sudo -n cp "$site" "$backup/site.conf"
-previous="$(readlink "$preview_root/new" || true)"
+previous="$(readlink "$web_target" || true)"
 site_changed=false
 link_changed=false
 rollback() {
   if [[ "$link_changed" == true ]]; then
     if [[ -n "$previous" ]]; then
-      ln -s "$previous" "$preview_root/.rollback-$sha"
-      mv -Tf "$preview_root/.rollback-$sha" "$preview_root/new"
-    elif [[ "$(readlink "$preview_root/new" || true)" == "$release" ]]; then
-      rm "$preview_root/new"
+      ln -s "$previous" "${web_target}.rollback-$sha"
+      mv -Tf "${web_target}.rollback-$sha" "$web_target"
+    elif [[ "$(readlink "$web_target" || true)" == "$release" ]]; then
+      rm "$web_target"
     fi
   fi
   if [[ "$site_changed" == true ]]; then
@@ -60,20 +60,23 @@ rollback() {
   fi
 }
 trap rollback ERR
-node "$infra/preview-nginx.mjs" "$site" "$backup/rendered.conf" "$preview_root"
-ln -s "$release" "$preview_root/.next-$sha"
-mv -Tf "$preview_root/.next-$sha" "$preview_root/new"
+node "$infra/root-frontend-nginx.mjs" "$site" "$backup/rendered.conf" "$web_target"
+if [[ -n "$previous" && -d "$previous" ]]; then
+  rsync --archive --ignore-existing "$previous/" "$release/"
+fi
+ln -s "$release" "${web_target}.next-$sha"
+mv -Tf "${web_target}.next-$sha" "$web_target"
 link_changed=true
 site_changed=true
 sudo -n install -o root -g root -m 0644 "$backup/rendered.conf" "$site"
 sudo -n nginx -t
 sudo -n systemctl reload nginx
 # A graceful reload starts new workers asynchronously. Old workers can still
-# answer the first request using the previous /new fallback; allow that bounded
+# answer the first request using the previous root frontend; allow that bounded
 # handover before deciding the release is unhealthy and rolling it back.
 verified=false
 for attempt in {1..15}; do
-  if curl --fail --silent --show-error --max-time 5 -H 'Cache-Control: no-cache' https://analytify.dynv6.net/new/version.json | node -e 'let body="";process.stdin.on("data",x=>body+=x);process.stdin.on("end",()=>{try{if(JSON.parse(body).commit!==process.argv[1])process.exitCode=1}catch{process.exitCode=1}})' "$sha"; then
+  if curl --fail --silent --show-error --max-time 5 -H 'Cache-Control: no-cache' https://analytify.dynv6.net/version.json | node -e 'let body="";process.stdin.on("data",x=>body+=x);process.stdin.on("end",()=>{try{if(JSON.parse(body).commit!==process.argv[1])process.exitCode=1}catch{process.exitCode=1}})' "$sha"; then
     verified=true
     break
   fi
@@ -81,5 +84,5 @@ for attempt in {1..15}; do
 done
 [[ "$verified" == true ]] || { echo 'Preview activation did not become healthy.' >&2; false; }
 trap - ERR
-echo "Preview frontend activated independently at /new/. Previous config preserved in $backup"
+echo "V2 frontend activated at /. Main pipeline restores the original interface. Previous config preserved in $backup"
 REMOTE

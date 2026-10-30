@@ -5,6 +5,13 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { AdminService } from '@core/admin/admin.service';
 import { AdminComponent } from './admin.component';
+import {AdminRunRecordComponent} from './admin-run-record.component';
+import {AdminRunFeedbackComponent} from './admin-run-feedback.component';
+import {AdminUserSaveFeedbackComponent} from './admin-user-save-feedback.component';
+import {AdminUserRefreshActionComponent} from './admin-user-refresh-action.component';
+import {AdminUserCardComponent} from './admin-user-card.component';
+import {AdminPendingReviewDialogComponent} from './admin-pending-review-dialog.component';
+import {AdminPolicyEditorComponent} from './admin-policy-editor.component';
 
 describe('AdminComponent', () => {
     let component: AdminComponent;
@@ -18,7 +25,6 @@ describe('AdminComponent', () => {
             listUsers: vi.fn().mockName("AdminService.listUsers"),
             listRuns: vi.fn().mockName("AdminService.listRuns"),
             listModerationReports: vi.fn().mockName("AdminService.listModerationReports"),
-            loadOperationalHealth: vi.fn().mockName("AdminService.loadOperationalHealth"),
             loadSyncSchedulePolicy: vi.fn().mockName("AdminService.loadSyncSchedulePolicy"),
             updateSyncSchedulePolicy: vi.fn().mockName("AdminService.updateSyncSchedulePolicy"),
             updateSiteSettings: vi.fn().mockName("AdminService.updateSiteSettings"),
@@ -48,17 +54,6 @@ describe('AdminComponent', () => {
                 details: {}
             }
         ]);
-        adminService.loadOperationalHealth.mockResolvedValue({
-            syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
-            notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
-            lastSuccessByFeature: {}, releases: { supabase: 'same', worker: 'same' },
-            workerRuntime: {
-                state: 'healthy', startedAt: '2026-09-08T08:00:00Z',
-                lastHeartbeatAt: '2026-09-08T08:01:00Z', secondsSinceHeartbeat: 5,
-                lastPassStartedAt: '2026-09-08T08:00:40Z', lastPassSucceededAt: '2026-09-08T08:00:50Z',
-                lastFailureAt: null, lastError: null, commitSha: 'same'
-            }, alerts: []
-        });
         adminService.loadSyncSchedulePolicy.mockResolvedValue([
             { taskKey: 'listening_history', available: true, intervalValue: 60, intervalUnit: 'minutes' }
         ]);
@@ -69,6 +64,7 @@ describe('AdminComponent', () => {
         };
 
         await TestBed.configureTestingModule({
+            imports: [AdminPendingReviewDialogComponent, AdminUserCardComponent, AdminRunRecordComponent, AdminRunFeedbackComponent, AdminUserSaveFeedbackComponent, AdminUserRefreshActionComponent, AdminPolicyEditorComponent],
             declarations: [AdminComponent],
             providers: [
                 { provide: AdminService, useValue: adminService },
@@ -112,88 +108,19 @@ describe('AdminComponent', () => {
         expect(fixture.nativeElement.querySelector('.schedule-policy-panel').textContent).toContain('Schedule limits');
     });
 
-    it('loads operational health in parallel and reports release drift', async () => {
-        adminService.loadOperationalHealth.mockResolvedValue({
-            syncQueueDepth: 51, oldestSyncQueueAgeSeconds: 901,
-            notificationQueueDepth: 12, oldestNotificationQueueAgeSeconds: 90, expiredLeases: 1,
-            lastSuccessByFeature: {}, releases: { supabase: 'one', worker: 'two' },
-            alerts: [{ key: 'sync-backlog', severity: 'warning', message: 'Sync backlog is old.', firstSeenAt: '', lastSeenAt: '' }]
-        });
+    it('surfaces non-destructive shared-playlist limit warnings from successful runs', async () => {
+        const warning = 'Favourite Tracks has more than 5000 songs. Its previous shared version was kept.';
+        adminService.listRuns.mockResolvedValue([{
+            id: 'warning-run', userId: 'user-1', displayName: 'Synthetic user', taskKey: 'shared_playlists',
+            status: 'succeeded', triggerType: 'scheduled', requestedAt: '2026-10-24T08:00:00Z',
+            startedAt: null, finishedAt: null, error: null, details: {warnings: [warning]}
+        }]);
         fixture.detectChanges();
         await fixture.whenStable();
+        component.toggleRunsCollapsed();
         fixture.detectChanges();
-
-        expect(component.releaseIsConsistent).toBe(false);
-        expect(fixture.nativeElement.querySelector('.operations-panel').textContent).toContain('Sync backlog is old.');
-        expect(adminService.loadOperationalHealth).toHaveBeenCalledTimes(1);
-    });
-
-    it('surfaces non-destructive shared-playlist limit warnings from successful runs', () => {
-        const run = {
-            ...component.runs[0],
-            details: {warnings: ['Favourite Tracks has more than 5000 songs. Its previous shared version was kept.']}
-        };
-
-        expect(component.runWarnings(run)).toEqual([
-            'Favourite Tracks has more than 5000 songs. Its previous shared version was kept.'
-        ]);
-    });
-
-    it('requires every deployed component before reporting a matched release', () => {
-        component.operationalHealth.releases = {
-            supabase: 'abc',
-            worker: 'abc',
-            'edge:spotify-credentials': 'abc',
-            'edge:song-league-playlist-sync': 'abc'
-        };
-        expect(component.releaseIsConsistent).toBe(false);
-        component.operationalHealth.releases['edge:song-league-notifications'] = 'abc';
-        expect(component.releaseIsConsistent).toBe(true);
-        component.operationalHealth.releases['worker'] = 'different';
-        expect(component.releaseIsConsistent).toBe(false);
-    });
-
-    it('renders healthy idle runtime separately from empty queue metrics and lists component releases', async () => {
-        adminService.loadOperationalHealth.mockResolvedValue({
-            syncQueueDepth: 0, oldestSyncQueueAgeSeconds: 0,
-            notificationQueueDepth: 0, oldestNotificationQueueAgeSeconds: 0, expiredLeases: 0,
-            lastSuccessByFeature: {},
-            releases: {
-                supabase: 'abcdef123456', worker: 'abcdef123456',
-                'edge:spotify-credentials': 'abcdef123456',
-                'edge:song-league-playlist-sync': 'abcdef123456',
-                'edge:song-league-notifications': 'abcdef123456'
-            },
-            workerRuntime: {
-                state: 'healthy', startedAt: '2026-09-08T08:00:00Z',
-                lastHeartbeatAt: '2026-09-08T08:01:00Z', secondsSinceHeartbeat: 5,
-                lastPassStartedAt: '2026-09-08T08:00:40Z', lastPassSucceededAt: '2026-09-08T08:00:50Z',
-                lastFailureAt: null, lastError: null, commitSha: 'abcdef123456'
-            }, alerts: []
-        });
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-        fixture.detectChanges();
-
-        const text = fixture.nativeElement.querySelector('.operations-panel').textContent;
-        expect(text).toContain('Worker healthy');
-        expect(text).toContain('No sync backlog');
-        expect(text).toContain('Spotify credentials');
-        expect(text).toContain('abcdef12');
-    });
-
-    it('renders stale and never-observed worker states as unavailable health, not healthy zeroes', () => {
-        component.operationalHealth.workerRuntime = {
-            state: 'stale', startedAt: null, lastHeartbeatAt: '2026-09-08T08:00:00Z',
-            secondsSinceHeartbeat: 600, lastPassStartedAt: null, lastPassSucceededAt: null,
-            lastFailureAt: null, lastError: null, commitSha: null
-        };
-        expect(component.workerStateLabel).toBe('Worker heartbeat stale');
-        expect(component.workerStateIsProblem).toBe(true);
-
-        component.operationalHealth.workerRuntime.state = 'never_observed';
-        expect(component.workerStateLabel).toBe('Worker never observed');
+        expect(fixture.nativeElement.querySelector('v2-admin-run-record').textContent).toContain(warning);
+        expect(fixture.nativeElement.querySelector('v2-admin-run-record .status').textContent).toBe('Succeeded · Warning');
     });
 
     it('expands and collapses Recent runs when toggled', async () => {
@@ -257,21 +184,21 @@ describe('AdminComponent', () => {
         fixture.detectChanges();
 
         expect(component.isUserExpanded('user-1')).toBe(false);
-        let settings = fixture.nativeElement.querySelector('.user-card-settings');
+        let settings = fixture.nativeElement.querySelector('#user-user-1-settings');
         expect(settings).toBeNull();
 
         const userCard = fixture.nativeElement.querySelector('.admin-user-card');
         expect(userCard.textContent).toContain('Alice');
         expect(userCard.textContent).toContain('spotify-user-1');
-        expect(userCard.textContent).toContain('3 tasks enabled');
+        expect(userCard.textContent).toContain('3 optional schedules selected · No required tasks.');
 
         component.toggleUserExpanded('user-1');
         fixture.detectChanges();
 
         expect(component.isUserExpanded('user-1')).toBe(true);
-        settings = fixture.nativeElement.querySelector('.user-card-settings');
+        settings = fixture.nativeElement.querySelector('#user-user-1-settings');
         expect(settings).not.toBeNull();
-        expect(settings.textContent).toContain('Timezone');
+        expect(settings.textContent).toContain('Schedule timezone');
         expect(settings.textContent).toContain('Listening history');
         expect(settings.textContent).toContain('Short-term stats');
 
@@ -279,7 +206,7 @@ describe('AdminComponent', () => {
         fixture.detectChanges();
 
         expect(component.isUserExpanded('user-1')).toBe(false);
-        settings = fixture.nativeElement.querySelector('.user-card-settings');
+        settings = fixture.nativeElement.querySelector('#user-user-1-settings');
         expect(settings).toBeNull();
     });
 
@@ -300,14 +227,23 @@ describe('AdminComponent', () => {
         adminService.reviewPendingProfile.mockResolvedValue({
             eligible: true, spotifyId: pending.spotifyId, createdAt: '2026-09-01T00:00:00Z', blockers: []
         });
-        vi.spyOn(window, 'confirm').mockReturnValue(true);
 
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
         expect(fixture.nativeElement.textContent).toContain('Incomplete registration');
 
-        await component.reviewIncompleteProfile(pending);
+        const action = component.reviewIncompleteProfile(pending);
+        await vi.waitFor(() => expect(component.pendingProfileReview?.phase).toBe('eligible'));
+        fixture.detectChanges();
+        const dialog = fixture.nativeElement.querySelector('[role="dialog"]') as HTMLElement;
+        expect(dialog.textContent).toContain('Delete incomplete registration?');
+        const actions = [...dialog.querySelectorAll('button')];
+        expect(actions.map(button => button.textContent?.trim())).toEqual(['Delete registration', 'Cancel']);
+        expect(adminService.deleteReviewedPendingProfile).not.toHaveBeenCalled();
+        actions[0].click(); await action;
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
         expect(adminService.deleteReviewedPendingProfile).toHaveBeenCalledWith(pending.userId, pending.spotifyId);
         expect(component.users).toEqual([]);
     });

@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.admin-exclusion.config.ts --grep policy save validates|policy editor read-only responsive geometry --output docs/testing-evidence/design-v2/admin-card-policy-split-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:39339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:39339) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:40186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:198:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (6.1s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 600 (7.2s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 1000 (6.9s)
+(node:41587) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:198:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (6.2s)
+  ✓   5 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 600 (7.3s)
+  ✓   6 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 1000 (7.4s)
+(node:42293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:198:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (6.2s)
+  ✓   8 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 600 (9.6s)
+  ✓   9 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 1000 (10.9s)
+(node:43140) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:198:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (14.1s)
+  ✓  11 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 600 (15.9s)
+  ✓  12 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:261:7 › policy editor read-only responsive geometry at height 1000 (19.3s)
+
+  12 passed (2.3m)

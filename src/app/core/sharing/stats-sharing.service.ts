@@ -6,7 +6,6 @@ import {environment} from '@env/environment';
 import {SupabaseService} from '@core/data-access/supabase/supabase.service';
 import {
   CreatedStatsAccessInvite,
-  BlockedStatsUser,
   ModerationCase,
   ModerationReceipt,
   SharedStatsSnapshot,
@@ -54,22 +53,6 @@ export class StatsSharingService {
 
   async blockUser(userId: string): Promise<void> {
     const {error} = await (await this.supabase.getClient()).rpc('block_stats_user', {p_user_id: userId});
-    if (error) throw error;
-  }
-
-  async listBlockedUsers(): Promise<BlockedStatsUser[]> {
-    const {data, error} = await (await this.supabase.getClient()).rpc('list_blocked_stats_users');
-    if (error) throw error;
-    return (data || []).map((row: any) => ({
-      userId: row.user_id,
-      displayName: row.display_name || 'Spotify user',
-      imageUrl: row.image_url || '',
-      blockedAt: row.blocked_at
-    }));
-  }
-
-  async unblockUser(userId: string): Promise<void> {
-    const {error} = await (await this.supabase.getClient()).rpc('unblock_stats_user', {p_user_id: userId});
     if (error) throw error;
   }
 

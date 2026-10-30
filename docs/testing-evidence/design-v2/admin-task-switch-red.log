@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui-v2/v2-preference-row.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.477 seconds] - 2026-10-29T18:46:02.230Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/shared/ui-v2/v2-preference-row.component.spec.ts > canonical preference row > supports an unadorned task switch with a distinct accessible purpose
+NG0303: Can't set value of the 'compact' input on the 'V2PreferenceRowComponent2' component. Make sure that the 'compact' property is declared as an input using the input() or model() function or the @Input() decorator.
+NG0303: Can't set value of the 'ariaLabel' input on the 'V2PreferenceRowComponent2' component. Make sure that the 'ariaLabel' property is declared as an input using the input() or model() function or the @Input() decorator.
+
+ ❯ |SpotiFront| src/app/shared/ui-v2/v2-preference-row.component.spec.ts (4 tests | 1 failed) 115ms
+     × supports an unadorned task switch with a distinct accessible purpose 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui-v2/v2-preference-row.component.spec.ts > canonical preference row > supports an unadorned task switch with a distinct accessible purpose
+AssertionError: expected 'Stats requests' to be 'Enable optional stats requests' // Object.is equality
+
+Expected: "Enable optional stats requests"
+Received: "Stats requests"
+
+ ❯ src/app/shared/ui-v2/v2-preference-row.component.spec.ts:32:46
+     30|     fixture.componentRef.setInput('ariaLabel', 'Enable optional stats …
+     31|     fixture.detectChanges();
+     32|     expect(input.getAttribute('aria-label')).toBe('Enable optional sta…
+       |                                              ^
+     33|     expect(fixture.nativeElement.querySelector('.v2-preference-row > i…
+     34|     expect(fixture.nativeElement.querySelector('small')).toBeNull();
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  19:46:02
+   Duration  946ms (transform 39ms, setup 251ms, import 9ms, tests 115ms, environment 435ms)
+

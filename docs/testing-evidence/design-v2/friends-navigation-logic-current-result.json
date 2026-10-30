@@ -1,0 +1,59 @@
+{
+  "checkpoint": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "state": "plus uncommitted application/tests and reviewed Navigation baselines",
+  "command": "npm run verify:ci",
+  "exit": 0,
+  "frontendPassed": 2321,
+  "frontendFiles": 185,
+  "hostedIntegrationSkipped": 1,
+  "workerPassed": 218,
+  "edgePassed": 83,
+  "frontendProductionSources": 167,
+  "frontendCoverage": {
+    "lines": {
+      "total": 11467,
+      "covered": 10367,
+      "skipped": 0,
+      "pct": 90.4
+    },
+    "statements": {
+      "total": 13543,
+      "covered": 12030,
+      "skipped": 0,
+      "pct": 88.82
+    },
+    "functions": {
+      "total": 2784,
+      "covered": 2443,
+      "skipped": 0,
+      "pct": 87.75
+    },
+    "branches": {
+      "total": 8823,
+      "covered": 7333,
+      "skipped": 0,
+      "pct": 83.11
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "sourceHashes": "friends-navigation-logic-ci-source-hashes.json",
+  "sourceDriftAtTerminal": [],
+  "log": "friends-navigation-logic-verified-ci.log",
+  "remoteFriendsContract": "friends-http-remote-current-result.json",
+  "browser": [
+    "friends-feedback-final-result.json",
+    "navigation-modern-current-result.json",
+    "stats-compare-current-result.json"
+  ],
+  "limitations": [
+    "Frontend98minimum fails",
+    "One documented hosted integration skipped; real selected Friends HTTP/Angular contracts verified separately",
+    "Full retained feature/motion/Figma parity remains incomplete",
+    "Admin audit found excluded runtimehealth stillreachable; correction is next and not covered by this CI"
+  ]
+}

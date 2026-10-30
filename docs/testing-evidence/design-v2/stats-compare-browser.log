@@ -1,0 +1,37 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=.extra_files/playwright.retained-logic.config.ts --grep historical search stays|v2 Compare Room|v2 join route
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --host 127.0.0.1 --port 4215 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:32190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:32190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:33317) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task (3.9s)
+  ✓   2 [desktop] › e2e/design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels (2.4s)
+  ✓   3 [desktop] › e2e/design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow (2.5s)
+  ✓   4 [desktop] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (5.4s)
+(node:34628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task (3.3s)
+  ✓   6 [mobile] › e2e/design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels (2.5s)
+  ✓   7 [mobile] › e2e/design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow (2.0s)
+  ✓   8 [mobile] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.8s)
+(node:35591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox-stats] › e2e/design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task (3.8s)
+  ✓  10 [firefox-stats] › e2e/design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels (2.1s)
+  ✓  11 [firefox-stats] › e2e/design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow (1.8s)
+  ✓  12 [firefox-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (4.3s)
+(node:36783) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit-stats] › e2e/design-v2-compare-room.spec.ts:9:5 › v2 Compare Room presents the compact three-step host task (4.5s)
+  ✓  14 [webkit-stats] › e2e/design-v2-compare-room.spec.ts:19:5 › v2 Compare Room prioritizes progress and participant actions at 320 CSS pixels (2.1s)
+  ✓  15 [webkit-stats] › e2e/design-v2-compare-room.spec.ts:28:5 › v2 join route stays inside the v2 shell and exposes a text invite flow (2.5s)
+  ✓  16 [webkit-stats] › e2e/design-v2-stats-search-switch.spec.ts:5:5 › historical search stays cancellable, ignores a late result and recovers through the native switch (7.0s)
+
+  16 passed (1.2m)

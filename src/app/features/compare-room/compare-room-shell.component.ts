@@ -46,6 +46,8 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   readonly enteredAuthenticated = this.auth.isAuthenticated();
 
   private subscriptions = new Subscription();
+  private destroyed = false;
+  private selectionOwners = new Map<string, symbol>();
   private mainAccessToken = '';
   private mainPlaylistsPromise: Promise<void> | null = null;
   private selectedPlaylistIdsByParticipant = new Map<string, string[]>();
@@ -146,7 +148,10 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     const playlists = this.mainSelectionIds(participantId)
       .map(id => this.availableMainPlaylists(participantId).find(item => item.id === id))
       .filter((playlist): playlist is ComparePlaylist => !!playlist);
-    if (!participant || playlists.length === 0) return;
+    if (this.destroyed || !participant || playlists.length === 0) return;
+    const owner = Symbol();
+    this.selectionOwners.set(participantId, owner);
+    const ownsSelection = () => !this.destroyed && this.selectionOwners.get(participantId) === owner;
     const loadingParticipant: CompareParticipant = {
       ...participant,
       playlist: playlists[0],
@@ -158,11 +163,14 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
     };
     this.coordinator.updateLocalParticipant(loadingParticipant);
     try {
+      const accessToken = await this.getMainAccessToken();
+      if (!ownsSelection()) return;
       const result = await this.source.loadMainSelection(
         playlists,
-        await this.getMainAccessToken(),
+        accessToken,
         this.auth.getUserId() || participant.spotifyUserId
       );
+      if (!ownsSelection()) return;
       this.coordinator.updateLocalParticipant({
         ...loadingParticipant,
         tracks: result.tracks,
@@ -170,6 +178,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
         dataSource: result.source
       });
     } catch (error) {
+      if (!ownsSelection()) return;
       this.coordinator.updateLocalParticipant({
         ...loadingParticipant,
         status: 'error',
@@ -227,6 +236,7 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   }
 
   removeLocalSlot(participantId: string): void {
+    this.selectionOwners.delete(participantId);
     this.selectedPlaylistIdsByParticipant.delete(participantId);
     this.playlistQueriesByParticipant.delete(participantId);
     this.publicPlaylistReferencesByParticipant.delete(participantId);
@@ -523,6 +533,8 @@ export class CompareRoomShellComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
+    this.selectionOwners.clear();
     this.subscriptions.unsubscribe();
     void this.coordinator.closeRoom();
   }

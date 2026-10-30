@@ -1,0 +1,14 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-task-editor.native.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation failed. [1.801 seconds] - 2026-10-29T18:48:54.747Z
+
+✘ [ERROR] TS2347: Untyped function calls may not accept type arguments. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/e2e/components/admin-user-task-editor.native.ts:29:24:
+      29 │ ...e.all([...fixture.nativeElement.querySelectorAll<HTMLImageEleme...
+         ╵              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

@@ -1,0 +1,95 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/compare-room/compare-room-join-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.176 seconds] - 2026-10-24T12:03:50.490Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/compare-room/compare-room-join-boundaries.spec.ts (4 tests | 4 failed) 325ms
+     × reports a failed initial selection publication without starting track loading 66ms
+     × does not transfer an acknowledged approval to a replacement proposal 54ms
+     × keeps room closure authoritative when selected tracks arrive late 103ms
+     × keeps participant removal authoritative when selected tracks arrive late 101ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-join-boundaries.spec.ts > Compare Room guest workflow ownership boundaries > reports a failed initial selection publication without starting track loading
+AssertionError: expected 'loading' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "loading"
+
+ ❯ src/app/features/compare-room/compare-room-join-boundaries.spec.ts:57:29
+     55|     // rather than allowing an unhandled rejection to obscure the stuc…
+     56|     await component.applyPlaylistSelection().catch(() => undefined);
+     57|     expect(component.stage).toBe('error');
+       |                             ^
+     58|     expect(component.errorMessage).toBe('Room connection lost');
+     59|     expect(source.loadSelection).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-join-boundaries.spec.ts > Compare Room guest workflow ownership boundaries > does not transfer an acknowledged approval to a replacement proposal
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/features/compare-room/compare-room-join-boundaries.spec.ts:74:35
+     72|     await approving;
+     73|     expect(component.proposal?.id).toBe('replacement');
+     74|     expect(component.hasApproved).toBe(false);
+       |                                   ^
+     75|     guest.createRequest$.next(proposal('replacement'));
+     76|     await Promise.resolve();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-join-boundaries.spec.ts > Compare Room guest workflow ownership boundaries > keeps room closure authoritative when selected tracks arrive late
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-join-boundaries.spec.ts > Compare Room guest workflow ownership boundaries > keeps participant removal authoritative when selected tracks arrive late
+AssertionError: expected 'ready' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "ready"
+
+ ❯ src/app/features/compare-room/compare-room-join-boundaries.spec.ts:94:31
+     92|       loading.resolve({tracks: [], source: 'spotify'});
+     93|       await applying;
+     94|       expect(component.stage).toBe('error');
+       |                               ^
+     95|       expect(component.errorMessage).toBe(terminalMessage);
+     96|       expect(guest.publishParticipant).toHaveBeenCalledTimes(publicati…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  14:03:50
+   Duration  1.08s (transform 113ms, setup 208ms, import 148ms, tests 325ms, environment 304ms)
+

@@ -1,0 +1,15 @@
+:host { position: fixed; inset: 0; z-index: 1200; display: block; font-family: var(--v2-font-family, 'Outfit', sans-serif); }
+.review-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgb(0 0 0 / 48%); backdrop-filter: blur(12px); }
+.review-panel { box-sizing: border-box; display: flex; flex-direction: column; gap: var(--v2-space-4, 16px); width: calc(100% - 32px); max-width: 576px; max-height: calc(100dvh - 32px); padding: var(--v2-space-6, 24px); border: 1px solid var(--v2-color-border, #34423a); border-radius: var(--v2-radius-panel, 24px); background: var(--v2-color-background-raised, #0b100d); color: var(--v2-color-text, #f5f7f5); }
+.review-panel:focus { outline: none; }
+.review-body { display: flex; flex-direction: column; gap: var(--v2-space-4, 16px); min-height: 0; overflow-y: auto; overflow-wrap: anywhere; }
+h2, p { margin: 0; }
+h2 { font: 600 20px/28px var(--v2-font-family, 'Outfit', sans-serif); }
+p { font: 400 16px/24px var(--v2-font-family, 'Outfit', sans-serif); color: var(--v2-color-text-muted, #a2ada6); }
+.review-details p { color: var(--v2-color-text-subtle, #8e9b92); font-size: 14px; line-height: 20px; }
+.review-actions { display: flex; flex: none; flex-direction: column; gap: var(--v2-space-4, 16px); }
+.review-actions button.v2-button { width: 100%; min-width: 0; height: 48px; min-height: 48px; box-sizing: border-box; font: 600 14px/20px var(--v2-font-family, 'Outfit', sans-serif); }
+.review-actions button.v2-button:disabled { opacity: .45; }
+.review-actions button.v2-button--danger { border-color: var(--v2-color-danger, #ff5666); background: var(--v2-color-surface-raised, #182019); }
+
+.review-body:focus-visible { outline: 2px solid var(--v2-color-focus, #1ed760); outline-offset: -2px; }

@@ -1,0 +1,233 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-pending-review-lifetimes.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [9.433 seconds] - 2026-10-30T11:26:09.055Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user save through pending review
+AssertionError: Save must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-lifetimes.spec.ts:60:110
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 1,
+  expected: 0,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user run through pending review
+AssertionError: Run must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-lifetimes.spec.ts:61:109
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 1,
+  expected: 0,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user save awaits write
+AssertionError: Review must not start while the same user mutation/readback owns its lifetime: expected 1 to be +0 // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-lifetimes.spec.ts:84:106
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 1,
+  expected: 0,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user run awaits write
+AssertionError: Review must not start while the same user mutation/readback owns its lifetime: expected 1 to be +0 // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-lifetimes.spec.ts:84:106
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 1,
+  expected: 0,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts (11 tests | 10 failed) 543ms
+     × blocks same-user save through pending review 47ms
+     × blocks same-user run through pending review 10ms
+     × blocks same-user save through pending delete 62ms
+     × blocks same-user run through pending delete 55ms
+     × blocks same-user save through pending inventory readback 108ms
+     × blocks same-user run through pending inventory readback 110ms
+     × blocks review while same-user save awaits write 9ms
+     × blocks review while same-user save awaits dependent readback 56ms
+     × blocks review while same-user run awaits write 13ms
+     × blocks review while same-user run awaits dependent readback 60ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user save through pending review
+AssertionError: Save must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/admin/admin-pending-review-lifetimes.spec.ts:60:110
+     58|         review.resolve(eligible); deleted.resolve(); inventory.resolve…
+     59|         await Promise.all([action, overlapping]);
+     60|         expect(writes, 'Save must not cross the service boundary while…
+       |                                                                                                              ^
+     61|         expect(queues, 'Run must not cross the service boundary while …
+     62|         expect(service.deleteReviewedPendingProfile).toHaveBeenCalledE…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user run through pending review
+AssertionError: Run must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/admin/admin-pending-review-lifetimes.spec.ts:61:109
+     59|         await Promise.all([action, overlapping]);
+     60|         expect(writes, 'Save must not cross the service boundary while…
+     61|         expect(queues, 'Run must not cross the service boundary while …
+       |                                                                                                             ^
+     62|         expect(service.deleteReviewedPendingProfile).toHaveBeenCalledE…
+     63|         expect(component.reviewingUsers.has(pending.userId)).toBe(fals…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user save through pending delete
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user save through pending inventory readback
+AssertionError: Save must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/admin/admin-pending-review-lifetimes.spec.ts:60:110
+     58|         review.resolve(eligible); deleted.resolve(); inventory.resolve…
+     59|         await Promise.all([action, overlapping]);
+     60|         expect(writes, 'Save must not cross the service boundary while…
+       |                                                                                                              ^
+     61|         expect(queues, 'Run must not cross the service boundary while …
+     62|         expect(service.deleteReviewedPendingProfile).toHaveBeenCalledE…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user run through pending delete
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks same-user run through pending inventory readback
+AssertionError: Run must not cross the service boundary while this user is being reviewed/deleted: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/admin/admin-pending-review-lifetimes.spec.ts:61:109
+     59|         await Promise.all([action, overlapping]);
+     60|         expect(writes, 'Save must not cross the service boundary while…
+     61|         expect(queues, 'Run must not cross the service boundary while …
+       |                                                                                                             ^
+     62|         expect(service.deleteReviewedPendingProfile).toHaveBeenCalledE…
+     63|         expect(component.reviewingUsers.has(pending.userId)).toBe(fals…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user save awaits write
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user save awaits dependent readback
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user run awaits write
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-lifetimes.spec.ts > pending-registration review shares the user mutation lifetime > blocks review while same-user run awaits dependent readback
+AssertionError: Review must not start while the same user mutation/readback owns its lifetime: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/app/features/admin/admin-pending-review-lifetimes.spec.ts:84:106
+     82|         const reviews = service.reviewPendingProfile.mock.calls.length;
+     83|         write.resolve(); queued.resolve(1); inventory.resolve([]); run…
+     84|         expect(reviews, 'Review must not start while the same user mut…
+       |                                                                                                          ^
+     85|         expect(service.deleteReviewedPendingProfile).not.toHaveBeenCal…
+     86|         expect(component.isUserBusy(pending.userId)).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 1 passed (11)
+   Start at  12:26:09
+   Duration  3.44s (transform 522ms, setup 653ms, import 731ms, tests 543ms, environment 1.08s)
+

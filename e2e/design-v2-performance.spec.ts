@@ -32,7 +32,7 @@ test('large cached playlists render incrementally and search the entire collecti
       };
     });
   });
-  await page.goto('/new/songs/playlist-1');
+  await page.goto('/songs/playlist-1');
   await page.getByRole('button', {name: 'Songs', exact: true}).click();
   const rows = page.locator('.v2-track-row');
   await expect(rows).toHaveCount(50);
@@ -102,7 +102,7 @@ test('full top-song rankings remain bounded through filtering, tabs, and history
     }));
     await route.fulfill({json: {items: tracks.slice(offset, offset + limit), total: 100}});
   });
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const rows = page.locator('.v2-ranking-row');
   await expect(rows).toHaveCount(100);
   const sample = () => page.evaluate(() => ({

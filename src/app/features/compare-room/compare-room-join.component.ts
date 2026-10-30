@@ -44,6 +44,8 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   private participantId = '';
   private hasJoinedRoom = false;
   private subscriptions = new Subscription();
+  private workflowActive = true;
+  private saveRequest = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -91,10 +93,12 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     }));
     this.subscriptions.add(this.guest.removed$.pipe(filter(Boolean)).subscribe(() => {
       this.fail('The host removed this participant from the room.');
+      this.workflowActive = false;
       this.transientAuth.clear();
     }));
     this.subscriptions.add(this.guest.closed$.pipe(filter(Boolean)).subscribe(() => {
       if (this.stage !== 'complete') this.fail('The host closed this Compare Room.');
+      this.workflowActive = false;
       this.transientAuth.clear();
     }));
     this.subscriptions.add(this.guest.error$.pipe(filter((value): value is string => !!value)).subscribe(value => this.fail(value)));
@@ -105,6 +109,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   async connectSpotify(): Promise<void> {
+    if (!this.workflowActive) return;
     if (!this.termsAccepted) {
       this.errorMessage = 'Accept the Terms and Privacy Notice before connecting Spotify.';
       return;
@@ -156,10 +161,12 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   async applyPlaylistSelection(): Promise<void> {
+    if (!this.workflowActive) return;
     const selectedPlaylists = this.selectedPlaylistIds
       .map(id => this.playlists.find(item => item.id === id))
       .filter((playlist): playlist is ComparePlaylist => !!playlist);
     if (selectedPlaylists.length === 0 || !this.participant) return;
+    this.errorMessage = '';
     this.stage = 'loading';
     this.participant = {
       ...this.participant,
@@ -169,14 +176,17 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
       status: 'loading',
       error: undefined
     };
-    await this.guest.publishParticipant(this.participant);
     try {
+      await this.guest.publishParticipant(this.participant);
+      if (!this.workflowActive) return;
       const token = await this.transientAuth.getAccessToken();
+      if (!this.workflowActive) return;
       const result = await this.source.loadSelection(
         selectedPlaylists,
         token,
         this.participant.spotifyUserId
       );
+      if (!this.workflowActive) return;
       this.participant = {
         ...this.participant,
         tracks: result.tracks,
@@ -184,12 +194,15 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
         dataSource: result.source
       };
       await this.guest.publishParticipant(this.participant);
+      if (!this.workflowActive) return;
       this.proposal = null;
       this.hasApproved = false;
       this.stage = 'ready';
     } catch (error) {
+      if (!this.workflowActive) return;
       this.participant = {...this.participant, status: 'error', error: this.describeError(error)};
       await this.guest.publishParticipant(this.participant).catch(() => {});
+      if (!this.workflowActive) return;
       this.fail(this.participant.error || 'Could not load that playlist.');
     }
   }
@@ -210,22 +223,29 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   async approve(): Promise<void> {
-    if (!this.proposal || !this.participant) return;
+    if (!this.workflowActive || !this.proposal || !this.participant) return;
+    const proposal = this.proposal;
     try {
-      await this.guest.approve(this.proposal.id, this.proposal.contentHash);
+      await this.guest.approve(proposal.id, proposal.contentHash);
+      if (!this.workflowActive || this.proposal?.id !== proposal.id || this.proposal.contentHash !== proposal.contentHash) return;
       this.hasApproved = true;
+      this.errorMessage = '';
+      this.stage = 'review';
     } catch (error) {
+      if (!this.workflowActive || this.proposal?.id !== proposal.id || this.proposal.contentHash !== proposal.contentHash) return;
       this.fail(this.describeError(error));
     }
   }
 
   async leave(): Promise<void> {
+    this.workflowActive = false;
     await this.guest.leave();
     this.transientAuth.clear();
     await this.router.navigate(this.routeCommands('login'));
   }
 
   ngOnDestroy(): void {
+    this.workflowActive = false;
     this.subscriptions.unsubscribe();
     if (this.hasJoinedRoom) {
       void this.guest.leave();
@@ -237,9 +257,13 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
     this.stage = 'joining';
     try {
       this.participantId = await this.guest.join(this.roomId, this.invitationId, this.invitationSecret);
+      if (!this.workflowActive) {
+        await this.guest.leave();
+        return;
+      }
       this.hasJoinedRoom = true;
       window.setTimeout(() => {
-        if (!this.guest.accepted$.value && this.stage === 'joining') {
+        if (this.workflowActive && !this.guest.accepted$.value && this.stage === 'joining') {
           this.fail('The host did not respond. Ask them to keep the room open and generate a new invitation.');
         }
       }, 20_000);
@@ -251,7 +275,9 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   private async loadParticipant(): Promise<void> {
     try {
       const token = await this.transientAuth.getAccessToken();
+      if (!this.workflowActive) return;
       const profile = await this.spotify.getProfile(token);
+      if (!this.workflowActive) return;
       this.participant = {
         id: this.participantId,
         invitationId: this.invitationId,
@@ -262,7 +288,9 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
         tracks: []
       };
       await this.guest.publishParticipant(this.participant);
+      if (!this.workflowActive) return;
       const playlistResult = await this.source.loadPlaylists(token, profile.id);
+      if (!this.workflowActive) return;
       this.playlists = playlistResult.playlists;
       this.playlistDataSource = playlistResult.source;
       this.stage = 'selecting';
@@ -272,11 +300,20 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   private async createPlaylist(proposal: CompareMergeProposal): Promise<void> {
-    if (!this.hasApproved || !this.participant || this.stage === 'saving' || this.stage === 'complete') return;
+    if (!this.workflowActive || proposal.id !== this.proposal?.id || proposal.contentHash !== this.proposal?.contentHash || !this.hasApproved || !this.participant || this.stage === 'saving' || this.stage === 'complete') return;
+    const saveRequest = ++this.saveRequest;
     this.stage = 'saving';
     this.participant = {...this.participant, status: 'saving'};
     try {
       const token = await this.transientAuth.getAccessToken();
+      if (!this.workflowActive) return;
+      if (!this.hasApproved || proposal.id !== this.proposal?.id || proposal.contentHash !== this.proposal.contentHash) {
+        if (saveRequest === this.saveRequest && this.stage === 'saving') {
+          this.stage = this.proposal ? 'review' : 'ready';
+          this.participant = {...this.participant, status: 'ready'};
+        }
+        return;
+      }
       const description = proposal.descriptionsByParticipant?.[this.participant.id] || proposal.description;
       this.saveResult = await this.spotify.createPlaylist(token, proposal.name, description, proposal.tracks, {
         operationId: `compare:${this.roomId}:${proposal.id}:${this.participant.spotifyUserId}`,
@@ -291,7 +328,9 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
         error: this.describeError(error)
       };
     }
+    if (!this.workflowActive) return;
     await this.guest.publishSaveResult(this.saveResult).catch(() => {});
+    if (!this.workflowActive) return;
     this.stage = this.saveResult.success ? 'complete' : 'error';
     if (!this.saveResult.success) this.errorMessage = this.saveResult.error || 'Playlist creation failed.';
   }
@@ -303,6 +342,7 @@ export class CompareRoomJoinComponent implements OnInit, OnDestroy {
   }
 
   private fail(message: string): void {
+    if (!this.workflowActive) return;
     this.errorMessage = message;
     this.stage = 'error';
   }

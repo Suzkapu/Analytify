@@ -1,0 +1,561 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-task-editor.native.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [1.717 seconds] - 2026-10-29T18:49:54.211Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |webkit| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 1791ms
+     × renders History at 866px with native fields and exact assets 411ms
+     × renders Required at 866px with native fields and exact assets 174ms
+     × renders League at 866px with native fields and exact assets 179ms
+     × renders History at 324px with native fields and exact assets 180ms
+     × renders Required at 324px with native fields and exact assets 170ms
+     × renders League at 324px with native fields and exact assets 182ms
+     × renders History at 254px with native fields and exact assets 172ms
+     × renders Required at 254px with native fields and exact assets 163ms
+     × renders League at 254px with native fields and exact assets 155ms
+ ❯ |chromium| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 2010ms
+     × renders History at 866px with native fields and exact assets 384ms
+     × renders Required at 866px with native fields and exact assets 211ms
+     × renders League at 866px with native fields and exact assets 209ms
+     × renders History at 324px with native fields and exact assets 234ms
+     × renders Required at 324px with native fields and exact assets 191ms
+     × renders League at 324px with native fields and exact assets 202ms
+     × renders History at 254px with native fields and exact assets 173ms
+     × renders Required at 254px with native fields and exact assets 201ms
+     × renders League at 254px with native fields and exact assets 205ms
+ ❯ |firefox| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 1620ms
+     × renders History at 866px with native fields and exact assets 260ms
+     × renders Required at 866px with native fields and exact assets 199ms
+     × renders League at 866px with native fields and exact assets 164ms
+     × renders History at 324px with native fields and exact assets 184ms
+     × renders Required at 324px with native fields and exact assets 157ms
+     × renders League at 324px with native fields and exact assets 179ms
+     × renders History at 254px with native fields and exact assets 165ms
+     × renders Required at 254px with native fields and exact assets 163ms
+     × renders League at 254px with native fields and exact assets 145ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-History-866-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-Required-866-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-League-866-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-History-324-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-Required-324-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-League-324-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-History-254-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-Required-254-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/27]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-League-254-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/27]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-History-866-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts/</</< e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:27:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/27]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-League-324-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts/</</< e2e/components/admin-user-task-editor.native.ts:64:58
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                          ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/27]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-task-editor.native.ts/task-History-866-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:64:76
+     62|           expect(image.getBoundingClientRect().height).toBe(image.natu…
+     63|         }
+     64|         await expect.element(page.elementLocator(editor)).toMatchScree…
+       |                                                                            ^
+     65|         fixture.destroy();
+     66|       });
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/27]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  27 failed (27)
+   Start at  19:49:54
+   Duration  4.29s (transform 0ms, setup 2.11s, import 322ms, tests 5.42s, environment 0ms)
+

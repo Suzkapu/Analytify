@@ -1,0 +1,10 @@
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	﻿2026-10-24T12:05:02.4202545Z ##[group]Run mkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4203211Z ^[[36;1mmkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4204163Z ^[[36;1mnode scripts/provision-isolated-friends-runtime.mjs > docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4205799Z ^[[36;1mANALYTIFY_TEST_POSTGRES_ROOT="$(jq -er .postgresRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4207401Z ^[[36;1mANALYTIFY_TEST_POSTGREST_ROOT="$(jq -er .postgrestRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4209183Z ^[[36;1mnode scripts/test-isolated-friends-http-contract.mjs --angular-contract > docs/testing-evidence/design-v2/friends-http-ci-artifacts/contract.log 2>&1^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4280996Z shell: /usr/bin/bash -e {0}
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.4281294Z ##[endgroup]
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.6780603Z Friends runtime provisioning failed: Preinstalled runtime paths must be root-owned and not group/world writable: /usr/share/postgresql/16/extension/pgcrypto.control (uid=0, mode=777).
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:05:02.6835022Z ##[error]Process completed with exit code 1.

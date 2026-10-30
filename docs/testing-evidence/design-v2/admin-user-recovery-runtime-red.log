@@ -1,0 +1,310 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-save-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.131 seconds] - 2026-10-27T19:31:59.585Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > reports an acknowledged write separately and refreshes without submitting it twice
+AssertionError: expected undefined to be 'read-error' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:28:51
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: 'read-error',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > holds only this user busy during recovery and prevents duplicate save, refresh and queue work
+AssertionError: expected undefined to be 'refreshing' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:46:51
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: 'refreshing',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > keeps acknowledged recovery available through repeated read failure, then permits a new explicit save
+AssertionError: expected false to be true // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:63:57
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: false,
+  expected: true,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > distinguishes rejected writes from committed writes and keeps other user feedback independent
+AssertionError: expected undefined to be 'save-error' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:77:51
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: undefined,
+  expected: 'save-error',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > preserves edits made during the first readback and exposes the newer unsaved draft
+AssertionError: expected undefined to be 'saving' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:90:51
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:86:103
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23) {
+  actual: undefined,
+  expected: 'saving',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > suppresses late recovery resolve after route destruction
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:111:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 2,
+  expected: 1,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > suppresses late recovery reject after route destruction
+Error: Late error
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:106:94
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:111:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: 2,
+  expected: 1,
+  showDiff: false,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts (7 tests | 7 failed) 19ms
+     × reports an acknowledged write separately and refreshes without submitting it twice 10ms
+     × holds only this user busy during recovery and prevents duplicate save, refresh and queue work 1ms
+     × keeps acknowledged recovery available through repeated read failure, then permits a new explicit save 2ms
+     × distinguishes rejected writes from committed writes and keeps other user feedback independent 1ms
+     × preserves edits made during the first readback and exposes the newer unsaved draft 1ms
+     × suppresses late recovery resolve after route destruction 1ms
+     × suppresses late recovery reject after route destruction 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > reports an acknowledged write separately and refreshes without submitting it twice
+AssertionError: expected undefined to be 'read-error' // Object.is equality
+
+- Expected:
+"read-error"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:28:51
+     26|     service.listUsers.mockRejectedValueOnce(new Error('Synthetic read …
+     27|     await component.saveUser(component.users[0]);
+     28|     expect(component.userSaveStates.get('Alice')).toBe('read-error');
+       |                                                   ^
+     29|     expect(component.userReadbackRequired.has('Alice')).toBe(true);
+     30|     expect(component.errorMessage).toBe('Synthetic read interruption');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > holds only this user busy during recovery and prevents duplicate save, refresh and queue work
+AssertionError: expected undefined to be 'refreshing' // Object.is equality
+
+- Expected:
+"refreshing"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:46:51
+     44|     const read = held<AdminUserSyncSettings[]>(); service.listUsers.mo…
+     45|     const recovery = component.refreshUserSettings(component.users[0]);
+     46|     expect(component.userSaveStates.get('Alice')).toBe('refreshing');
+       |                                                   ^
+     47|     expect(component.isUserBusy('Alice')).toBe(true); expect(component…
+     48|     await component.refreshUserSettings(component.users[0]); await com…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > keeps acknowledged recovery available through repeated read failure, then permits a new explicit save
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:63:57
+     61|     service.listUsers.mockRejectedValueOnce(new Error('First read fail…
+     62|     await component.saveUser(component.users[0]); await component.refr…
+     63|     expect(component.userReadbackRequired.has('Alice')).toBe(true);
+       |                                                         ^
+     64|     expect(component.userSaveStates.get('Alice')).toBe('read-error');
+     65|     expect(component.errorMessage).toBe('Retry failed'); expect(servic…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > distinguishes rejected writes from committed writes and keeps other user feedback independent
+AssertionError: expected undefined to be 'save-error' // Object.is equality
+
+- Expected:
+"save-error"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:77:51
+     75|     service.updateUser.mockRejectedValueOnce(new Error('Write denied')…
+     76|     await component.saveUser(component.users[0]);
+     77|     expect(component.userSaveStates.get('Alice')).toBe('save-error');
+       |                                                   ^
+     78|     expect(component.userReadbackRequired.has('Alice')).toBe(false);
+     79|     expect(service.listUsers).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > preserves edits made during the first readback and exposes the newer unsaved draft
+AssertionError: expected undefined to be 'saving' // Object.is equality
+
+- Expected:
+"saving"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:90:51
+     88|     const read = held<AdminUserSyncSettings[]>(); service.listUsers.mo…
+     89|     const saving = component.saveUser(component.users[0]);
+     90|     expect(component.userSaveStates.get('Alice')).toBe('saving');
+       |                                                   ^
+     91|     await vi.waitFor(() => expect(service.listUsers).toHaveBeenCalledO…
+     92|     component.users[0].timezone = 'Europe/London';
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:86:103
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > suppresses late recovery resolve after route destruction
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-save-recovery.spec.ts > per-user save acknowledgement and read-only recovery > suppresses late recovery reject after route destruction
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ src/app/features/admin/admin-user-save-recovery.spec.ts:111:32
+    109|     expect(component.successMessage).toBe(''); expect(component.errorM…
+    110|     expect(component.isUserBusy('Alice')).toBe(false);
+    111|     expect(service.updateUser).toHaveBeenCalledOnce();
+       |                                ^
+    112|   });
+    113| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed (7)
+   Start at  20:31:59
+   Duration  771ms (transform 120ms, setup 203ms, import 155ms, tests 19ms, environment 288ms)
+

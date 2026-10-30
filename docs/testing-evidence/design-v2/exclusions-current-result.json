@@ -1,0 +1,114 @@
+{
+  "collectedDate": "2026-10-26",
+  "checkpoint": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "state": "Development changes after checkpoint remain local/uncommitted; no new application publication/deployment.",
+  "changes": [
+    "Removed explicitly excluded Admin runtime-health UI and frontend dependency after canonical desktop/mobile correction",
+    "Removed dead blocked-user management UI and list/unblock frontend adapters; retained live block/report and backend permissions",
+    "Moved Recent runs interactive semantics onto text-only child to remove nested-interactive axe defect without changing layout",
+    "Hid decorative Refresh glyph from accessibility tree; retained exact visible/accessibility label",
+    "Scheduled view checks after native async Admin load/refresh completion; real browser confirms loading/busy/error recovery",
+    "Required isolated Admin browser suite in preview checks and excluded it from ordinary backend environment"
+  ],
+  "canonical": "admin-health-canonical-exclusion.json",
+  "unit": {
+    "passed": 39,
+    "files": 5,
+    "log": "exclusions-current-unit.log"
+  },
+  "browser": {
+    "passed": 12,
+    "exit": 0,
+    "log": "admin-exclusion-current-browser.log",
+    "configuration": "playwright.admin-exclusion.config.ts",
+    "projects": [
+      "desktop",
+      "mobile",
+      "firefox-stats",
+      "webkit-stats"
+    ],
+    "widths": [
+      1440,
+      390
+    ],
+    "heights": [
+      600,
+      1000
+    ],
+    "checks": [
+      "retained settings/policies/users/runs/appealed reports",
+      "no runtimehealth RPC/panel",
+      "nonadmin guard denies all privileged inventory reads",
+      "native Enter/Space/chevron and independent run refresh",
+      "visible keyboardfocus",
+      "full refresh failure/cached content/recovery",
+      "hard axe; no overflow; no unexpected writes/runtime errors"
+    ],
+    "sourceHashes": {
+      "e2e/design-v2-admin-exclusion.spec.ts": "b95e9083ed291efe3d15fb4e52f23c6b6fcaf76580a3810085669f470b3897a4",
+      "playwright.admin-exclusion.config.ts": "9f54882373c6b08dd52dff3d1b62da2039baa96ab6c2b05c9518b5ffdbd7e10f",
+      "playwright.config.ts": "2d335971a83ef683f433daa9354ff431f72e5f911297b0785d775d4fb0ed274e",
+      "src/app/features/admin/admin.component.ts": "23469e8e1e7a65ed6e6b53b357e28322688dc4453b87394d7cde63d9ad0123f4",
+      "src/app/features/admin/admin.component.html": "94e3808422f674b4ecd5262ae576094e5f9051bf5b8783add3a6acd14987b5d4",
+      "src/app/features/admin/admin.component.scss": "19244e959884f7dfdfad9fc10131c5a0408b2514dde0e11a7aadfd7a58fece8b",
+      ".github/workflows/preview.yml": "c108c3c7f20ed76401805cc3e897d9dcc5352261b52e6b2c1e337952df5efdc8",
+      "scripts/design-v2-test-policy.test.mjs": "53316bd5f899e0363688e88bdc3222749c7c0b29ec505031d7d9c0753bf9e113"
+    }
+  },
+  "combinedCI": {
+    "command": "npm run verify:ci",
+    "exit": 0,
+    "frontendPassed": 2318,
+    "frontendFiles": 186,
+    "documentedHostedIntegrationSkipped": 1,
+    "workerPassed": 218,
+    "edgePassed": 83,
+    "log": "exclusions-final-ci.log",
+    "sourceHashes": "exclusions-ci-source-hashes.json",
+    "sourceCount": 662,
+    "driftAtTerminal": []
+  },
+  "frontendCoverage": {
+    "lines": {
+      "total": 11425,
+      "covered": 10353,
+      "skipped": 0,
+      "pct": 90.61
+    },
+    "statements": {
+      "total": 13492,
+      "covered": 12015,
+      "skipped": 0,
+      "pct": 89.05
+    },
+    "functions": {
+      "total": 2770,
+      "covered": 2435,
+      "skipped": 0,
+      "pct": 87.9
+    },
+    "branches": {
+      "total": 8755,
+      "covered": 7288,
+      "skipped": 0,
+      "pct": 83.24
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "frontendProductionSources": 166,
+  "denominatorChange": "Actual deletion of one unreachable, explicitly excluded production component; no new coverage exclusion or ignore annotation. Six obsolete health tests removed; three retained admin regressions added. Dead list/unblock test replaced by denied-live-blocking security boundary test.",
+  "visualReview": "Root viewed desktop/mobile WebKit current captures. Excluded health is absent and retained sections remain. Overall Administration still uses legacy composition and differs from canonical; no full-page or golden parity certificate.",
+  "limits": [
+    "Frontend below98minimum; all retained feature migration and100aim incomplete",
+    "Overall Admin layout/state/Figma parity remains open",
+    "Artist/Compare visible retry controls remain absent",
+    "Provisional sidebar motion and wider full-page visual acceptance remain open",
+    "One hosted integration skip; selected isolated Friends HTTP/Angular contract verified separately",
+    "Browser Admin service is deterministic mock transport, not production or hosted real-admin contract"
+  ]
+}

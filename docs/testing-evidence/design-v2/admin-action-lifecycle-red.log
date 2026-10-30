@@ -1,0 +1,545 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.350 seconds] - 2026-10-26T21:16:55.576Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts (19 tests | 19 failed) 596ms
+     × does not start policy readback after a held write completes on a destroyed route 145ms
+     × does not publish an old policy readback after destroy 28ms
+     × does not publish an old policy readback after new load 17ms
+     × ignores a held site save resolve after destruction 15ms
+     × ignores a held site save reject after destruction 15ms
+     × ignores a queued user resolve without refreshing runs after destruction 25ms
+     × ignores a queued user reject without refreshing runs after destruction 17ms
+     × never opens a destructive confirmation when a profile review completes after navigation away 19ms
+     × does not read private user inventory after a confirmed deletion finishes on a destroyed route 68ms
+     × does not read the private moderation inbox after a write finishes on a destroyed route 20ms
+     × does not navigate when demo creation resolves after route destruction 26ms
+     × ignores a synthetic notification resolve after route destruction 14ms
+     × ignores a synthetic notification reject after route destruction 12ms
+     × ignores a moderation readback resolve after a newer dashboard load 65ms
+     × ignores a moderation readback reject after a newer dashboard load 62ms
+     × ignores an old policy readback rejection after a newer dashboard load 13ms
+     × does not start a conflicting action for the same user while save first is pending 12ms
+     × does not start a conflicting action for the same user while queue first is pending 11ms
+     × does not initiate administrative effects from an already destroyed component 11ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 19 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not start policy readback after a held write completes on a destroyed route
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:49:48
+     47|     expect(service.updateSyncSchedulePolicy).toHaveBeenCalledExactlyOn…
+     48|     fixture.destroy(); write.resolve(); await action;
+     49|     expect(service.loadSyncSchedulePolicy).not.toHaveBeenCalled();
+       |                                                ^
+     50|     expect(service.listUsers).not.toHaveBeenCalled();
+     51|     expect(component.successMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not publish an old policy readback after destroy
+AssertionError: expected [ { userId: 'synthetic-user', …(2) } ] to deeply equal [ { userId: 'synthetic-user', …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "displayName": "Synthetic user",
++     "displayName": "Old inventory",
+      "spotifyId": "pending:synthetic",
+      "userId": "synthetic-user",
+    },
+  ]
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:66:29
+     64|     const currentUsers = component.users;
+     65|     readback.resolve([{...user, displayName: 'Old inventory'}]); await…
+     66|     expect(component.users).toEqual(currentUsers);
+       |                             ^
+     67|     expect(component.successMessage).toBe('');
+     68|     expect(component.errorMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not publish an old policy readback after new load
+AssertionError: expected [ { userId: 'synthetic-user', …(2) } ] to deeply equal [ { userId: 'synthetic-user', …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "displayName": "New inventory",
++     "displayName": "Old inventory",
+      "spotifyId": "pending:synthetic",
+      "userId": "synthetic-user",
+    },
+  ]
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:66:29
+     64|     const currentUsers = component.users;
+     65|     readback.resolve([{...user, displayName: 'Old inventory'}]); await…
+     66|     expect(component.users).toEqual(currentUsers);
+       |                             ^
+     67|     expect(component.successMessage).toBe('');
+     68|     expect(component.errorMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a held site save resolve after destruction
+AssertionError: expected 'Website settings saved.' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Website settings saved.
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:77:38
+     75|     if (outcome === 'resolve') write.resolve(); else write.reject(new …
+     76|     await action;
+     77|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                      ^
+     78|   });
+     79|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a held site save reject after destruction
+AssertionError: expected 'Old site failure' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old site failure
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:77:79
+     75|     if (outcome === 'resolve') write.resolve(); else write.reject(new …
+     76|     await action;
+     77|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                                                               ^
+     78|   });
+     79|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a queued user resolve without refreshing runs after destruction
+AssertionError: expected "refreshRuns" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st refreshRuns call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:87:25
+     85|     if (outcome === 'resolve') queued.resolve(2); else queued.reject(n…
+     86|     await action;
+     87|     expect(refresh).not.toHaveBeenCalled(); expect(service.listRuns).n…
+       |                         ^
+     88|     expect(component.successMessage).toBe(''); expect(component.errorM…
+     89|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a queued user reject without refreshing runs after destruction
+AssertionError: expected 'Old queue failure' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old queue failure
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:88:79
+     86|     await action;
+     87|     expect(refresh).not.toHaveBeenCalled(); expect(service.listRuns).n…
+     88|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                                                               ^
+     89|   });
+     90|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > never opens a destructive confirmation when a profile review completes after navigation away
+AssertionError: expected "Mock" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st Mock call:
+
+    Array [
+      "Delete the reviewed incomplete registration pending:synthetic? No linked data or credentials were found.",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:96:25
+     94|     const confirm = vi.spyOn(window, 'confirm').mockReturnValue(true);
+     95|     const action = component.reviewIncompleteProfile(user); fixture.de…
+     96|     expect(confirm).not.toHaveBeenCalled(); expect(service.deleteRevie…
+       |                         ^
+     97|     expect(service.listUsers).not.toHaveBeenCalled(); expect(component…
+     98|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not read private user inventory after a confirmed deletion finishes on a destroyed route
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:107:35
+    105|     await vi.waitFor(() => expect(service.deleteReviewedPendingProfile…
+    106|     fixture.destroy(); deleted.resolve(); await action;
+    107|     expect(service.listUsers).not.toHaveBeenCalled(); expect(component…
+       |                                   ^
+    108|   });
+    109|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not read the private moderation inbox after a write finishes on a destroyed route
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:114:47
+    112|     const write = held<void>(); service.updateModerationReport.mockRet…
+    113|     const action = component.saveModerationReport(report); fixture.des…
+    114|     expect(service.listModerationReports).not.toHaveBeenCalled(); expe…
+       |                                               ^
+    115|   });
+    116|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not navigate when demo creation resolves after route destruction
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Array [
+        "/song-league",
+        "synthetic-league",
+      ],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:121:33
+    119|     const created = held<string>(); service.createDemoLeague.mockRetur…
+    120|     const action = component.createDemoLeague(); fixture.destroy(); cr…
+    121|     expect(router.navigate).not.toHaveBeenCalled(); expect(component.e…
+       |                                 ^
+    122|   });
+    123|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a synthetic notification resolve after route destruction
+AssertionError: expected 'Test notification sent to 1 registere…' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Test notification sent to 1 registered PWA device.
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:130:38
+    128|     if (outcome === 'resolve') sent.resolve(1); else sent.reject(new E…
+    129|     await action;
+    130|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                      ^
+    131|   });
+    132|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a synthetic notification reject after route destruction
+AssertionError: expected 'Old synthetic response' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old synthetic response
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:130:79
+    128|     if (outcome === 'resolve') sent.resolve(1); else sent.reject(new E…
+    129|     await action;
+    130|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                                                               ^
+    131|   });
+    132|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a moderation readback resolve after a newer dashboard load
+AssertionError: expected [ { …(2) } ] to deeply equal [ { …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "receiptCode": "CURRENT-INBOX",
++     "receiptCode": "OLD-INBOX",
+      "reportId": "synthetic-report",
+    },
+  ]
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:145:41
+    143|     else inbox.reject(new Error('Old inbox failure'));
+    144|     await action;
+    145|     expect(component.moderationReports).toEqual([current]);
+       |                                         ^
+    146|     expect(component.successMessage).toBe(''); expect(component.errorM…
+    147|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores a moderation readback reject after a newer dashboard load
+AssertionError: expected 'Old inbox failure' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old inbox failure
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:146:79
+    144|     await action;
+    145|     expect(component.moderationReports).toEqual([current]);
+    146|     expect(component.successMessage).toBe(''); expect(component.errorM…
+       |                                                                               ^
+    147|   });
+    148|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > ignores an old policy readback rejection after a newer dashboard load
+AssertionError: expected 'Old policy inventory failure' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Old policy inventory failure
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:156:36
+    154|     await component.load(); old.reject(new Error('Old policy inventory…
+    155|     expect(component.users[0].displayName).toBe('Current inventory');
+    156|     expect(component.errorMessage).toBe(''); expect(component.successM…
+       |                                    ^
+    157|     expect(component.policyRefreshRequired.has(policy.taskKey)).toBe(f…
+    158|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not start a conflicting action for the same user while save first is pending
+AssertionError: expected "vi.fn()" to be called +0 times, but got 1 times
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:170:33
+    168|     write.resolve(); queued.resolve(1); await Promise.all([first, seco…
+    169|     expect(service.updateUser).toHaveBeenCalledTimes(order === 'save f…
+    170|     expect(service.enqueueUser).toHaveBeenCalledTimes(order === 'queue…
+       |                                 ^
+    171|     expect(component.isUserBusy(user.userId)).toBe(false);
+    172|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not start a conflicting action for the same user while queue first is pending
+AssertionError: expected "vi.fn()" to be called +0 times, but got 1 times
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:169:32
+    167|     // Release both promises even on a failing implementation, so no a…
+    168|     write.resolve(); queued.resolve(1); await Promise.all([first, seco…
+    169|     expect(service.updateUser).toHaveBeenCalledTimes(order === 'save f…
+       |                                ^
+    170|     expect(service.enqueueUser).toHaveBeenCalledTimes(order === 'queue…
+    171|     expect(component.isUserBusy(user.userId)).toBe(false);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/19]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts > administration action ownership after leaving the route > does not initiate administrative effects from an already destroyed component
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+  2nd vi.fn() call:
+
+    Array []
+
+
+Number of calls: 2
+
+ ❯ src/app/features/admin/admin-action-lifecycle-boundaries.spec.ts:181:69
+    179|     await component.reviewIncompleteProfile(user); await component.sav…
+    180|     await component.createDemoLeague(); await component.sendTestNotifi…
+    181|     for (const method of Object.values(service)) expect(method).not.to…
+       |                                                                     ^
+    182|     expect(router.navigate).not.toHaveBeenCalled(); expect(confirm).no…
+    183|     expect(component.successMessage).toBe(''); expect(component.errorM…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/19]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  19 failed (19)
+   Start at  22:16:55
+   Duration  1.42s (transform 139ms, setup 229ms, import 180ms, tests 596ms, environment 304ms)
+

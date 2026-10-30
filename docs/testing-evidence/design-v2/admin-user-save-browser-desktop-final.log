@@ -1,0 +1,50 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop --grep user save retains edits --output=docs/testing-evidence/design-v2/admin-user-save-browser-desktop-final-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:76124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:76124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:77099) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work (30.3s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Save', exact: true })
+
+
+      381 |   await timezone.fill('Europe/London');
+      382 |   const save = card.getByRole('button', {name: 'Save', exact: true});
+    > 383 |   await save.click();
+          |              ^
+      384 |   await expect.poll(() => fixture.writes.length).toBe(1);
+      385 |   await expect(save).toBeDisabled();
+      386 |   await expect(card.getByRole('button', {name: 'Run enabled tasks', exact: true})).toBeDisabled();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:383:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-user-save-browser-desktop-final-artifacts/design-v2-admin-exclusion--33ed4-ng-them-or-duplicating-work-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-user-save-browser-desktop-final-artifacts/design-v2-admin-exclusion--33ed4-ng-them-or-duplicating-work-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-user-save-browser-desktop-final-artifacts/design-v2-admin-exclusion--33ed4-ng-them-or-duplicating-work-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-user-save-browser-desktop-final-artifacts/design-v2-admin-exclusion--33ed4-ng-them-or-duplicating-work-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work 

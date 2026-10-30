@@ -16,7 +16,7 @@ async function openNavigationMenu(page: Page) {
 test('one ambient renderer persists through overlays, routes, and shell modes', async ({page}) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await ambient.evaluate(element => { (element as HTMLElement & {ambientIdentity?: string}).ambientIdentity = 'persistent'; });
@@ -51,7 +51,7 @@ test('one ambient renderer persists through overlays, routes, and shell modes', 
 
 test('v2 ambient layer is decorative, fixed-glow, particle-scroll-responsive, and reflow-safe', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
-  await page.goto('/new/login');
+  await page.goto('/login');
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCount(1);
   await expect(ambient).toHaveAttribute('aria-hidden', 'true');
@@ -122,7 +122,7 @@ for (const nativeTransitions of [true, false]) {
     }, nativeTransitions);
     await mockSpotify(page);
     await seedAuthenticatedBrowser(page);
-    await page.goto('/new/playlists');
+    await page.goto('/playlists');
     await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
     if (nativeTransitions) expect(await page.evaluate(() => (window as any).__nativeTransitionAvailable)).toBe(true);
     const ambient = page.locator('app-ambient-background');
@@ -145,7 +145,7 @@ for (const nativeTransitions of [true, false]) {
 
 test('v2 ambient layer remains static with reduced motion', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
-  await page.goto('/new/login');
+  await page.goto('/login');
   const ambient = page.locator('app-ambient-background');
   const initial = await ambient.evaluate(element => ({
     x: (element as HTMLElement).style.getPropertyValue('--ambient-primary-x'),
@@ -182,7 +182,7 @@ test('reduced motion suppresses native route snapshot animations without losing 
   });
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   await expect(page.getByRole('heading', {name: 'Your playlists', exact: true})).toBeVisible();
   const restoreViewport = await openNavigationMenu(page);
   await page.getByRole('link', {name: /Compare playlists/}).click();
@@ -199,7 +199,7 @@ test('canonical particle phases loop independently through a complete native tim
   const canonical = JSON.parse(context.content.find((entry: {type: string}) => entry.type === 'text').text);
   await page.emulateMedia({reducedMotion: 'no-preference'});
   await page.setViewportSize({width: 1440, height: 810});
-  await page.goto('/new/login');
+  await page.goto('/login');
   const geometry: unknown[] = [];
   for (const viewport of [{width: 1440, height: 810}, {width: 390, height: 867}]) {
     await page.setViewportSize(viewport);
@@ -255,7 +255,7 @@ test('canonical particle phases loop independently through a complete native tim
 test('particle cohort keeps its phase across desktop mobile desktop resizing', async ({page}) => {
   await page.emulateMedia({reducedMotion: 'no-preference'});
   await page.setViewportSize({width: 1440, height: 810});
-  await page.goto('/new/login');
+  await page.goto('/login');
   await expect(page.locator('.ambient-dot:visible')).toHaveCount(26);
   await page.locator('.ambient-dot').evaluateAll(async elements => {
     const first = elements[0].getAnimations()[0]; const extra = elements[12].getAnimations()[0];

@@ -13,10 +13,10 @@ export default defineConfig({
     use: {...project.use, ...(['desktop', 'mobile'].includes(project.name ?? '') ? {channel: 'chromium'} : {})}
   })),
   outputDir: 'docs/testing-evidence/design-v2/friends-browser-artifacts',
-  use: {...base.use, baseURL: 'http://127.0.0.1:4214/new/'},
+  use: {...base.use, baseURL: 'http://127.0.0.1:4214/'},
   webServer: {
     command: 'npm start -- --configuration browser-testing --host 127.0.0.1 --port 4214 --watch=false --hmr=false --live-reload=false',
-    url: 'http://127.0.0.1:4214/new/login',
+    url: 'http://127.0.0.1:4214/login',
     reuseExistingServer: false,
     timeout: 120_000
   }

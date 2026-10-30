@@ -40,7 +40,7 @@ async function prepareNavigation(page: Page, motion: 'no-preference' | 'reduce')
 
 test('Navigation preferences match canonical section typography and responsive layout', async ({page}, info) => {
   const {unexpected, errors} = await prepareNavigation(page, 'reduce');
-  await page.goto('/new/settings/navigation');
+  await page.goto('/settings/navigation');
   const panel = page.locator('v2-settings-navigation-preferences');
   await expect(panel.getByRole('status')).toHaveText('3 of 5 shortcuts selected');
   const samples = [];
@@ -78,7 +78,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     const {unexpected, errors} = await prepareNavigation(page, motion);
     for (const width of [1440, 390]) {
       await page.setViewportSize({width, height: 900});
-      await page.goto('/new/settings/navigation');
+      await page.goto('/settings/navigation');
       await expect(page.getByRole('status').filter({hasText: /^3 of 5 shortcuts selected$/})).toBeVisible();
       if (width > 760) {
         await page.getByRole('complementary', {name: 'Desktop sidebar'}).getByRole('link', {name: 'Settings', exact: true}).press('Enter');
@@ -86,12 +86,12 @@ for (const motion of ['no-preference', 'reduce'] as const) {
         await page.getByRole('button', {name: 'Open navigation menu', exact: true}).press('Enter');
         await page.getByRole('dialog', {name: 'Navigation menu', exact: true}).getByRole('link', {name: 'Settings', exact: true}).press('Enter');
       }
-      await expect(page).toHaveURL(/\/new\/settings\/account$/);
+      await expect(page).toHaveURL(/\/settings\/account$/);
       const account = page.getByRole('region', {name: 'Account settings'});
       await expect(account.getByRole('button', {name: 'Log out', exact: true})).toBeVisible();
       await expect(account.getByRole('link', {name: 'Spotify connection'})).toHaveAttribute('href', 'https://www.spotify.com/account/apps/');
       await expect(account.getByRole('link', {name: 'Spotify connection'})).toHaveAttribute('rel', 'noopener noreferrer');
-      await expect(account.getByRole('link', {name: 'Legal & privacy'})).toHaveAttribute('href', '/new/legal');
+      await expect(account.getByRole('link', {name: 'Legal & privacy'})).toHaveAttribute('href', '/legal');
       await page.getByRole('navigation', {name: 'Settings sections'}).getByRole('link', {name: 'Data', exact: true}).press('Enter');
       await expect(page.getByRole('switch', {name: 'Cloud Backup', exact: true})).toBeVisible();
       await page.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
@@ -109,7 +109,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
   });
   test(`Canonical app header, gutters and document footer (${motion})`, async ({page}, info) => {
     const {unexpected, errors} = await prepareNavigation(page, motion);
-    await page.goto('/new/settings/account');
+    await page.goto('/settings/account');
     await expect(page.getByRole('region', {name: 'Account settings'})).toBeVisible();
     const geometry = [];
     for (const width of [1440, 1920, 1024, 768, 761, 760, 390, 360, 320]) for (const height of [480, 1000]) {
@@ -200,7 +200,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
   test(`Desktop sidebar keeps geometry and mobile independence (${motion})`, async ({page}, info) => {
     const {unexpected, errors} = await prepareNavigation(page, motion);
     await page.setViewportSize({width: 1440, height: 900});
-    await page.goto('/new/settings/navigation');
+    await page.goto('/settings/navigation');
     await expect(page.getByRole('status').filter({hasText: /^3 of 5 shortcuts selected$/})).toBeVisible();
     const sidebar = page.getByRole('complementary', {name: 'Desktop sidebar'});
     if (motion === 'reduce') {
@@ -293,7 +293,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     });
     const {unexpected, errors} = await prepareNavigation(page, motion);
     await page.setViewportSize({width: 600, height: 900});
-    await page.goto('/new/settings/navigation');
+    await page.goto('/settings/navigation');
     const panel = page.locator('v2-settings-navigation-preferences');
     const choices = panel.locator('.shortcut-choice');
     const count = panel.getByRole('status').filter({hasText: /^\d of 5 shortcuts selected$/});
@@ -374,7 +374,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
   });
   test(`Device shortcut limits, responsive geometry and five-choice persistence (${motion})`, async ({page}, info) => {
     const {unexpected, errors} = await prepareNavigation(page, motion);
-    await page.goto('/new/settings/navigation');
+    await page.goto('/settings/navigation');
     const panel = page.locator('v2-settings-navigation-preferences');
     const choice = (name: string) => panel.getByRole('button', {name, exact: true});
     const count = panel.getByRole('status').filter({hasText: /^\d of 5 shortcuts selected$/});
@@ -388,7 +388,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await choice('Song Leagues').press('Enter');
     await expect(count).toHaveText('5 of 5 shortcuts selected');
     await expect(bar.getByRole('link', {includeHidden: true})).toHaveText(['Playlists', 'Stats', 'History', 'Friends', 'Song Leagues']);
-    await expect(bar.locator('a').filter({hasText: 'Friends'})).toHaveAttribute('href', '/new/friends');
+    await expect(bar.locator('a').filter({hasText: 'Friends'})).toHaveAttribute('href', '/friends');
     await expect(choice('Private Sharing')).toBeEnabled();
     await choice('Private Sharing').press('Enter');
     await expect(panel.getByText('Five shortcuts selected. Remove one before adding another.', {exact: true})).toBeVisible();
@@ -437,7 +437,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
   });
   test(`Empty shortcut persistence, reachable menu and focus recovery (${motion})`, async ({page}, info) => {
     const {unexpected, errors} = await prepareNavigation(page, motion);
-    await page.goto('/new/settings/navigation');
+    await page.goto('/settings/navigation');
     const panel = page.locator('v2-settings-navigation-preferences');
     const choice = (name: string) => panel.getByRole('button', {name, exact: true});
     const count = panel.getByRole('status').filter({hasText: /^\d of 5 shortcuts selected$/});

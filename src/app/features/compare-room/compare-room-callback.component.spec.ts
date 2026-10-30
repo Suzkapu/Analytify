@@ -3,7 +3,7 @@ import {CompareRoomCallbackComponent} from './compare-room-callback.component';
 
 describe('CompareRoomCallbackComponent', () => {
   it('returns to the exact v2 join route saved before Spotify authorization', async () => {
-    const returnUrl = '/new/compare-room/join/room-1#invitation=invite&secret=secret';
+    const returnUrl = '/compare-room/join/room-1#invitation=invite&secret=secret';
     const router = {navigateByUrl: vi.fn().mockResolvedValue(true)};
     const auth = {handleCallback: vi.fn().mockResolvedValue(returnUrl)};
     const route = {snapshot: {queryParamMap: {get: (key: string) => ({code: 'code', state: 'state'} as any)[key]}}};

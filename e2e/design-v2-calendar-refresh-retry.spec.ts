@@ -40,7 +40,7 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) test(`cached c
     }
     return route.fulfill({json: []});
   });
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
   await showStatsDateControls(page);
   const opener = page.getByRole('button', {name: 'Ranking date', exact: true});

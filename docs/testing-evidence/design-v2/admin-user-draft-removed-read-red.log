@@ -1,0 +1,64 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-draft-ownership.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.209 seconds] - 2026-10-27T20:08:39.588Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not republish a late recovery read failure for a user removed by a newer inventory
+AssertionError: expected true to be false // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:247:51
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: true,
+  expected: false,
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts (17 tests | 2 failed) 286ms
+     × does not republish a late save read failure for a user removed by a newer inventory 56ms
+     × does not republish a late recovery read failure for a user removed by a newer inventory 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not republish a late save read failure for a user removed by a newer inventory
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not republish a late recovery read failure for a user removed by a newer inventory
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:247:51
+    245|     old.reject(new Error('Stale private read failure')); await pending;
+    246|     expect(component.users.map(value => value.userId)).toEqual(['Bob']…
+    247|     expect(component.userSaveStates.has('Alice')).toBe(false);
+       |                                                   ^
+    248|     expect(component.userReadbackRequired.has('Alice')).toBe(false);
+    249|     expect(component.errorMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  21:08:39
+   Duration  1.04s (transform 126ms, setup 203ms, import 164ms, tests 286ms, environment 287ms)
+

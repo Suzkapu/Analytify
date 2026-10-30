@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-30",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "complete": false,
+  "change": "Review now shares the same-user Save/Run busy lifetime through request, confirmation, deletion and readback; independent users remain usable. Root Review action uses the same guard.",
+  "regression": {
+    "red": {
+      "failed": 10,
+      "passed": 1,
+      "exit": 1,
+      "log": "admin-pending-review-lifetimes-red.log"
+    },
+    "green": {
+      "passed": 68,
+      "files": 5,
+      "exit": 0,
+      "log": "admin-pending-review-lifetimes-green.log"
+    }
+  },
+  "ci": {
+    "passedFrontend": 2586,
+    "frontendFiles": 204,
+    "documentedHostedSkip": 1,
+    "workerPassed": 218,
+    "edgePassed": 83,
+    "exit": 0,
+    "log": "admin-pending-review-lifetimes-ci.log",
+    "initialJavaScriptBytes": 849164
+  },
+  "frontendCoverage": {
+    "sources": 177,
+    "missing": [],
+    "metrics": {
+      "lines": {
+        "total": 11731,
+        "covered": 10747,
+        "skipped": 0,
+        "pct": 91.61
+      },
+      "statements": {
+        "total": 13887,
+        "covered": 12526,
+        "skipped": 0,
+        "pct": 90.19
+      },
+      "functions": {
+        "total": 2828,
+        "covered": 2508,
+        "skipped": 0,
+        "pct": 88.68
+      },
+      "branches": {
+        "total": 9015,
+        "covered": 7613,
+        "skipped": 0,
+        "pct": 84.44
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "final98Exit": 1,
+    "newExclusions": []
+  },
+  "backendCoverage": "Unchanged source/report/runner hashes and final98gates recorded in admin-card-backend-reconfirmation.json, admin-card-worker-98.log and admin-card-edge-98.log; current CI reran218worker/83edge tests. Retained L/S/F/B99.66/99.72/100/98.81 worker,100/99.88/100/99.74 edge.",
+  "browser": {
+    "uniquePassedAcrossScopedRuns": 88,
+    "scope": "24mounted save/resizing/keyboard +52non-policy retained/capability +12split policy cases. The original3passing combined-policy runs are superseded, not counted again.",
+    "policySplit": {
+      "passed": 12,
+      "exit": 0,
+      "log": "admin-card-policy-split-browser.log",
+      "unchangedTimeouts": true,
+      "unchangedAssertions": "All original eight viewport/axe/screenshot checks retained, split by height; complete mutation/recovery/keyboard/style checks preserved."
+    },
+    "limitations": "Lifetime review mutation behavior currently verified by focused/full unit suites; actual custom-dialog browser flow remains open. Existing non-policy browser runs predate the guard change and certify their scoped prior card workflows only."
+  },
+  "figma": {
+    "family": "1142:36586",
+    "references": "1142:36587",
+    "variants": 16,
+    "widths": [
+      576,
+      358
+    ],
+    "states": [
+      "Reviewing",
+      "Blocked",
+      "Eligible",
+      "Deleting",
+      "Review error",
+      "Deletion not confirmed",
+      "Deleted refresh error",
+      "Deleted refreshing"
+    ],
+    "allStatePairsVisuallyReviewed": true,
+    "mutations": "admin-pending-review-figma-mutations.json",
+    "corrections": [
+      "Prototype note inherited hidden: made all16identity/details visible before final review.",
+      "Uncertain transport outcome: no false kept/deleted claim, no repeated delete; read-only reconciliation action."
+    ],
+    "remaining": "Blurred overlay/short-window composition, prototype actions, custom Angular dialog/focus and acknowledged/uncertain deletion recovery remain unimplemented."
+  },
+  "sourceHashes": "admin-pending-review-lifetimes-source-hashes.json",
+  "sourceHashCount": 725,
+  "sourceDrift": [],
+  "remaining": [
+    "Frontend all four98minimum metrics unmet;100aim remains.",
+    "Replace native confirmation after overlay/prototype design, add focus/Cancel-last/held-dialog races.",
+    "Acknowledged and uncertain deletion require read-only reconciliation without repeated delete.",
+    "Isolated Admin SQL/HTTP contracts and all remaining original feature/parity/motion gates."
+  ],
+  "nextSlice": "Finish canonical overlay/short-window compositions, then implement accessible pending-review state machine with safe recovery and meaningful browser/service tests.",
+  "releaseBoundaries": "No commits/pushes/main merge/deployment/shared backend/service/database changes; no production identities or real notifications."
+}

@@ -1,0 +1,77 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/*.spec.ts --include=src/app/core/admin/*.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.670 seconds] - 2026-10-26T20:52:25.070Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-mutation-boundaries.spec.ts > retained administration mutation boundaries > keeps a schedule save busy through dependent reads and surfaces a failed user refresh
+AssertionError: expected [] to deeply equal [ { …(4) } ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-mutation-boundaries.spec.ts:66:40
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: [],
+  expected: [
+    {
+      taskKey: 'listening_history',
+      available: true,
+      intervalValue: 1,
+      intervalUnit: 'hours'
+    }
+  ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-mutation-boundaries.spec.ts (10 tests | 1 failed) 44ms
+     × keeps a schedule save busy through dependent reads and surfaces a failed user refresh 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-mutation-boundaries.spec.ts > retained administration mutation boundaries > keeps a schedule save busy through dependent reads and surfaces a failed user refresh
+AssertionError: expected [] to deeply equal [ { …(4) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "available": true,
+-     "intervalUnit": "hours",
+-     "intervalValue": 1,
+-     "taskKey": "listening_history",
+-   },
+- ]
++ []
+
+ ❯ src/app/features/admin/admin-mutation-boundaries.spec.ts:66:40
+     64|     refreshed.reject({details: 'Synthetic user inventory unavailable'}…
+     65|     await first;
+     66|     expect(component.schedulePolicies).toEqual([policy]);
+       |                                        ^
+     67|     expect(component.errorMessage).toBe('Synthetic user inventory unav…
+     68|     expect(component.successMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 93 passed (94)
+   Start at  21:52:25
+   Duration  3.27s (transform 442ms, setup 2.73s, import 1.32s, tests 2.67s, environment 4.16s)
+

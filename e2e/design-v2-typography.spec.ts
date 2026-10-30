@@ -7,7 +7,7 @@ for (const width of [390, 1440]) {
     page.on('pageerror', error => browserErrors.push(error.message));
     await page.setViewportSize({width, height: 1080});
     const measurements = [];
-    for (const path of ['/new/login', '/new/legal']) {
+    for (const path of ['/login', '/legal']) {
       await page.goto(path);
       const title = page.getByRole('main').getByRole('heading', {level: 1}).first();
       await expect(title).toBeVisible();
@@ -37,11 +37,11 @@ test('initially hidden public page mounts with reduced motion without browser re
     Object.defineProperty(document, 'hidden', {get: () => true, configurable: true});
   });
   await page.emulateMedia({reducedMotion: 'reduce'});
-  await page.goto('/new/login');
+  await page.goto('/login');
   await expect(page.getByRole('main').getByRole('heading', {level: 1}).first()).toBeVisible();
   const ambient = page.locator('app-ambient-background');
   await expect(ambient).toHaveCSS('--ambient-intensity', /\d/);
-  await page.goto('/new/legal');
+  await page.goto('/legal');
   await expect(page.getByRole('main').getByRole('heading', {level: 1}).first()).toBeVisible();
   expect(browserErrors).toEqual([]);
 });

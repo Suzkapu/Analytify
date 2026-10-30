@@ -70,7 +70,7 @@ describe('Compare coordinator retained workflow boundaries', () => {
     expect(service.canPrepareResult()).toBe(true);
     const invitation = await service.addInvitation();
     const url = new URL(invitation.joinUrl);
-    expect(url.pathname).toBe(`/new/compare-room/join/${service.currentRoomId}`);
+    expect(url.pathname).toBe(`/compare-room/join/${service.currentRoomId}`);
     expect(url.search).toBe('');
     expect(new URLSearchParams(url.hash.slice(1)).get('secret')).toBe(invitation.secret);
     expect(service.canPrepareResult()).toBe(false);

@@ -17,7 +17,7 @@ describe('PersonalSpotifyCallbackComponent', () => {
     query = {};
     auth = {
       clearPendingPersonalAppAuthorization: vi.fn(),
-      handlePersonalAppCallback: vi.fn().mockResolvedValue('/new/playlists')
+      handlePersonalAppCallback: vi.fn().mockResolvedValue('/playlists')
     };
     router = { navigateByUrl: vi.fn().mockResolvedValue(true), createUrlTree: vi.fn() };
     await TestBed.configureTestingModule({
@@ -47,6 +47,6 @@ describe('PersonalSpotifyCallbackComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(auth.handlePersonalAppCallback).toHaveBeenCalledWith('code', 'state');
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/playlists');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/playlists');
   });
 });

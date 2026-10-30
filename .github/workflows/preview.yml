@@ -1,4 +1,4 @@
-name: Verify and deploy development preview
+name: Verify and deploy v2 root frontend
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
         description: Run only isolated Friends contracts without deployment
         type: boolean
         required: true
-        default: true
+        default: false
 
 permissions:
   contents: read
@@ -65,6 +65,8 @@ jobs:
         run: npm run test:native-components
       - name: Verify isolated device Navigation preferences
         run: npx playwright test --config=playwright.navigation.config.ts
+      - name: Verify retained administration and excluded-feature boundaries
+        run: npx playwright test --config=playwright.admin-exclusion.config.ts
       - name: Preserve test evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -76,10 +78,11 @@ jobs:
             playwright-report
             docs/testing-evidence/design-v2/friends-browser-artifacts
             docs/testing-evidence/design-v2/navigation-browser-artifacts
+            docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts
             e2e/components/__screenshots__
           retention-days: 7
       - name: Record preview artifact identity
-        run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/new/"}))'
+        run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/"}))'
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: preview-web-${{ github.sha }}
@@ -140,8 +143,7 @@ jobs:
     needs: [verify, friends-http-contract]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2' && (github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only)
     runs-on: ubuntu-latest
-    # Serialize Nginx configuration writes with stable releases, without ever
-    # replacing their frontend artifacts or running their backend deployment.
+    # Serialize root frontend activation with main; never deploy v2 backend changes.
     concurrency:
       group: analytify-production
       cancel-in-progress: false
@@ -151,7 +153,7 @@ jobs:
         with:
           name: preview-web-${{ github.sha }}
           path: dist/spoti-front
-      - name: Deploy only the separate preview frontend
+      - name: Activate v2 at the website root (frontend only)
         env:
           DEPLOY_HOST: analytify.dynv6.net
           DEPLOY_USER: ${{ secrets.REMOTE_USER }}

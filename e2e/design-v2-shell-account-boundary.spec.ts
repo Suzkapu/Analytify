@@ -47,20 +47,20 @@ for (const motion of ['no-preference', 'reduce'] as const) for (const oldOutcome
         oldCompleted = true;
       } else await route.fulfill({json: {id: 'e2e-user', display_name: 'Current account', images: []}});
     });
-    await page.goto('/new/stats');
+    await page.goto('/stats');
     await expect(page.getByRole('status', {name: 'Loading Analytify', exact: true})).toHaveCount(0);
     await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
     await expect.poll(() => profileRequests).toBe(1);
     const account = page.getByRole('button', {name: 'Open account and data settings', exact: true});
     await account.press('Enter'); await expect(page.locator('#v2-account-title')).toHaveText('Cached account');
     await page.getByRole('link', {name: 'Privacy notice', exact: true}).press('Enter');
-    await expect(page).toHaveURL(/\/new\/legal#privacy$/);
+    await expect(page).toHaveURL(/\/legal#privacy$/);
     await expect(page.locator('.design-v2')).toHaveAttribute('data-chrome', 'public'); await expect(account).toHaveCount(0);
     await expect.poll(() => oldCancelled).toBe(true);
     await expect.poll(() => page.evaluate(() => (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe)).toEqual({pending: 0, errors: []});
     release(); await expect.poll(() => oldCompleted).toBe(true);
     await page.getByRole('link', {name: 'Analytify playlists', exact: true}).press('Enter');
-    await expect(page).toHaveURL(/\/new\/playlists$/);
+    await expect(page).toHaveURL(/\/playlists$/);
     await expect(page.locator('.design-v2')).toHaveAttribute('data-chrome', 'app');
     await account.press('Enter'); await expect(page.locator('#v2-account-title')).toHaveText('Current account');
     expect(profileRequests).toBe(2); await expect(page.getByText('Obsolete account', {exact: true})).toHaveCount(0);
@@ -70,7 +70,7 @@ for (const motion of ['no-preference', 'reduce'] as const) for (const oldOutcome
     // Same-account app navigation keeps the settled profile, without another request.
     const navigation = page.locator(info.project.name === 'mobile' ? '.v2-mobile-nav' : '.v2-desktop-nav');
     await navigation.getByRole('link', {name: 'Stats', exact: true}).press('Enter');
-    await expect(page).toHaveURL(/\/new\/stats$/);
+    await expect(page).toHaveURL(/\/stats$/);
     await account.press('Enter'); await expect(page.locator('#v2-account-title')).toHaveText('Current account');
     expect(profileRequests).toBe(2);
     await expect.poll(() => page.evaluate(() => (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe)).toEqual({pending: 0, errors: []});

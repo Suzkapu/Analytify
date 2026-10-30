@@ -130,6 +130,7 @@ export class UserStatsController implements OnInit, OnDestroy {
   private pastSearchSequence = 0;
   private activeSpyOwnerUserId: string | null = null;
   private routeSubscription: Subscription | null = null;
+  private routeGeneration = 0;
   private statsViewVersion = 0;
   private builtStatsViewVersion = -1;
   private isBuildingStatsView = false;
@@ -213,6 +214,7 @@ export class UserStatsController implements OnInit, OnDestroy {
   }
 
   private activateStatsRoute(userId: string): void {
+    const routeGeneration = ++this.routeGeneration;
     this.snapshotDetailContext++;
     this.unavailableSnapshotDetails.clear();
     this.pendingSnapshotDetails.clear();
@@ -243,7 +245,8 @@ export class UserStatsController implements OnInit, OnDestroy {
     this.scheduleHistoryLoad();
     if (this.authService.isAuthenticated()) {
       void this.authService.ensureInitialSync().then(() => {
-        if (this.snapshotOptions.length === 0 && this.authService.isBackupActive()) {
+        if (routeGeneration === this.routeGeneration && !this.isSpyMode
+          && this.snapshotOptions.length === 0 && this.authService.isBackupActive()) {
           this.scheduleHistoryLoad();
         }
       }).catch(() => {});
@@ -251,6 +254,7 @@ export class UserStatsController implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.routeGeneration++;
     this.snapshotDetailContext++;
     this.unavailableSnapshotDetails.clear();
     this.pendingSnapshotDetails.clear();
@@ -364,21 +368,29 @@ export class UserStatsController implements OnInit, OnDestroy {
     }
     const kind = this.pastSearchKind();
     const range = this.selectedRange;
+    const spotifyUserId = this.authService.getUserId?.();
+    const hasCurrentAccess = () => spotifyUserId === this.authService.getUserId?.()
+      && supabaseUserId === this.authService.getSupabaseUserId()
+      && this.authService.isBackupActive() && !this.isSpyMode;
     try {
       const results = await this.supabaseService.searchPastTopItems(range, kind, query);
       if (sequence !== this.pastSearchSequence || range !== this.selectedRange
-        || kind !== this.pastSearchKind()) return;
+        || kind !== this.pastSearchKind() || !hasCurrentAccess()) return;
       const currentIds = new Set((kind === 'track' ? this.topTracks : kind === 'artist' ? this.topArtists : this.topGenres)
         .map(item => this.normalizeStatsIdentity(kind === 'genre' ? item?.name : item?.id))
         .filter(Boolean));
       this.pastTopResults = results.filter(item => !currentIds.has(this.normalizeStatsIdentity(item.id)));
       this.pastStatsSearchError = '';
     } catch (error) {
-      if (sequence !== this.pastSearchSequence) return;
+      if (sequence !== this.pastSearchSequence || !hasCurrentAccess()) return;
       this.pastTopResults = [];
       this.pastStatsSearchError = (error as any)?.message || 'Saved ranking history could not be searched.';
     } finally {
       if (sequence === this.pastSearchSequence) {
+        if (!hasCurrentAccess()) {
+          this.pastTopResults = [];
+          this.pastStatsSearchError = '';
+        }
         this.isSearchingPastStats = false;
         this.changeDetector?.markForCheck();
       }
@@ -576,7 +588,7 @@ export class UserStatsController implements OnInit, OnDestroy {
 
     if (!isExpired && !isCacheIncomplete) {
       if (!isCurrentLoad()) return;
-      console.log(`[Stats] Loading stats for ${range} from the local IndexedDB cache.`);
+      console.log(`[Stats] Local cache: ${range}`);
       try {
         this.topTracks = parsedTracks;
         this.topArtists = parsedArtists;
@@ -604,7 +616,7 @@ export class UserStatsController implements OnInit, OnDestroy {
         if (!isCurrentLoad()) return;
 
         if (dbSnapshot) {
-          console.log(`[Stats] Cache missing/expired. Fetching a recent stats snapshot for ${range} directly from Supabase Cloud...`);
+          console.log(`[Stats] Cloud snapshot: ${range}`);
           const loadedTracks = dbSnapshot.topTracks;
           let loadedArtists = dbSnapshot.topArtists;
           let loadedGenres = dbSnapshot.topGenres || [];
@@ -641,7 +653,7 @@ export class UserStatsController implements OnInit, OnDestroy {
         }
       }
 
-      console.log(`[Stats] Cache and database snapshot missing/expired. Loading stats for ${range} from Spotify API...`);
+      console.log(`[Stats] Spotify fallback: ${range}`);
       updateLoadingState();
       if (!hasUsableCachedStats()) {
         this.topTracks = [];
@@ -678,7 +690,7 @@ export class UserStatsController implements OnInit, OnDestroy {
               loadedArtists = enriched.artists;
               calculatedGenres = enriched.genres;
             } catch (error) {
-              console.warn('[Stats] Could not enrich artist genres; keeping the last usable genre cache.', error);
+              console.warn('[Stats] Genre enrichment failed; keeping prior cache.', error);
             }
           }
           // Do not let a transient/deprecated empty genres payload erase the
@@ -1409,8 +1421,8 @@ export class UserStatsController implements OnInit, OnDestroy {
 
       return this.storageService.saveStatsHistory(snapshot).then(() => {
         console.log(existingToday
-          ? 'Updated today\'s history snapshot in IndexedDB'
-          : 'Saved history snapshot to IndexedDB');
+          ? '[Stats] Updated local snapshot'
+          : '[Stats] Saved local snapshot');
         this.loadHistoryData();
       });
       })
@@ -1585,7 +1597,7 @@ export class UserStatsController implements OnInit, OnDestroy {
                 const explPct = trackCount > 0 ? Math.round((explicitCount / trackCount) * 100) : 0;
                 const genreDiversity = (localSnap.topGenres || []).length;
 
-                console.log(`[Stats] Uploading local-only snapshot to cloud: ${dateStr} (${range})`);
+                console.log(`[Stats] Upload snapshot: ${dateStr} (${range})`);
                 await this.supabaseService.saveStatsSnapshot(
                   supabaseUserId,
                   range,
@@ -2375,7 +2387,7 @@ export class UserStatsController implements OnInit, OnDestroy {
     );
     if (supabaseUserId && snap.id) {
       this.pendingSnapshotDetails.add(key);
-      console.log(`[Stats] Lazy-loading snapshot details on demand: ${snap.snapshotDate || snapshotIdStr}`);
+      console.log(`[Stats] Load snapshot: ${snap.snapshotDate || snapshotIdStr}`);
       this.supabaseService.loadStatsSnapshotById(supabaseUserId, snap.id).then(fullSnap => {
         this.pendingSnapshotDetails.delete(key);
         if (!isCurrentRequest()) return;

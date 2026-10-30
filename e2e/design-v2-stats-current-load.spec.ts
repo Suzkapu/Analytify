@@ -59,7 +59,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await page.route('https://api.spotify.com/v1/me/top/artists?*', route => failed
       ? route.fulfill({status: 503, headers: {'Retry-After': '0'}, json: {error: {status: 503, message: 'Isolated current Stats failure'}}})
       : route.fulfill({json: {items: [{id: 'recovered-artist', name: 'Recovered artist', genres: ['pop'], images: []}], total: 1}}));
-    await page.goto('/new/stats');
+    await page.goto('/stats');
     const main = page.getByRole('main');
     await expect(main.getByRole('alert')).toBeVisible({timeout: 12_000});
     await expect(main.getByRole('heading', {name: 'No top songs found', exact: true})).toHaveCount(0);
@@ -75,7 +75,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
 test('successful empty Spotify responses produce an empty state without a failure alert', async ({page}) => {
   await page.clock.setFixedTime(new Date('2026-10-06T12:00:00Z')); await mockSpotify(page); await seedAuthenticatedBrowser(page);
   await page.route('https://api.spotify.com/v1/me/top/**', route => route.fulfill({json: {items: [], total: 0}}));
-  await page.goto('/new/stats'); const main = page.getByRole('main');
+  await page.goto('/stats'); const main = page.getByRole('main');
   await expect(main.getByRole('heading', {name: 'No top songs found', exact: true})).toBeVisible();
   await expect(main.getByRole('alert')).toHaveCount(0); await expectNoBlockingAxeViolations(page);
 });
@@ -94,7 +94,7 @@ for (const shared of [false,true]) for (const motion of ['no-preference','reduce
     else await page.route('https://api.spotify.com/v1/me/top/**',async route=>{
       await gate; return recovered ? route.fulfill({json:{items:[],total:0}}) : route.fulfill({status:403,json:{error:{status:403,message:'Isolated Spotify failure'}}});
     });
-    await page.goto(shared?'/new/stats/shared-owner':'/new/stats');
+    await page.goto(shared?'/stats/shared-owner':'/stats');
     const main=page.getByRole('main');
     await expect(main.locator('[role="status"][aria-busy="true"]')).toBeVisible();
     await measureFeedback(page,info,'loading'); await expectNoBlockingAxeViolations(page);

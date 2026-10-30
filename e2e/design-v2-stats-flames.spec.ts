@@ -4,7 +4,7 @@ import {join} from 'node:path';
 import {test, expect} from './fixtures';
 import {expectNoBlockingAxeViolations, mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-browser';
 
-const canonicalArtworkUrl='http://127.0.0.1:4200/new/__e2e-canonical-stats-artwork.png';
+const canonicalArtworkUrl='http://127.0.0.1:4200/__e2e-canonical-stats-artwork.png';
 async function mockCanonicalArtwork(page: import('@playwright/test').Page): Promise<void> {
   await page.route(canonicalArtworkUrl,route=>route.fulfill({path:join(__dirname,'assets/canonical-stats-artwork.png'),contentType:'image/png'}));
 }
@@ -115,7 +115,7 @@ test.beforeEach(async ({page}) => {
   }, {tracks, artists});
   await page.route('https://api.spotify.com/v1/me/top/tracks?*', route => route.fulfill({json: {items: currentTracks, total: 3}}));
   await page.route('https://api.spotify.com/v1/me/top/artists?*', route => route.fulfill({json: {items: currentArtists, total: 3}}));
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   await expect(page.getByRole('button',{name:'Compare dates',exact:true})).toBeVisible();
   await expect(page.getByRole('img', {name: 'Top 10 debut', exact: true})).toHaveCount(1);
   await expect(page.getByRole('img', {name: 'Hot mover', exact: true})).toHaveCount(1);

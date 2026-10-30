@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.admin-exclusion.config.ts --project desktop --grep pending registration dialog cancels held review --output docs/testing-evidence/design-v2/admin-dialog-first-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:54398) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:54398) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:54611) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus (7.6s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('v2-admin-user-card').getByRole('button', { name: 'Review incomplete registration', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('v2-admin-user-card').getByRole('button', { name: 'Review incomplete registration', exact: true }) with timeout 5000ms
+      - waiting for locator('v2-admin-user-card').getByRole('button', { name: 'Review incomplete registration', exact: true })
+        14 × locator resolved to <button type="button" v2button="secondary" _ngcontent-ng-c618419091="" class="review-action v2-button v2-button--secondary">…</button>
+           - unexpected value "inactive"
+
+
+      841 |   await expect(dialog.getByRole('button', {name: 'Cancel', exact: true})).toBeFocused();
+      842 |   expect(fixture.deleteCalls).toEqual([]);
+    > 843 |   await page.keyboard.press('Escape'); await expect(dialog).toHaveCount(0); await expect(reviewButton).toBeFocused();
+          |                                                                                                        ^
+      844 |   const response = page.waitForResponse(url => url.url().includes('/rpc/admin_review_pending_spotify_profile'));
+      845 |   release(); await response; await expect(dialog).toHaveCount(0);
+      846 |   fixture.planPendingReview(); await page.keyboard.press('Enter');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:843:104
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-first-browser-artifacts/design-v2-admin-exclusion--cd86d-estores-safe-keyboard-focus-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-first-browser-artifacts/design-v2-admin-exclusion--cd86d-estores-safe-keyboard-focus-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-first-browser-artifacts/design-v2-admin-exclusion--cd86d-estores-safe-keyboard-focus-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-first-browser-artifacts/design-v2-admin-exclusion--cd86d-estores-safe-keyboard-focus-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus 

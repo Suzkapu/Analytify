@@ -1,0 +1,228 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.admin-exclusion.config.ts --grep mounted task|user save retains
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:11600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11600) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:12143) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (3.3s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (4.7s)
+  ✘   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (7.3s)
+(node:13429) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion (8.9s)
+(node:14522) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion (9.4s)
+(node:15743) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   6 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion (8.3s)
+(node:16610) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:393:5 › user save retains edits made during the write without submitting them or duplicating work (5.4s)
+  ✓   8 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (8.7s)
+  ✘   9 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (3.3s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator: locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+    Expected: focused
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeFocused" locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true }) with timeout 5000ms
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+
+
+      666 |       const disclosure = card.getByRole('button', {name: 'Collapse Synthetic schedule user settings', exact: true});
+      667 |       await disclosure.focus(); await page.keyboard.press('Enter');
+    > 668 |       await expect(disclosure).toBeFocused(); await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+          |                                ^
+      669 |       await expect(history).toHaveCount(0);
+      670 |       await page.keyboard.press('Space');
+      671 |       await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:668:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator: locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+    Expected: focused
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeFocused" locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true }) with timeout 5000ms
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+
+
+      666 |       const disclosure = card.getByRole('button', {name: 'Collapse Synthetic schedule user settings', exact: true});
+      667 |       await disclosure.focus(); await page.keyboard.press('Enter');
+    > 668 |       await expect(disclosure).toBeFocused(); await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+          |                                ^
+      669 |       await expect(history).toHaveCount(0);
+      670 |       await page.keyboard.press('Space');
+      671 |       await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:668:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--f6c7a-x-with-no-preference-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--f6c7a-x-with-no-preference-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--f6c7a-x-with-no-preference-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--f6c7a-x-with-no-preference-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator: locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+    Expected: focused
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeFocused" locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true }) with timeout 5000ms
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+
+
+      666 |       const disclosure = card.getByRole('button', {name: 'Collapse Synthetic schedule user settings', exact: true});
+      667 |       await disclosure.focus(); await page.keyboard.press('Enter');
+    > 668 |       await expect(disclosure).toBeFocused(); await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+          |                                ^
+      669 |       await expect(history).toHaveCount(0);
+      670 |       await page.keyboard.press('Space');
+      671 |       await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:668:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--d70ee-at-480px-with-reduce-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--d70ee-at-480px-with-reduce-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--d70ee-at-480px-with-reduce-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--d70ee-at-480px-with-reduce-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator: locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+    Expected: focused
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeFocused" locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true }) with timeout 5000ms
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+
+
+      666 |       const disclosure = card.getByRole('button', {name: 'Collapse Synthetic schedule user settings', exact: true});
+      667 |       await disclosure.focus(); await page.keyboard.press('Enter');
+    > 668 |       await expect(disclosure).toBeFocused(); await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+          |                                ^
+      669 |       await expect(history).toHaveCount(0);
+      670 |       await page.keyboard.press('Space');
+      671 |       await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:668:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--9d0b0-t-1000px-with-reduce-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--9d0b0-t-1000px-with-reduce-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--9d0b0-t-1000px-with-reduce-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--9d0b0-t-1000px-with-reduce-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion 
+
+    Test was interrupted.
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator: locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+    Expected: focused
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeFocused" locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true }) with timeout 5000ms
+      - waiting for locator('.admin-user-card').filter({ has: getByRole('heading', { name: 'Synthetic schedule user', exact: true }) }).getByRole('button', { name: 'Collapse Synthetic schedule user settings', exact: true })
+      - Test ended.
+
+
+      666 |       const disclosure = card.getByRole('button', {name: 'Collapse Synthetic schedule user settings', exact: true});
+      667 |       await disclosure.focus(); await page.keyboard.press('Enter');
+    > 668 |       await expect(disclosure).toBeFocused(); await expect(disclosure).toHaveAttribute('aria-expanded', 'false');
+          |                                ^
+      669 |       await expect(history).toHaveCount(0);
+      670 |       await page.keyboard.press('Space');
+      671 |       await expect(disclosure).toHaveAttribute('aria-expanded', 'true');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:668:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--c9036-x-with-no-preference-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion 
+  1 interrupted
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion 
+  15 did not run
+  4 passed (1.2m)

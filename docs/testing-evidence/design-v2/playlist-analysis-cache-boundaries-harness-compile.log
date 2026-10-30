@@ -1,0 +1,13 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/library/playlist-analysis/playlist-analysis-cache-boundaries.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [4.663 seconds] - 2026-10-24T06:57:40.020Z
+
+✘ [ERROR] TS2345: Argument of type 'Promise<void>' is not assignable to parameter of type 'Promise<undefined>'.
+  Type 'void' is not assignable to type 'undefined'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/playlist-analysis/playlist-analysis-cache-boundaries.spec.ts:145:43:
+      145 │ ...mockReturnValue(new Promise<void>(resolve => release = resolve));
+          ╵                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

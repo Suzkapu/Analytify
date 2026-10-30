@@ -1,0 +1,33 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-exclusion-current-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:45276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:45276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:45667) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (9.3s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (9.5s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:113:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.3s)
+(node:46998) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (13.2s)
+  ✓   5 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (13.8s)
+  ✓   6 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:113:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.0s)
+(node:49592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (14.6s)
+  ✓   8 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (13.6s)
+  ✓   9 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:113:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (4.2s)
+(node:53366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (18.8s)
+  ✓  11 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (16.2s)
+  ✓  12 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:113:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.8s)
+
+  12 passed (2.5m)

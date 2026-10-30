@@ -1,0 +1,29 @@
+{
+  "checkpoint": "99315ee7 plus uncommitted development changes",
+  "scope": "Public temporary Spotify authorization and HTTP boundaries; no UI change",
+  "passed": 23,
+  "checks": {
+    "tests": "transient-auth-refresh-ownership-green.log",
+    "lint": "transient-auth-refresh-ownership-lint.log",
+    "types": "transient-auth-refresh-ownership-types.log"
+  },
+  "regressionEvidence": [
+    "transient-auth-characterization-red.log",
+    "transient-auth-refresh-ownership-red.log"
+  ],
+  "fixes": [
+    "Reject held callback after clear, replacement callback, or newer authorization",
+    "Reject stale refresh completion after clear or replacement session",
+    "Validate access_token before publishing callback/refresh result",
+    "Share concurrent refresh HTTP exchange, reset ownership on replacement callback"
+  ],
+  "sourceHashes": {
+    "src/app/core/compare-room/transient-participant-auth.service.ts": "5594afa3d0b73a747854e1e44189e16173c50fde8a1d5d6a32ed4bfcde9737d3",
+    "src/app/core/compare-room/transient-participant-auth.service.spec.ts": "b43a8c7de9be1d14ab6c73c54cf38aa00142e7b6739773dc199d56b95d7a774c"
+  },
+  "limitations": [
+    "Focused service evidence only; whole-project CI/coverage predates these fixes",
+    "Complete successful authorization navigation is not proven by jsdom; held-PKCE cancellation is tested without navigation",
+    "No commits/push/deployment"
+  ]
+}

@@ -60,7 +60,7 @@ test('preview HTML and mutable worker/version metadata explicitly revalidate', (
   }
   assert.match(result, /set \$analytify_asset_cache_control "no-cache, no-store, must-revalidate"/);
 });
-test('the preview deployment does not deploy the production backend or worker', () => {
+test('v2 root promotion does not deploy the production backend or worker', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
   const deploy = readFileSync('scripts/deploy-preview.sh', 'utf8');
   assert.match(workflow, /codex\/design-v2/);
@@ -69,7 +69,7 @@ test('the preview deployment does not deploy the production backend or worker', 
   assert.match(deploy, /StrictHostKeyChecking=yes/);
   const app = readFileSync('src/app/app.module.ts', 'utf8');
   const angular = JSON.parse(readFileSync('angular.json', 'utf8'));
-  assert.equal(angular.projects.SpotiFront.architect.build.options.baseHref, '/new/');
-  assert.match(app, /register\('\/new\/ngsw-worker\.js'/);
-  assert.match(app, /scope: '\/new\/'/);
+  assert.equal(angular.projects.SpotiFront.architect.build.options.baseHref, '/');
+  assert.match(app, /register\('\/ngsw-worker\.js'/);
+  assert.match(app, /scope: '\/'/);
 });

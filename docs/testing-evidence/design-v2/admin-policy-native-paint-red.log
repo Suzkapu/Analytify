@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=webkit-stats --grep=policy save validates --output=docs/testing-evidence/design-v2/admin-policy-native-paint-red-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:50219) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50219) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:50758) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (10.3s)
+
+
+  1) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh 
+
+    Error: expect(locator).toHaveCSS(expected) failed
+
+    Locator:  locator('app-admin').getByRole('region', { name: 'Listening history schedule limit', exact: true }).getByRole('combobox')
+    Expected: "none"
+    Received: "auto"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCSS" locator('app-admin').getByRole('region', { name: 'Listening history schedule limit', exact: true }).getByRole('combobox') with timeout 5000ms
+      - waiting for locator('app-admin').getByRole('region', { name: 'Listening history schedule limit', exact: true }).getByRole('combobox')
+        13 × locator resolved to <select _ngcontent-ng-c3634248403="" id="policy-unit-listening_history" class="ng-untouched ng-dirty ng-valid">…</select>
+           - unexpected value "auto"
+
+
+      171 |   await expect(history.getByRole('spinbutton')).toHaveValue('120');
+      172 |   await expect(history.getByRole('combobox')).toHaveValue('minutes');
+    > 173 |   await expect(history.getByRole('combobox')).toHaveCSS('appearance', 'none');
+          |                                               ^
+      174 |   await expect(history.getByRole('combobox')).toHaveCSS('background-color', 'rgb(13, 19, 15)');
+      175 |   await history.getByRole('spinbutton').focus();
+      176 |   await page.keyboard.press('ArrowUp');
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:173:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-policy-native-paint-red-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-policy-native-paint-red-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-policy-native-paint-red-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-policy-native-paint-red-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh 

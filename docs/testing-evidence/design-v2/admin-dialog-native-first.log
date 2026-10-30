@@ -1,0 +1,873 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-pending-review.native.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [3.412 seconds] - 2026-10-30T11:55:50.046Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |firefox| e2e/components/admin-pending-review.native.ts (22 tests | 22 failed) 18880ms
+     × reviewing at 1100px 503ms
+     × blocked at 1100px 901ms
+     × eligible at 1100px 894ms
+     × deleting at 1100px 875ms
+     × review-error at 1100px 879ms
+     × delete-error at 1100px 951ms
+     × deleted-read-error at 1100px 900ms
+     × deleted-refreshing at 1100px 858ms
+     × reconciling at 1100px 847ms
+     × reviewing at 390px 928ms
+     × blocked at 390px 831ms
+     × eligible at 390px 848ms
+     × deleting at 390px 872ms
+     × review-error at 390px 863ms
+     × delete-error at 390px 852ms
+     × deleted-read-error at 390px 884ms
+     × deleted-refreshing at 390px 828ms
+     × reconciling at 390px 847ms
+     × long reviewed identity keeps both actions reachable at 1100x480 960ms
+     × long reviewed identity keeps both actions reachable at 390x480 859ms
+     × compact review at 320x480 834ms
+     × compact review at 320x1000 862ms
+ ❯ |webkit| e2e/components/admin-pending-review.native.ts (22 tests | 22 failed) 20332ms
+     × reviewing at 1100px 607ms
+     × blocked at 1100px 281ms
+     × eligible at 1100px 263ms
+     × deleting at 1100px 967ms
+     × review-error at 1100px 905ms
+     × delete-error at 1100px 922ms
+     × deleted-read-error at 1100px 1619ms
+     × deleted-refreshing at 1100px 957ms
+     × reconciling at 1100px 916ms
+     × reviewing at 390px 910ms
+     × blocked at 390px 913ms
+     × eligible at 390px 848ms
+     × deleting at 390px 844ms
+     × review-error at 390px 879ms
+     × delete-error at 390px 856ms
+     × deleted-read-error at 390px 1595ms
+     × deleted-refreshing at 390px 893ms
+     × reconciling at 390px 875ms
+     × long reviewed identity keeps both actions reachable at 1100x480 989ms
+     × long reviewed identity keeps both actions reachable at 390x480 927ms
+     × compact review at 320x480 1489ms
+     × compact review at 320x1000 870ms
+ ❯ |chromium| e2e/components/admin-pending-review.native.ts (22 tests | 22 failed) 21364ms
+     × reviewing at 1100px 586ms
+     × blocked at 1100px 394ms
+     × eligible at 1100px 1134ms
+     × deleting at 1100px 906ms
+     × review-error at 1100px 1069ms
+     × delete-error at 1100px 1686ms
+     × deleted-read-error at 1100px 979ms
+     × deleted-refreshing at 1100px 1586ms
+     × reconciling at 1100px 968ms
+     × reviewing at 390px 965ms
+     × blocked at 390px 1538ms
+     × eligible at 390px 935ms
+     × deleting at 390px 976ms
+     × review-error at 390px 1535ms
+     × delete-error at 390px 929ms
+     × deleted-read-error at 390px 989ms
+     × deleted-refreshing at 390px 927ms
+     × reconciling at 390px 1532ms
+     × long reviewed identity keeps both actions reachable at 1100x480 945ms
+     × long reviewed identity keeps both actions reachable at 390x480 261ms
+     × compact review at 320x480 273ms
+     × compact review at 320x1000 250ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 66 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reviewing-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-blocked-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleting-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-review-error-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-delete-error-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleted-read-error-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleted-refreshing-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 1100px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reconciling-1100x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reviewing-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-blocked-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleting-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-review-error-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-delete-error-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleted-read-error-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-deleted-refreshing-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 390px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reconciling-390x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 1100x480
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-1100x480-long-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 390x480
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-390x480-long-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x480
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-320x480-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x1000
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-eligible-320x1000-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/66]⎯
+
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 1100px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 390px
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 1100x480
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 390x480
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x480
+ FAIL  |firefox| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x1000
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reviewing-1100x1000-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts/render/< e2e/components/admin-pending-review.native.ts:66:51
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                   ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:12
+ ❯ initZone/ZoneTask/this.invoke node_modules/zone.js/fesm2015/zone.js:448:37
+ ❯ patchTimer/scheduleTask/data.args[0] node_modules/zone.js/fesm2015/zone.js:1476:25
+ ❯ setTimeout handler*scheduleTask node_modules/zone.js/fesm2015/zone.js:1478:33
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:372:15
+ ❯ onScheduleTask node_modules/@angular/core/fesm2022/_pending_tasks-chunk.mjs:2454:20
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ onScheduleTask node_modules/zone.js/fesm2015/zone-testing.js:1864:32
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ onScheduleTask node_modules/zone.js/fesm2015/zone.js:259:60
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMacroTask node_modules/zone.js/fesm2015/zone.js:220:18
+ ❯ scheduleMacroTaskWithCurrentZone node_modules/zone.js/fesm2015/zone.js:637:22
+ ❯ patchTimer/setNative</< node_modules/zone.js/fesm2015/zone.js:1515:52
+ ❯ patchMethod/proto[name] node_modules/zone.js/fesm2015/zone.js:916:15
+ ❯ ngAfterViewInit src/app/shared/ui/accessible-dialog.directive.ts:51:22
+ ❯ callHookInternal node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:262:9
+ ❯ callHook node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:277:23
+ ❯ callHooks node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:251:17
+ ❯ executeInitAndCheckHooks node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:220:14
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6248:35
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+ ❯ detectChangesInComponent node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6334:34
+ ❯ detectChangesInChildComponents node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6382:29
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6233:37
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+ ❯ detectChangesInEmbeddedViews node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6314:36
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6212:33
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:12
+ ❯ initZone/ZoneTask/this.invoke node_modules/zone.js/fesm2015/zone.js:448:37
+ ❯ patchTimer/scheduleTask/data.args[0] node_modules/zone.js/fesm2015/zone.js:1476:25
+ ❯ setTimeout handler*scheduleTask node_modules/zone.js/fesm2015/zone.js:1478:33
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:372:15
+ ❯ onScheduleTask node_modules/@angular/core/fesm2022/_pending_tasks-chunk.mjs:2454:20
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ onScheduleTask node_modules/zone.js/fesm2015/zone-testing.js:1864:32
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ onScheduleTask node_modules/zone.js/fesm2015/zone.js:259:60
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:367:42
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMacroTask node_modules/zone.js/fesm2015/zone.js:220:18
+ ❯ scheduleMacroTaskWithCurrentZone node_modules/zone.js/fesm2015/zone.js:637:22
+ ❯ patchTimer/setNative</< node_modules/zone.js/fesm2015/zone.js:1515:52
+ ❯ patchMethod/proto[name] node_modules/zone.js/fesm2015/zone.js:916:15
+ ❯ ngAfterViewInit src/app/shared/ui/accessible-dialog.directive.ts:51:22
+ ❯ callHookInternal node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:262:9
+ ❯ callHook node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:277:23
+ ❯ callHooks node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:251:17
+ ❯ executeInitAndCheckHooks node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:220:14
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6248:35
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+ ❯ detectChangesInComponent node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6334:34
+ ❯ detectChangesInChildComponents node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6382:29
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6233:37
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+ ❯ detectChangesInEmbeddedViews node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6314:36
+ ❯ refreshView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6212:33
+ ❯ detectChangesInView node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6360:16
+ ❯ detectChangesInViewIfAttached node_modules/@angular/core/fesm2022/_debug_node-chunk.mjs:6343:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/66]⎯
+
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 1100px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reviewing at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > blocked at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > eligible at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleting at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > review-error at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > delete-error at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-read-error at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > deleted-refreshing at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > reconciling at 390px
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 1100x480
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > long reviewed identity keeps both actions reachable at 390x480
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x480
+ FAIL  |webkit| e2e/components/admin-pending-review.native.ts > canonical pending registration review panels > compact review at 320x1000
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-pending-review.native.ts/pending-reviewing-1100x1000-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-pending-review.native.ts:66:69
+     64|     expect(getComputedStyle(body).overflowY).toBe('auto');
+     65|   } else if (width !== 320) expect(box.height).toBe(naturalHeights[pha…
+     66|   await expect.element(page.elementLocator(panel)).toMatchScreenshot(`…
+       |                                                                     ^
+     67|   fixture.destroy();
+     68| }
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/66]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  66 failed (66)
+   Start at  12:55:50
+   Duration  24.24s (transform 0ms, setup 2.99s, import 425ms, tests 60.58s, environment 0ms)
+

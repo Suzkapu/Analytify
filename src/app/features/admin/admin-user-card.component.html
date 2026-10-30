@@ -1,0 +1,70 @@
+<article class="admin-user-card" [class.expanded]="expanded">
+  <header class="identity">
+    <span class="avatar" aria-hidden="true">
+      @if (avatarUrl) {<img class="profile-image" [src]="avatarUrl" width="48" height="48" alt="" (error)="avatarFailed()">}
+      @else {<img src="assets/design-v2/stats-category-user.svg" width="20" height="20" alt="">}
+    </span>
+    <div class="identity-copy"><h3>{{ pending ? 'Incomplete registration' : user.displayName }}</h3><p>{{ user.spotifyId }}</p></div>
+    <button type="button" v2Button="secondary" class="disclosure" (click)="disclosureToggle.emit()" [attr.aria-expanded]="expanded"
+      [attr.aria-controls]="'user-' + user.userId + '-settings'"
+      [attr.aria-label]="(expanded ? 'Collapse ' : 'Expand ') + user.displayName + ' settings'">
+      <span class="icon-slot" aria-hidden="true"><img class="disclosure-icon" [class.is-expanded]="expanded" src="assets/design-v2/admin-task-chevron.svg" width="20" height="20" alt=""></span>
+    </button>
+  </header>
+  <div class="capabilities">
+    @if (pending) {<span class="capability">Pending Spotify verification</span>}
+    <span class="capability" [class.available]="user.backupActive">{{ user.backupActive ? 'Cloud Backup on' : 'Cloud Backup off' }}</span>
+    <span class="capability" [class.available]="user.hasRefreshToken">{{ user.hasRefreshToken ? 'Spotify connected' : 'Reconnect needed' }}</span>
+  </div>
+  <p class="schedule-summary">{{ optionalCount ? optionalCount + (optionalCount === 1 ? ' optional schedule selected' : ' optional schedules selected') : 'No optional schedules selected' }} · {{ requiredCount ? requiredCount + (requiredCount === 1 ? ' feature-required task.' : ' feature-required tasks.') : 'No required tasks.' }}</p>
+  @if (expanded) {
+    <div class="card-settings" [id]="'user-' + user.userId + '-settings'">
+      <div class="timezone-field"><label [for]="'user-' + user.userId + '-timezone'">Schedule timezone</label>
+        <input type="text" [id]="'user-' + user.userId + '-timezone'" [(ngModel)]="user.timezone" placeholder="Europe/Vienna">
+      </div>
+      <v2-preference-row [compact]="true" label="Enable optional schedules" description="" iconUrl=""
+        ariaLabel="Enable optional administrator schedules" [(checked)]="user.enabled" />
+      <div class="task-settings">
+        <v2-admin-user-task-editor label="Listening history" [controlId]="'user-' + user.userId + '-history'"
+          [(enabled)]="user.historyEnabled" [(intervalValue)]="user.historyIntervalMinutes" [(intervalUnit)]="user.historyIntervalUnit" />
+        <v2-admin-user-task-editor label="Short-term stats" [controlId]="'user-' + user.userId + '-short'"
+          [(enabled)]="user.shortTermEnabled" [(intervalValue)]="user.shortTermIntervalHours" [(intervalUnit)]="user.shortTermIntervalUnit"
+          [requiredReason]="requiredReason('stats_short_term')" />
+        <v2-admin-user-task-editor label="Medium-term stats" [controlId]="'user-' + user.userId + '-medium'"
+          [(enabled)]="user.mediumTermEnabled" [(intervalValue)]="user.mediumTermIntervalHours" [(intervalUnit)]="user.mediumTermIntervalUnit" />
+        <v2-admin-user-task-editor label="Long-term stats" [controlId]="'user-' + user.userId + '-long'"
+          [(enabled)]="user.longTermEnabled" [(intervalValue)]="user.longTermIntervalHours" [(intervalUnit)]="user.longTermIntervalUnit" />
+        <v2-admin-user-task-editor label="Song League playlists" [controlId]="'user-' + user.userId + '-league'"
+          [(enabled)]="user.songLeaguePlaylistsEnabled" [(intervalValue)]="user.songLeaguePlaylistIntervalMinutes" [(intervalUnit)]="user.songLeaguePlaylistIntervalUnit"
+          [requiredReason]="requiredReason('song_league_playlists')"
+          [(fridaysOnly)]="user.songLeaguePlaylistFridaysOnly" />
+        <v2-admin-user-task-editor label="Shared playlists" [controlId]="'user-' + user.userId + '-shared'"
+          [(enabled)]="user.sharedPlaylistsEnabled" [(intervalValue)]="user.sharedPlaylistIntervalMinutes" [(intervalUnit)]="user.sharedPlaylistIntervalUnit"
+          [requiredReason]="requiredReason('shared_playlists')" />
+      </div>
+      @if (successTimestamp || nextTimestamp || user.manualJobRetained || user.lastError) {
+        <div class="synchronization-summary">
+          @if (successTimestamp; as value) {<p>Last success <time [attr.datetime]="value">{{ value | date:'d MMM y, HH:mm':'UTC' }} UTC</time></p>}
+          @if (nextTimestamp; as value) {<p>Next automatic run <time [attr.datetime]="value">{{ value | date:'d MMM y, HH:mm':'UTC' }} UTC</time></p>}
+          @if (user.manualJobRetained) {<p>A manually requested run is retained.</p>}
+          @if (user.lastError) {<p>{{ user.lastError }}</p>}
+        </div>
+      }
+      @if (runUnavailableReason) {<p [id]="'user-' + user.userId + '-run-reason'">{{ runUnavailableReason }}</p>}
+      <p>Changes stay in this user’s draft until Save.</p>
+      @if (state) {<v2-admin-user-save-feedback [state]="state" />}
+      <footer class="user-actions">
+        @if (refreshRequired) {
+          <v2-admin-user-refresh-action [busy]="busy" (refresh)="refresh.emit()" />
+        } @else {
+          <button type="button" v2Button="primary" class="save-action" [disabled]="busy" (click)="save.emit()"><span class="icon-slot" aria-hidden="true"><img src="assets/design-v2/update-save.svg" width="20" height="20" alt=""></span>Save</button>
+        }
+        <button type="button" v2Button="secondary" class="run-action" [disabled]="busy || !!runUnavailableReason"
+          [attr.aria-describedby]="runUnavailableReason ? 'user-' + user.userId + '-run-reason' : null" (click)="run.emit()"><img src="assets/design-v2/admin-user-refresh.svg" width="18" height="18" alt="">Run enabled tasks</button>
+        @if (pending) {
+          <button type="button" v2Button="secondary" class="review-action" #reviewTrigger [disabled]="reviewBusy" (click)="review.emit(reviewTrigger)"><span class="icon-slot" aria-hidden="true"><img src="assets/design-v2/admin-card-review.svg" width="20" height="20" alt=""></span>Review incomplete registration</button>
+        }
+      </footer>
+    </div>
+  }
+</article>

@@ -76,28 +76,6 @@ export interface AdminSyncRun {
   details: Record<string, unknown>;
 }
 
-export interface AdminOperationalHealth {
-  syncQueueDepth: number;
-  oldestSyncQueueAgeSeconds: number;
-  notificationQueueDepth: number;
-  oldestNotificationQueueAgeSeconds: number;
-  expiredLeases: number;
-  lastSuccessByFeature: Partial<Record<SyncTaskKey, string>>;
-  releases: Record<string, string>;
-  workerRuntime: {
-    state: 'healthy' | 'starting' | 'stale' | 'stopped' | 'never_observed';
-    startedAt: string | null;
-    lastHeartbeatAt: string | null;
-    secondsSinceHeartbeat: number | null;
-    lastPassStartedAt: string | null;
-    lastPassSucceededAt: string | null;
-    lastFailureAt: string | null;
-    lastError: string | null;
-    commitSha: string | null;
-  };
-  alerts: Array<{key: string; severity: 'warning' | 'critical'; message: string; firstSeenAt: string; lastSeenAt: string}>;
-}
-
 export interface AdminModerationReport {
   reportId: string;
   receiptCode: string;

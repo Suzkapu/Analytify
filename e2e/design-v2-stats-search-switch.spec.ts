@@ -28,7 +28,7 @@ test('historical search stays cancellable, ignores a late result and recovers th
       };
     });
   });
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const search = page.getByRole('searchbox', {name: 'Search songs or artists', exact: true});
   const toggle = page.getByRole('switch', {name: 'Search past rankings'});
   await expect(toggle).toHaveAttribute('aria-checked', 'false');
@@ -59,7 +59,7 @@ test('historical search stays cancellable, ignores a late result and recovers th
 test('canonical search row keeps touch geometry when resizing short and tall windows', async ({page}, testInfo) => {
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const group = page.getByRole('group', {name: 'Search rankings', exact: true});
   const toggle = group.getByRole('switch', {name: 'Search past rankings'});
   const input = group.getByRole('searchbox');
@@ -99,7 +99,7 @@ test('selection follows the native 220ms timeline and responds to reduced motion
   await page.emulateMedia({reducedMotion: 'no-preference'});
   await mockSpotify(page);
   await seedAuthenticatedBrowser(page);
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const toggle = page.getByRole('switch', {name: 'Search past rankings'});
   await toggle.press('Tab');
   await toggle.focus();

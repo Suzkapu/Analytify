@@ -1,0 +1,91 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.311 seconds] - 2026-10-30T11:12:45.096Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯⎯ Unhandled Error ⎯⎯⎯⎯⎯⎯⎯
+Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+<launched> pid=8667
+[pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window[22m
+[2m  - <launched> pid=8667[22m
+[2m  - [pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=8667] <gracefully close start>[22m
+[2m  - [pid=8667] <kill>[22m
+[2m  - [pid=8667] <will force kill>[22m
+[2m  - [pid=8667] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=8667] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=8667] starting temporary directories cleanup[22m
+[2m  - [pid=8667] finished temporary directories cleanup[22m
+[2m  - [pid=8667] <gracefully close end>[22m
+
+ ❯ node_modules/@vitest/browser-playwright/dist/index.js:941:55
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { log: [ '  - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window', '  - <launched> pid=8667', '  - [pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory', '  - [pid=8667] <gracefully close start>', '  - [pid=8667] <kill>', '  - [pid=8667] <will force kill>', '  - [pid=8667] exception while trying to kill process: Error: kill ESRCH', '  - [pid=8667] <process did exit: exitCode=127, signal=null>', '  - [pid=8667] starting temporary directories cleanup', '  - [pid=8667] finished temporary directories cleanup', '  - [pid=8667] <gracefully close end>' ] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files   (15)
+      Tests  no tests
+     Errors  1 error
+   Start at  12:12:45
+   Duration  281ms (transform 0ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+
+error during close browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window
+<launched> pid=8667
+[pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window[22m
+[2m  - <launched> pid=8667[22m
+[2m  - [pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=8667] <gracefully close start>[22m
+[2m  - [pid=8667] <kill>[22m
+[2m  - [pid=8667] <will force kill>[22m
+[2m  - [pid=8667] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=8667] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=8667] starting temporary directories cleanup[22m
+[2m  - [pid=8667] finished temporary directories cleanup[22m
+[2m  - [pid=8667] <gracefully close end>[22m
+
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/browser-playwright/dist/index.js:941:55 {
+  log: [
+    '  - <launching> /home/suzkapu/.cache/ms-playwright/webkit-2359/pw_run.sh --inspector-pipe --headless --no-startup-window',
+    '  - <launched> pid=8667',
+    '  - [pid=8667][err] /home/suzkapu/.cache/ms-playwright/webkit-2359/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libicudata.so.74: cannot open shared object file: No such file or directory',
+    '  - [pid=8667] <gracefully close start>',
+    '  - [pid=8667] <kill>',
+    '  - [pid=8667] <will force kill>',
+    '  - [pid=8667] exception while trying to kill process: Error: kill ESRCH',
+    '  - [pid=8667] <process did exit: exitCode=127, signal=null>',
+    '  - [pid=8667] starting temporary directories cleanup',
+    '  - [pid=8667] finished temporary directories cleanup',
+    '  - [pid=8667] <gracefully close end>'
+  ],
+  type: 'Unhandled Error',
+  stacks: [
+    {
+      method: '',
+      file: '/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/browser-playwright/dist/index.js',
+      line: 941,
+      column: 55
+    }
+  ]
+}

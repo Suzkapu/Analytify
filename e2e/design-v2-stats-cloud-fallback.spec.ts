@@ -41,7 +41,7 @@ for(const cacheState of ['fresh','stale','corrupt'] as const)for(const motion of
       }
       return route.fulfill({json:url.pathname==='/rest/v1/users'?{backup_active:true}:[]});
     });
-    await page.goto('/new/stats');const main=page.getByRole('main');
+    await page.goto('/stats');const main=page.getByRole('main');
     await expect(page.getByRole('status',{name:'Loading Analytify',exact:true})).toHaveCount(0);
     await expect(main.getByText(retainedSong,{exact:true})).toBeVisible();
     await expect.poll(()=>cloudReads).toBe(1);

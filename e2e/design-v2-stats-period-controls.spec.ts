@@ -8,7 +8,7 @@ test.beforeEach(async ({page}) => {
 });
 
 test('canonical period and category geometry survives breakpoint and short-window resizing', async ({page}, testInfo) => {
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const row = page.getByRole('region', {name: 'Statistics controls', exact: true});
   const period = page.getByRole('group', {name: 'Ranking period'});
   const category = page.getByRole('group', {name: 'Ranking category'});
@@ -60,7 +60,7 @@ test('canonical period and category geometry survives breakpoint and short-windo
   const loadedIcons = await category.locator('img').evaluateAll(images => images.map(image => ({loaded: (image as HTMLImageElement).complete,
     width: (image as HTMLImageElement).naturalWidth, height: (image as HTMLImageElement).naturalHeight, src: (image as HTMLImageElement).currentSrc})));
   expect(loadedIcons).toHaveLength(3);
-  for (const icon of loadedIcons) {expect(icon.loaded).toBe(true); expect(icon.width).toBe(20); expect(icon.height).toBe(20); expect(icon.src).toContain('/new/assets/design-v2/stats-category-');}
+  for (const icon of loadedIcons) {expect(icon.loaded).toBe(true); expect(icon.width).toBe(20); expect(icon.height).toBe(20); expect(icon.src).toContain('/assets/design-v2/stats-category-');}
   await expectNoBlockingAxeViolations(page);
   await writeFile(testInfo.outputPath('period-category-responsive-geometry.json'), JSON.stringify(evidence, null, 2));
 });
@@ -75,7 +75,7 @@ test('period keyboard changes query the selected range once and category choices
       : {id: `artist-${range}`, name: `Artist ${range}`, images: [], genres: ['pop']};
     await route.fulfill({json: {items: offset === 0 ? [item] : [], total: 1}});
   });
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const period = page.getByRole('group', {name: 'Ranking period'});
   const category = page.getByRole('group', {name: 'Ranking category'});
   await expect(page.locator('.v2-ranking-list strong')).toHaveText('Song short_term');

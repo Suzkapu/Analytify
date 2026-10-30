@@ -31,6 +31,8 @@ interface InertState {
 })
 export class AccessibleDialogDirective implements AfterViewInit, OnDestroy {
   @Input() modalEscapeDisabled = false;
+  @Input() modalFocusReturnFallback: HTMLElement | null = null;
+  @Input() modalFocusReturnTarget: HTMLElement | null = null;
   @Output() modalEscape = new EventEmitter<void>();
 
   private readonly dialog: HTMLElement;
@@ -57,9 +59,16 @@ export class AccessibleDialogDirective implements AfterViewInit, OnDestroy {
       if (state.ariaHidden === null) state.element.removeAttribute('aria-hidden');
       else state.element.setAttribute('aria-hidden', state.ariaHidden);
     }
-    if (this.previouslyFocused?.isConnected && !this.previouslyFocused.closest('[inert]')) {
-      this.previouslyFocused.focus();
-    }
+    const previous = this.modalFocusReturnTarget ?? this.previouslyFocused;
+    const restore = () => {
+      const usable = (element: HTMLElement | null): element is HTMLElement =>
+        !!element?.isConnected && !element.closest('[inert]') && !element.matches(':disabled');
+      const destination = usable(previous) ? previous : this.modalFocusReturnFallback;
+      if (usable(destination)) destination.focus();
+    };
+    // A busy opener may be re-enabled later in the same Angular closing render.
+    if (this.modalFocusReturnTarget?.matches(':disabled')) queueMicrotask(restore);
+    else restore();
   }
 
   @HostListener('document:keydown', ['$event'])

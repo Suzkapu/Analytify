@@ -1,0 +1,90 @@
+{
+  "checkpoint": "99315ee7",
+  "date": "2026-10-24",
+  "browser": {
+    "command": "ANALYTIFY_WEBKIT_EXECUTABLE=\"$PWD/.extra_files/portable-webkit/run-webkit.sh\" npx playwright test --config=playwright.friends.config.ts",
+    "exit": 0,
+    "passed": 92,
+    "projects": [
+      "desktop",
+      "mobile",
+      "firefox-stats",
+      "webkit-stats"
+    ],
+    "strictAppGoldens": 128,
+    "log": "docs/testing-evidence/design-v2/friends-feedback-final-browser.log",
+    "sourceHashes": "docs/testing-evidence/design-v2/friends-feedback-final-browser-source-hashes.json",
+    "sourceDrift": {
+      "package.json": {
+        "atStart": "15c8612090d9b02ab408edb2965eeff095df84bed367d7ca2314d6ad44928bfb",
+        "now": "4d1f52b50177df1911829b1b146afb837def70621d2bbad0077cbd8e3a9e6505"
+      }
+    },
+    "driftExplanation": "package.json gained the isolated workflow policy check while browser run was active; no Friends/browser runtime code changed."
+  },
+  "native": {
+    "command": "npm run test:native-components",
+    "exit": 0,
+    "passed": 6,
+    "strictGoldens": 6,
+    "log": "docs/testing-evidence/design-v2/friends-feedback-final-native.log"
+  },
+  "localCI": {
+    "command": "npm run verify:ci",
+    "exit": 0,
+    "frontendPassed": 2240,
+    "frontendDocumentedHostedSkip": 1,
+    "workerPassed": 218,
+    "edgePassed": 83,
+    "log": "docs/testing-evidence/design-v2/friends-feedback-final-ci.log",
+    "scope": "Before new temporary-auth characterization/fixes; not final whole-project certification."
+  },
+  "frontendCoverage": {
+    "lines": {
+      "total": 11388,
+      "covered": 10052,
+      "skipped": 0,
+      "pct": 88.26
+    },
+    "statements": {
+      "total": 13439,
+      "covered": 11686,
+      "skipped": 0,
+      "pct": 86.95
+    },
+    "functions": {
+      "total": 2780,
+      "covered": 2398,
+      "skipped": 0,
+      "pct": 86.25
+    },
+    "branches": {
+      "total": 8726,
+      "covered": 7110,
+      "skipped": 0,
+      "pct": 81.48
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "final98Gate": {
+    "exit": 1,
+    "log": "docs/testing-evidence/design-v2/friends-feedback-final-frontend98.log"
+  },
+  "parityReviews": [
+    "friends-feedback-cold-visual-review.json",
+    "friends-feedback-remaining-visual-review.json",
+    "friends-native-component-strict-baselines.json",
+    "friends-modal-canonical-visual-review.json"
+  ],
+  "limitations": [
+    "Navigation renderer verification in progress",
+    "Remote isolated contract run40071817459 in progress",
+    "Whole frontend below98percent; full migration incomplete",
+    "Local portable WebKit is not Ubuntu CI visual certification"
+  ]
+}

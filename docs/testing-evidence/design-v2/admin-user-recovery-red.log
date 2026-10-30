@@ -1,0 +1,138 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-save-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [2.121 seconds] - 2026-10-27T19:31:38.076Z
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:28:21:
+      28 │     expect(component.userSaveStates.get('Alice')).toBe('read-error');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userReadbackRequired' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:29:21:
+      29 │     expect(component.userReadbackRequired.has('Alice')).toBe(true);
+         ╵                      ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:36:21:
+      36 │     expect(component.userSaveStates.get('Alice')).toBe('newer-draf...
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userReadbackRequired' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:37:21:
+      37 │     expect(component.userReadbackRequired.has('Alice')).toBe(false);
+         ╵                      ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'refreshUserSettings' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:45:31:
+      45 │ ...onst recovery = component.refreshUserSettings(component.users[0]);
+         ╵                              ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:46:21:
+      46 │     expect(component.userSaveStates.get('Alice')).toBe('refreshing');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'refreshUserSettings' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:48:20:
+      48 │     await component.refreshUserSettings(component.users[0]); await...
+         ╵                     ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:55:21:
+      55 │     expect(component.userSaveStates.get('Alice')).toBe('saved');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'refreshUserSettings' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:62:66:
+      62 │ ...sers[0]); await component.refreshUserSettings(component.users[0]);
+         ╵                              ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userReadbackRequired' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:63:21:
+      63 │     expect(component.userReadbackRequired.has('Alice')).toBe(true);
+         ╵                      ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:64:21:
+      64 │     expect(component.userSaveStates.get('Alice')).toBe('read-error');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'refreshUserSettings' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:66:20:
+      66 │     await component.refreshUserSettings(component.users[0]);
+         ╵                     ~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:77:21:
+      77 │     expect(component.userSaveStates.get('Alice')).toBe('save-error');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userReadbackRequired' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:78:21:
+      78 │     expect(component.userReadbackRequired.has('Alice')).toBe(false);
+         ╵                      ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:81:21:
+      81 │     expect(component.userSaveStates.get('Alice')).toBe('save-error');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:82:21:
+      82 │     expect(component.userSaveStates.get('Bob')).toBe('saved');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:90:21:
+      90 │     expect(component.userSaveStates.get('Alice')).toBe('saving');
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'userSaveStates' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:94:21:
+      94 │     expect(component.userSaveStates.get('Alice')).toBe('newer-draf...
+         ╵                      ~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'refreshUserSettings' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-recovery.spec.ts:103:33:
+      103 │ ...t recovering = component.refreshUserSettings(component.users[0]);
+          ╵                             ~~~~~~~~~~~~~~~~~~~
+
+

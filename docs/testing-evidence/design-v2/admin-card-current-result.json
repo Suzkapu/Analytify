@@ -1,0 +1,275 @@
+{
+  "date": "2026-10-30",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "complete": false,
+  "state": "Identified-user card bounded parity verified;88unique Admin browser cases pass across scoped runs after policy workload split. Later review lifetime fix is tracked separately; full migration remains incomplete.",
+  "changes": [
+    "Reusable responsive identified-user card replaces legacy identity/capability/master/actions while retaining controller effects and drafts.",
+    "Shared strict timestamp parser extracted unchanged.",
+    "Canonical Save vector override fill corrected; exact shared SVG reused.",
+    "Native harness outer viewport prevents tall iframe clipping/scaling; strict comparison unchanged.",
+    "New characterization and cross-browser keyboard, capability and long-identity boundaries."
+  ],
+  "verification": {
+    "ci": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "log": "admin-card-final-ci-unrestricted.log",
+      "frontendPassed": 2575,
+      "frontendFiles": 203,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849164
+    },
+    "native": {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npm run test:native-components",
+      "exit": 0,
+      "log": "admin-card-final-native-restored.log",
+      "passed": 201,
+      "files": 15,
+      "newReviewedReferences": 54,
+      "unchangedReferences": 147,
+      "acceptance": "admin-card-native-acceptance.json",
+      "strictComparison": "update none; zero mismatched pixels and ratio; unchanged threshold0.1"
+    },
+    "browserGeometrySave": {
+      "exit": 0,
+      "passed": 24,
+      "log": "admin-card-final-browser-restored.log",
+      "artifacts": "admin-card-final-geometry-artifacts",
+      "scope": "Four browser projects; seven resizing widths;480/1000heights; both motion preferences; keyboard disclosure focus/draft retention, exact activated saves, later-draft ownership and axe."
+    },
+    "browserRetainedCapability": {
+      "status": "terminal",
+      "exit": 1,
+      "passed": 55,
+      "failed": 1,
+      "log": "admin-card-final-retained-browser.log",
+      "artifacts": "admin-card-final-retained-artifacts",
+      "failure": "WebKit combined policy save/8viewport axe case timed out at30seconds during final axe aggregation; no assertion failure.",
+      "policySplitStatus": "PASS12/exit0; admin-card-policy-split-browser.log. All original geometry/axe assertions and timeouts retained."
+    },
+    "nativeTypes": {
+      "exit": 0,
+      "log": "admin-card-final-native-types.log"
+    },
+    "scopedLint": {
+      "exit": 0,
+      "log": "admin-card-final-scoped-lint.log"
+    },
+    "browserCombined": {
+      "uniqueCasesPassed": 88,
+      "composition": "24mounted/save/resizing +52unchanged non-policy retained/capability cases +12split policy workflow/geometry cases. Original three passing combined-policy executions are superseded, not counted again.",
+      "logs": [
+        "admin-card-final-browser-restored.log",
+        "admin-card-final-retained-browser.log",
+        "admin-card-policy-split-browser.log"
+      ],
+      "limitation": "The original retained run terminal result remains55pass/1timeout; no false rewrite to passing. Later review-guard production changes have separate focused/full CI evidence; full dialog workflows remain unimplemented."
+    }
+  },
+  "coverage": {
+    "worker": {
+      "productionSources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 916,
+          "skipped": 0,
+          "pct": 98.81
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained report and all production/coverage runner/pinned-runtime input hashes verified; whole package file drift from23Oct acknowledged and compared to27Oct in admin-task-editor-backend-reconfirmation.json; current CI218/83 tests rerun",
+      "currentReconfirmation": "admin-card-backend-reconfirmation.json; current source/report/runner hashes unchanged from preceding snapshot, existing package.json historical exception retained; current final inventory gate passes."
+    },
+    "edge": {
+      "productionSources": 12,
+      "metrics": {
+        "lines": {
+          "total": 763,
+          "covered": 763,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 903,
+          "covered": 902,
+          "skipped": 0,
+          "pct": 99.88
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 799,
+          "covered": 797,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained report and all production/coverage runner/pinned-runtime input hashes verified; whole package file drift from23Oct acknowledged and compared to27Oct in admin-task-editor-backend-reconfirmation.json; current CI218/83 tests rerun",
+      "currentReconfirmation": "admin-card-backend-reconfirmation.json; current source/report/runner hashes unchanged from preceding snapshot, existing package.json historical exception retained; current final inventory gate passes."
+    },
+    "frontend": {
+      "productionSources": 177,
+      "metrics": {
+        "lines": {
+          "total": 11731,
+          "covered": 10747,
+          "skipped": 0,
+          "pct": 91.61
+        },
+        "statements": {
+          "total": 13887,
+          "covered": 12526,
+          "skipped": 0,
+          "pct": 90.19
+        },
+        "functions": {
+          "total": 2828,
+          "covered": 2508,
+          "skipped": 0,
+          "pct": 88.68
+        },
+        "branches": {
+          "total": 9014,
+          "covered": 7612,
+          "skipped": 0,
+          "pct": 84.44
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "missingProductionSources": [],
+      "final98Exit": 1,
+      "provenance": "Fresh full CI admin-card-final-ci-unrestricted.log",
+      "changedSources": {
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-timestamp.ts": {
+          "lines": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 1,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 6,
+            "covered": 6,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 9,
+            "covered": 9,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-card.component.ts": {
+          "lines": {
+            "total": 33,
+            "covered": 33,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 12,
+            "covered": 12,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 39,
+            "covered": 39,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 12,
+            "covered": 12,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      }
+    }
+  },
+  "figma": {
+    "family": "1125:35373",
+    "referenceFamily": "1125:35374",
+    "currentCanonical": "1125:33533",
+    "comparison": "admin-card-canonical-comparison.json",
+    "scope": "Bounded identified-card parity, not full Administration page or complete motion."
+  },
+  "sourceHashes": "admin-card-source-hashes.json",
+  "sourceHashCount": 724,
+  "failureEvidence": [
+    "admin-card-final-ci.log: sandbox spawnSync Bash EPERM in disposable activation rehearsal; unrestricted unchanged gate passes.",
+    "admin-card-final-native.log: sandbox loopback EPERM, no tests ran.",
+    "admin-card-final-native-unrestricted.log: missing historical temporary WebKit libraries, no tests ran. Exact documented hashes restored via Ubuntu snapshot; see admin-card-webkit-restoration.json.",
+    "admin-card-final-browser.log: changing accessible-name locator lost disclosure after collapse; stable locator fixed, focused case and full24 matrix pass.",
+    "Earlier native candidates clipped/downscaled or contained solid Save fill; rejected before current54 references accepted."
+  ],
+  "remaining": [
+    "Frontend98minimum all four metrics unmet.",
+    "Pending-review canonical dialog, focus/Cancel-last, concurrency and eligibility confirmation.",
+    "Full Administration navigation/composition/inventory states and appealed context.",
+    "Original feature/motion/canonical parity gates and isolated hosted Admin contracts.",
+    "Final requested commit verification; no new commit requested."
+  ],
+  "nextSlice": "Finish current56-case retained/capability matrix, then canonical pending-review workflow.",
+  "releaseBoundaries": "No commit/push/main merge/deployment/shared backend/service/database changes, production data or real notifications.",
+  "review": {
+    "finding": "Independent read-only review found no actionable card-extraction regressions; retained known review concurrency and acknowledged-deletion/readback defects remain explicit next-slice work.",
+    "audit": "admin-pending-review-next-slice-audit.md",
+    "workflowScreenshotLimit": "Full-height card element screenshots can include the fixed mobile shell navigation at the current viewport position. They are workflow artifacts, not canonical visual goldens; native captures and exact geometry provide bounded card parity evidence."
+  },
+  "sourceScope": "admin-card-source-hashes.json captures the card checkpoint before the later same-user review lifetime fix and policy workload split; see admin-pending-review-lifetimes-source-hashes.json for current inputs."
+}

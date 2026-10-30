@@ -8,13 +8,6 @@ export interface StatsShareableUser {
   requestStatus: StatsAccessStatus | null;
 }
 
-export interface BlockedStatsUser {
-  userId: string;
-  displayName: string;
-  imageUrl: string;
-  blockedAt: string;
-}
-
 export type ModerationStatus = 'submitted' | 'under_review' | 'resolved_action' | 'resolved_no_action' | 'appealed';
 
 export interface ModerationReceipt {

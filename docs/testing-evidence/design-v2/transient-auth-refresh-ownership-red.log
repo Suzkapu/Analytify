@@ -1,0 +1,67 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/compare-room/transient-participant-auth.service.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.254 seconds] - 2026-10-24T06:54:24.377Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > keeps a replacement callback refresh independent of an older held refresh: old-first
+Error: Expected one matching request for criteria "Match URL: https://accounts.spotify.com/api/token", found none.
+    at HttpClientTestingBackend.expectOne (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/common/fesm2022/http-testing.mjs:196:13)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:248:26
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+
+stderr | src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > keeps a replacement callback refresh independent of an older held refresh: replacement-first
+Error: Expected one matching request for criteria "Match URL: https://accounts.spotify.com/api/token", found none.
+    at HttpClientTestingBackend.expectOne (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/common/fesm2022/http-testing.mjs:196:13)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/compare-room/transient-participant-auth.service.spec.ts:248:26
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+
+ ❯ |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts (23 tests | 2 failed) 166ms
+     × keeps a replacement callback refresh independent of an older held refresh: old-first 13ms
+     × keeps a replacement callback refresh independent of an older held refresh: replacement-first 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > keeps a replacement callback refresh independent of an older held refresh: old-first
+ FAIL  |SpotiFront| src/app/core/compare-room/transient-participant-auth.service.spec.ts > Temporary Compare Room Spotify authorization HTTP boundaries > keeps a replacement callback refresh independent of an older held refresh: replacement-first
+Error: Expected one matching request for criteria "Match URL: https://accounts.spotify.com/api/token", found none.
+ ❯ HttpClientTestingBackend.expectOne ../darwin_arm64-fastbuild-ST-fdfa778d11ba/bin/packages/common/http/testing/src/backend.ts:112:12
+ ❯ src/app/core/compare-room/transient-participant-auth.service.spec.ts:248:26
+    246|     await connect({access_token: 'replacement-access', refresh_token: …
+    247|     const replacement = auth.getAccessToken();
+    248|     const request = http.expectOne(tokenUrl);
+       |                          ^
+    249|     expect(new URLSearchParams(request.request.body).get('refresh_toke…
+    250|     const finishOld = async () => {
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 21 passed (23)
+   Start at  08:54:24
+   Duration  1.44s (transform 152ms, setup 387ms, import 170ms, tests 166ms, environment 533ms)
+

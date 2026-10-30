@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-26",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "state": "Mutation lifetime protections and canonical audit records progressed; full migration incomplete",
+  "changes": [
+    "All remaining Admin mutation entry points reject destroyed routes",
+    "Late mutation success/rejection/readback/confirmation/navigation cannot publish after route destruction or newer explicit load",
+    "Policy/moderation readbacks use current-action ownership; same-user save/queue operations block each other",
+    "Moderation and pending-deletion readbacks preserve unrelated drafts",
+    "Demo busy state settles even when a new dashboard load supersedes creation"
+  ],
+  "tests": {
+    "newCases": 22,
+    "initialRed": "admin-action-lifecycle-red.log:19fail",
+    "demoRed": "admin-demo-lifecycle-red.log:19pass/1fail",
+    "draftRed": "admin-action-drafts-red.log:20pass/2fail",
+    "focused": {
+      "passed": 128,
+      "files": 10,
+      "exit": 0,
+      "log": "admin-actions-current-unit.log"
+    },
+    "browser": {
+      "passed": 16,
+      "exit": 0,
+      "log": "admin-actions-current-browser.log",
+      "artifacts": "admin-actions-current-browser-artifacts",
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "scope": "Retained route/read/refresh/keyboard/axe and policy workflow regressions; new mutation lifetime interleavings are isolated component tests, not claimed as actual browser mutation workflows.",
+      "goldensUpdated": false
+    },
+    "fullCI": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "log": "admin-actions-final-ci.log",
+      "frontendPassed": 2422,
+      "frontendFiles": 192,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849144,
+      "sourceHashCount": 649,
+      "drift": []
+    }
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "newRunRecordSet": "1108:32913",
+    "variants": [
+      "Queued",
+      "Running",
+      "Succeeded",
+      "Failed",
+      "Cancelled",
+      "Warning"
+    ],
+    "widths": [
+      900,
+      358
+    ],
+    "referenceFrame": "1109:32855",
+    "reviewedAll12Instances": true,
+    "referenceRows": [
+      "1109:32856",
+      "1109:32871",
+      "1109:32888",
+      "1109:32905",
+      "1109:32924",
+      "1109:32941"
+    ],
+    "canonicalInstances": [
+      "1109:32803",
+      "1109:32811",
+      "1109:32820",
+      "1109:32829",
+      "1109:32837",
+      "1109:32846"
+    ],
+    "removedGenericDescriptionNodes": [
+      "27:1504",
+      "35:2175"
+    ],
+    "reusedFoundations": [
+      "988:32194",
+      "27:1438",
+      "988:32193",
+      "24:124",
+      "43:1713",
+      "43:1722",
+      "43:1701",
+      "43:1725",
+      "43:1704"
+    ],
+    "contract": "Read-only actual user/task/trigger/status/times/error/string warnings. Duration only from valid ordered timestamps; warning maps succeeded plus details.warnings, not a new backend status. No per-record mutation.",
+    "implementationPending": true,
+    "fullAdminParity": false
+  },
+  "coverage": {
+    "frontend": {
+      "sources": 167,
+      "measured": {
+        "lines": {
+          "total": 11544,
+          "covered": 10560,
+          "skipped": 0,
+          "pct": 91.47
+        },
+        "statements": {
+          "total": 13664,
+          "covered": 12302,
+          "skipped": 0,
+          "pct": 90.03
+        },
+        "functions": {
+          "total": 2787,
+          "covered": 2470,
+          "skipped": 0,
+          "pct": 88.62
+        },
+        "branches": {
+          "total": 8916,
+          "covered": 7528,
+          "skipped": 0,
+          "pct": 84.43
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98exit": 1
+    },
+    "worker": {
+      "sources": 17,
+      "lines": 99.66,
+      "statements": 99.72,
+      "functions": 100,
+      "branches": 98.81,
+      "final98exit": 0
+    },
+    "edge": {
+      "sources": 12,
+      "lines": 100,
+      "statements": 99.88,
+      "functions": 100,
+      "branches": 99.74,
+      "final98exit": 0
+    },
+    "backend": "Retained source-matched reports;73backend/config hashes unchanged. Current CI reran218/83tests and final gates pass."
+  },
+  "limitations": [
+    "Frontend98minimum/100aim not reached",
+    "Figma audit records are not yet implemented in Angular; list loading/empty/error/recovery composition still needs canonical completion",
+    "Identified user cards, remaining Admin navigation/layout and appeal context remain incomplete",
+    "Actual browser mutation workflows beyond policy, full visual/motion matrix and broader retained feature/service gates remain incomplete",
+    "No claim of current-account live invalidation solely from route-lifetime guards; auth/account replacement needs separate workflow evidence",
+    "Concurrent policy refresh can still replace user models; future user forms need owned drafts before full UI migration"
+  ],
+  "nextSlice": "Finish canonical audit inventory feedback, implement/test reusable run record/list with real date/missing-time/warning boundaries, then identified user cards",
+  "sourceHashes": "admin-actions-ci-source-hashes.json",
+  "noCommitPushDeploy": true
+}

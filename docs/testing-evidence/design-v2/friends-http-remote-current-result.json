@@ -1,0 +1,118 @@
+{
+  "run": "https://github.com/Suzkapu/Analytify/actions/runs/40093680946",
+  "checkpoint": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "input": {
+    "friends_contract_only": true
+  },
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": {
+    "friends-http-contract": "success",
+    "verify": "skipped",
+    "deploy": "skipped"
+  },
+  "httpOutcomeGroups": 12,
+  "angularServiceTestsPassed": 6,
+  "environment": {
+    "postgresRoot": "/home/runner/work/Analytify/Analytify/.extra_files/isolated-friends-runtime/.ci-provision-El2YH8/postgres",
+    "postgrestRoot": "/home/runner/work/Analytify/Analytify/.extra_files/isolated-friends-runtime/.ci-provision-El2YH8/postgrest",
+    "postgres": {
+      "versions": {
+        "postgres": "postgres (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+        "initdb": "initdb (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+        "pg_ctl": "pg_ctl (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+        "psql": "psql (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)"
+      },
+      "assets": {
+        "control": "/usr/share/postgresql/16/extension/pgcrypto.control",
+        "library": "/usr/lib/postgresql/16/lib/pgcrypto.so"
+      }
+    },
+    "postgrestVersion": "PostgREST 16.5",
+    "scope": "Ubuntu24.04 preinstalled PostgreSQL16; pinned PostgREST16.5. No host service/packages changed. The existing contract runner owns its temporary database/socket/signing material."
+  },
+  "contract": {
+    "mode": "selected-contract-and-angular",
+    "versions": {
+      "postgres": "postgres (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+      "postgrest": "PostgREST 16.5",
+      "supabaseJs": "2.117.2"
+    },
+    "migrations": [
+      {
+        "path": "supabase/migrations/20260801000000_foundational_schema.sql",
+        "sha256": "2ddb1def6b431674bc06bace7edbc55177c957f6689371f894c7f8861b8bc95e"
+      },
+      {
+        "path": "supabase/migrations/20260905153000_lock_spotify_profile_identity.sql",
+        "sha256": "dc6d6dd600184d58ecd8e12a6cf440c84b1db4a10d29d134de626af1bc4c6716"
+      },
+      {
+        "path": "supabase/migrations/20260801181500_playlist_sharing.sql",
+        "sha256": "2744dfdc7236e2c8d95df0b5d73cda7465daf4ad4ca8d6f5bf1c1a2c5c16a8d6"
+      },
+      {
+        "path": "supabase/migrations/20260902190000_stats_spy_mode.sql",
+        "sha256": "110d2f98b0647ec6bb998c22a9ece4583dd52543752f44e0f9978e857f5cbcb7"
+      },
+      {
+        "path": "supabase/migrations/20261011162823_design_v2_single_use_friend_invitations.sql",
+        "sha256": "ec192d691fee40f7f860ae9418c140c43d4a46bdf671b3c6b846b8155726d4db"
+      }
+    ],
+    "outcomes": [
+      "Real SDK HTTP RPC reaches PostgREST with a verified synthetic JWT actor; users RLS exposes only the actor profile.",
+      "Signed anonymous/missing-actor/unverified/forged/expired JWT requests are denied with real HTTP/SQLSTATE codes; private schema is not exposed and raw table grants are absent.",
+      "Real users table RLS allows the actor operational toggle, silently denies another actor row, and column grants reject identity replacement.",
+      "Dropping a committed real HTTP creation response and retrying the same secret produces exactly one hashed pending invitation; malformed secrets/token takeover/non-owner revoke are rejected.",
+      "Receiving reserves exactly one recipient without friendship; exact incoming/preview DTOs contain no secret, and another actor cannot claim or answer the saved request.",
+      "Saved request acceptance and uncertain same-decision retries create one mutual versioned connection with exact Friends DTOs and preserve real independent Stats/playlist grants.",
+      "Removal retries cannot revive old acceptance or remove a later reconnection; the other participant can remove the current version and independent grants remain byte-for-byte unchanged.",
+      "Sender revocation and recipient decline remove incoming pending requests; both are replay-safe and prevent later acceptance.",
+      "Two actual HTTP/SDK receive requests observed waiting on a native row lock reserve exactly one recipient.",
+      "Two actual HTTP accept requests waiting on the same native invitation row produce one accepted recipient and one denied contender.",
+      "Owner revocation committed while actual HTTP acceptance waits prevents late acceptance and preserves independent grants.",
+      "HTTP RPC pagination rejects invalid bounds, owner invitation DTOs omit secrets, and a previously denied synthetic actor recovers after the verified-profile prerequisite is established.",
+      "Actual Angular FriendsService injection uses real cached SDK sessions and the same isolated HTTP/database stack; dedicated suite passed."
+    ],
+    "isolation": {
+      "freshCluster": true,
+      "postgresTcp": false,
+      "socketPermissions": "0700",
+      "authenticatorNoInherit": true,
+      "authenticatorSuperuser": false,
+      "postgrestAndGatewayHost": "127.0.0.1",
+      "syntheticJwtProfilesOnly": true,
+      "externalDatabaseUrlAccepted": false
+    },
+    "prerequisites": "Local absolute PostgreSQL root and PostgREST directory. Explicit auth.users/auth.uid(JSON request.jwt.claims) and verified_spotify_id fixtures; selected actual migrations only.",
+    "limitations": "No hosted Auth login/token issuance/refresh/logout, Spotify OAuth/provider, Realtime, full retained migration chain, deployed backend compatibility, browser/UI parity or notification delivery is certified.",
+    "runnerSha256": "59b719692757b8748b8ef6e276efe67eff40ca12b5ce822670525315a2509590",
+    "cleanup": {
+      "gatewayClosed": true,
+      "postgrestStopped": true,
+      "postgresStopped": true,
+      "workspaceRemoved": true
+    }
+  },
+  "currentVerifiedSourceHashes": {
+    "scripts/test-isolated-friends-http-contract.mjs": "59b719692757b8748b8ef6e276efe67eff40ca12b5ce822670525315a2509590",
+    "scripts/provision-isolated-friends-runtime.mjs": "cb861672feb5e24ae02691ddb17e10b0e04855595a92b4d29f99c92fadc51de2",
+    "integration/friends-http/friends-http.service.spec.ts": "5a2a03f95c62b4d410b72bd5d86050cda829b462a7fe29ae5d91ec07744b6752",
+    "integration/friends-http/vitest.config.mjs": "3887b13fed7c910925f09d0ac1ba6cbc006fd71eff8e6c3d2c8a71986c90e343",
+    "src/app/core/friends/friends.service.ts": "30b06317ef42529a1f1949b0b59f40b2be4cdd76431d43df75d1b04431688e3e",
+    "src/app/core/auth/spotify-auth.service.ts": "f22a708da20a4853ef89bd09635f7c98c781221c024bf1c4da9cfbd474fd0266",
+    "src/app/core/auth/session-lifecycle.service.ts": "b874c0afde0273c8bf3aaf1ef3f62461f931aa987ba6f91962405cf0ad0b8484",
+    "src/app/core/data-access/supabase/supabase.service.ts": "53f68b9918c20be6c1690d26a13865e2db8d6177e02aa2130bfc5afed76d472d",
+    "package-lock.json": "2a6f1557c4d5cebb148872a3569baf06f78ad69c5953eefdd6bae3f2f5747271"
+  },
+  "attempts": [
+    "40071817459 failedguardgeneric",
+    "40092335237 failedcontrolfile777",
+    "40092921061 failedextensiondirectory777",
+    "40093289205 failedusrshare777",
+    "40093680946 success"
+  ],
+  "permissionsFix": "Tightened fixed root-owned canonical non-symlink runtime paths on disposable runner; unchanged trust guards; all six trust boundaries validated before any executable. No shared deployments.",
+  "authorization": "User-authorized test-only infrastructure fixes until contract pass; that authorization ends with this success."
+}

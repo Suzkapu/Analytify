@@ -143,10 +143,10 @@ describe('authentication guards', () => {
         auth.isAuthenticated.mockReturnValue(false);
 
         const allowed = await TestBed.runInInjectionContext(() =>
-            spotifyAuthGuard(undefined, {url: '/new/stats?range=short_term'} as any)
+            spotifyAuthGuard(undefined, {url: '/stats?range=short_term'} as any)
         );
 
-        expect(returnUrl.remember).toHaveBeenCalledWith('/new/stats?range=short_term');
+        expect(returnUrl.remember).toHaveBeenCalledWith('/stats?range=short_term');
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
         expect(allowed).toBe(false);
     });

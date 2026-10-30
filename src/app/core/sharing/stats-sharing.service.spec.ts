@@ -117,6 +117,17 @@ describe('StatsSharingService', () => {
         ]);
     });
 
+    it('propagates denied blocking without attempting to unblock or change access', async () => {
+        const denied = {message: 'Blocking is not permitted', code: '42501'};
+        rpc.mockResolvedValue({data: null, error: denied});
+
+        await expect(service.blockUser('restricted-user')).rejects.toBe(denied);
+
+        expect(rpc.mock.calls).toEqual([
+            ['block_stats_user', {p_user_id: 'restricted-user'}]
+        ]);
+    });
+
     it('shows private moderation notices and sends an appeal through guarded RPCs', async () => {
         rpc.mockResolvedValueOnce({data: [{
             report_id: 'report-id', receipt_code: 'AR-123', viewer_role: 'affected',
@@ -133,24 +144,6 @@ describe('StatsSharingService', () => {
         expect(rpc).toHaveBeenLastCalledWith('appeal_moderation_report', {
             p_report_id: 'report-id', p_reason: 'Please reconsider'
         });
-    });
-
-    it('lists and unblocks users without restoring access client-side', async () => {
-        rpc.mockResolvedValueOnce({data: [{
-            user_id: 'blocked-user', display_name: 'Blocked person', image_url: 'avatar.jpg',
-            blocked_at: '2026-09-10T08:00:00Z'
-        }], error: null}).mockResolvedValueOnce({data: null, error: null});
-
-        await expect(service.listBlockedUsers()).resolves.toEqual([{
-            userId: 'blocked-user', displayName: 'Blocked person', imageUrl: 'avatar.jpg',
-            blockedAt: '2026-09-10T08:00:00Z'
-        }]);
-        await service.unblockUser('blocked-user');
-
-        expect(vi.mocked(rpc).mock.calls).toEqual([
-            ['list_blocked_stats_users'],
-            ['unblock_stats_user', {p_user_id: 'blocked-user'}]
-        ]);
     });
 
     it('requests, approves, declines, and revokes access only through guarded RPCs', async () => {

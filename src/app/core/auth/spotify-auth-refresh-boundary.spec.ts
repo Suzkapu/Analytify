@@ -350,7 +350,7 @@ describe('Spotify refresh and restored-session ownership boundaries', () => {
     const params = destinations[0].searchParams;
     const request = JSON.parse(sessionStorage.getItem('analytify_personal_spotify_auth_request')!);
     expect(request.clientId).toBe('12345678901234567890123456789012');
-    expect(request.returnUrl).toBe('/new/playlists');
+    expect(request.returnUrl).toBe('/playlists');
     expect(request.expectedSpotifyId).toBe('existing');
     expect(request.scopes).toEqual(['playlist-read-private', 'user-read-private']);
     expect(request.verifier).toMatch(/^[A-Za-z0-9_-]{86}$/);
@@ -380,7 +380,7 @@ describe('Spotify refresh and restored-session ownership boundaries', () => {
     const {destinations} = authorizationBoundary();
     await auth.renewSpotifyAuthorization('/stats');
     expect(destinations[0].searchParams.get('scope')).toBe('playlist-read-private user-read-private');
-    expect(JSON.parse(sessionStorage.getItem('analytify_personal_spotify_auth_request')!).returnUrl).toBe('/new/stats');
+    expect(JSON.parse(sessionStorage.getItem('analytify_personal_spotify_auth_request')!).returnUrl).toBe('/stats');
     await auth.requestPlaylistWriteAuthorization('/playlists/source');
     expect(destinations[1].searchParams.get('scope')).toBe('playlist-modify-private playlist-read-private user-read-private');
     expect(values.get('spotifyAccessToken')).toBe('access-owner-A');
@@ -407,7 +407,7 @@ describe('Spotify refresh and restored-session ownership boundaries', () => {
   function savedPersonalRequest(overrides: Record<string, unknown> = {}) {
     sessionStorage.setItem('analytify_personal_spotify_auth_request', JSON.stringify({
       clientId: '12345678901234567890123456789012', state: 'expected-state', verifier: 'isolated-verifier',
-      returnUrl: '/new/stats', scopes: ['user-read-private'], expectedSpotifyId: null, createdAt: Date.now(), ...overrides
+      returnUrl: '/stats', scopes: ['user-read-private'], expectedSpotifyId: null, createdAt: Date.now(), ...overrides
     }));
   }
 

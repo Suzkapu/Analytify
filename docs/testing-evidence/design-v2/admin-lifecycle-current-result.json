@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-26",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "state": "Current lifecycle and native policy-control checks pass; full migration incomplete",
+  "changes": [
+    "Guard full-load/run-refresh publication with route lifetime and request ownership",
+    "Keep user readback limited to the saved identity, preserving another user draft",
+    "Stop user readback after destroyed route or newer explicit load; suppress stale rejections",
+    "Shared Unit select retains native keyboard semantics while using canonical input paint and reused chevron mask",
+    "Hide platform number steppers while preserving native ArrowUp/Down behavior"
+  ],
+  "tests": {
+    "newLifecycleCases": 12,
+    "initialRed": "admin-user-lifecycle-red.log:6fail/1pass",
+    "expandedRed": "admin-user-lifecycle-expanded-red.log:11fail/1pass",
+    "focused": {
+      "passed": 106,
+      "files": 9,
+      "exit": 0,
+      "log": "admin-lifecycle-current-unit.log"
+    },
+    "nativePaintRed": "admin-policy-native-paint-red.log:WebKit appearance auto, expected none",
+    "nativePaintFourProjects": {
+      "passed": 4,
+      "exit": 0,
+      "log": "admin-policy-native-paint.log"
+    },
+    "fullBrowser": {
+      "passed": 16,
+      "exit": 0,
+      "log": "admin-lifecycle-current-browser.log",
+      "artifacts": "admin-lifecycle-current-browser-artifacts",
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ],
+      "heights": [
+        600,
+        1000
+      ],
+      "retries": 0,
+      "goldensUpdated": false,
+      "additionalAssertions": [
+        "canonical select and number appearance",
+        "canonical select background",
+        "native number ArrowUp/Down retained",
+        "selected unit fits reserved chevron padding"
+      ]
+    },
+    "fullCI": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "log": "admin-lifecycle-final-ci.log",
+      "frontendPassed": 2400,
+      "frontendFiles": 191,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849144,
+      "frozenHashes": 648,
+      "sourceDrift": []
+    },
+    "scopedLint": 0,
+    "testTypes": 0,
+    "diffCheck": 0
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "policyComponentSet": "1100:32712",
+    "newUnitComponent": "1105:32738",
+    "compactSavedReviewed": "1103:32745",
+    "reusedField": "24:124",
+    "reusedChevron": "62:2392",
+    "nativeAsset": "src/assets/design-v2/update-chevron.svg",
+    "visualReview": "Root reviewed final WebKit320 and desktop768 examples against fresh compact policy reference; no strict golden/full Administration parity claim.",
+    "usersAndRunsRead": [
+      "27:1461",
+      "35:2143"
+    ],
+    "usersAndRunsFindings": "Still contains generic interval fields and audit description; identified cards and actual run records remain missing."
+  },
+  "coverage": {
+    "frontend": {
+      "sources": 167,
+      "measured": {
+        "lines": {
+          "total": 11502,
+          "covered": 10510,
+          "skipped": 0,
+          "pct": 91.37
+        },
+        "statements": {
+          "total": 13590,
+          "covered": 12225,
+          "skipped": 0,
+          "pct": 89.95
+        },
+        "functions": {
+          "total": 2782,
+          "covered": 2464,
+          "skipped": 0,
+          "pct": 88.56
+        },
+        "branches": {
+          "total": 8834,
+          "covered": 7454,
+          "skipped": 0,
+          "pct": 84.37
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98exit": 1
+    },
+    "worker": {
+      "sources": 17,
+      "lines": 99.66,
+      "statements": 99.72,
+      "functions": 100,
+      "branches": 98.81,
+      "final98exit": 0
+    },
+    "edge": {
+      "sources": 12,
+      "lines": 100,
+      "statements": 99.88,
+      "functions": 100,
+      "branches": 99.74,
+      "final98exit": 0
+    },
+    "backendMeasurement": "Retained source-matched reports;73 backend/config hashes unchanged, current final gates pass. CI reran218/83 backend tests."
+  },
+  "limitations": [
+    "Frontend98/100goal not reached; broader retained migrations incomplete",
+    "Lifetime guards currently cover full loads, user saves/readbacks and run refreshes; other Admin mutations require their own lifetime/ownership tests before dependent migration",
+    "Full Administration layout/navigation, identified user/audit states and appealed-case context remain unfinished",
+    "Matching-width per-state strict visual golden acceptance and full motion validation remain open",
+    "Existing hosted-service/Artist/Compare/League gaps remain open in progress document"
+  ],
+  "nextSlice": "Canonical identified user/audit states and remaining Admin mutation ownership, then responsive implementation and browser workflows",
+  "noCommitPushDeploy": true,
+  "sourceHashes": "admin-lifecycle-ci-source-hashes.json"
+}

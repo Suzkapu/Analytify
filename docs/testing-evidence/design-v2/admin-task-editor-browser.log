@@ -1,0 +1,41 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --grep=mounted task --output=docs/testing-evidence/design-v2/admin-task-editor-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:17107) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:17107) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 20 tests using 1 worker
+
+(node:17295) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (6.9s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (4.2s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion (4.7s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion (4.0s)
+  ✓   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion (5.7s)
+(node:19302) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   6 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (5.8s)
+  ✓   7 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (5.2s)
+  ✓   8 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion (4.9s)
+  ✓   9 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion (4.1s)
+  ✓  10 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion (4.8s)
+(node:20954) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (6.7s)
+  ✓  12 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (4.9s)
+  ✓  13 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion (5.6s)
+  ✓  14 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion (4.3s)
+  ✓  15 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion (4.3s)
+(node:22824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  16 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:592:6 › mounted task drafts validate without writing, then save only the activated values (12.7s)
+  ✓  17 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with no-preference motion (7.5s)
+  ✓  18 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with no-preference motion (8.8s)
+  ✓  19 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 480px with reduce motion (5.1s)
+  ✓  20 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:626:7 › mounted task editors resize at 1000px with reduce motion (5.8s)
+
+  20 passed (2.2m)

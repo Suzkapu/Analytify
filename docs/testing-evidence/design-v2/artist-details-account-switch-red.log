@@ -1,0 +1,51 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/library/artist-details/artist-details-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [4.315 seconds] - 2026-10-24T06:56:44.045Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/library/artist-details/artist-details-boundaries.spec.ts > Artist details cache and service boundaries > discards held Spotify data after an account switch and can retry for the replacement account
+[Analytify][0031][+01339ms][Artist Details][STEP] Cache missing. Loading artist details from Spotify API...
+
+ ❯ |SpotiFront| src/app/features/library/artist-details/artist-details-boundaries.spec.ts (23 tests | 1 failed) 1383ms
+     × discards held Spotify data after an account switch and can retry for the replacement account 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/library/artist-details/artist-details-boundaries.spec.ts > Artist details cache and service boundaries > discards held Spotify data after an account switch and can retry for the replacement account
+AssertionError: expected { id: 'artist-a', …(1) } to deeply equal {}
+
+- Expected
++ Received
+
+- {}
++ {
++   "id": "artist-a",
++   "name": "Outgoing account response",
++ }
+
+ ❯ src/app/features/library/artist-details/artist-details-boundaries.spec.ts:278:33
+    276|     oldResponse.complete();
+    277|     await Promise.resolve();
+    278|     expect(f.controller.artist).toEqual({});
+       |                                 ^
+    279|     expect(f.storage.setItem).not.toHaveBeenCalled();
+    280|     expect(f.items.size).toBe(0);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 passed (23)
+   Start at  08:56:44
+   Duration  2.99s (transform 206ms, setup 464ms, import 267ms, tests 1.38s, environment 615ms)
+

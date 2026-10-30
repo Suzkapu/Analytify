@@ -29,7 +29,7 @@ test.beforeEach(async ({page}) => {
   });
   await page.route('https://api.spotify.com/v1/me/top/tracks?*', route => route.fulfill({json: {items: [], total: 0}}));
   await page.route('https://api.spotify.com/v1/me/top/artists?*', route => route.fulfill({json: {items: [], total: 0}}));
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   await chooseStatsDate(page, 'ranking', '2026-10-04');
   await expect(page.getByRole('button', {name: 'View position history for Midnight Drive'})).toBeVisible();
 });
@@ -46,7 +46,7 @@ test('approved shared snapshot has no private history actions in any category', 
       topGenres:[{name:'pop',weight:100}]
     } : []});
   });
-  await page.goto('/new/stats/shared-owner');
+  await page.goto('/stats/shared-owner');
   await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
   for (const [category,item] of [['Songs','Shared Song'],['Artists','Shared Artist'],['Genres','pop']]) {
     await page.getByRole('group',{name:'Ranking category'}).getByRole('button',{name:category,exact:true}).click();
@@ -383,7 +383,7 @@ for (const lateOutcome of ['ready','unavailable'] as const) {
     });
     // Use the real router link and browser history so the pending controller is
     // destroyed by navigation, rather than reloading the application in a fixture.
-    await page.goto('/new/stats/shared-owner');
+    await page.goto('/stats/shared-owner');
     await expect(page.getByRole('heading',{name:'Alex · Listening stats'})).toBeVisible();
     await page.getByRole('link',{name:'Stats',exact:true}).first().click();
     await expect(page.getByRole('heading',{name:'Your top listening'})).toBeVisible();

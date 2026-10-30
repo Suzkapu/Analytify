@@ -1,0 +1,85 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-pending-review-recovery.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.802 seconds] - 2026-10-30T11:41:20.838Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > Cancel during a held review ignores the late eligible response and permits a fresh review
+AssertionError: expected undefined to be 'reviewing' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-recovery.spec.ts:48:51
+    at Generator.next (<anonymous>)
+    at /mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:106:61
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23)
+    at __async (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:90:10)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-pending-review-recovery.spec.ts:45:110
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+    at new ZoneAwarePromise (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2238:23) {
+  actual: undefined,
+  expected: 'reviewing',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts (4 tests | 4 failed) 3031ms
+     × waits for explicit confirmation and snapshots reviewed identity while eligible 1020ms
+     × Cancel during a held review ignores the late eligible response and permits a fresh review 4ms
+     × removes acknowledged deleted row immediately and recovers failed inventory without another delete 1002ms
+     × treats delete transport failure as uncertain and blocks every user mutation until read-only reconciliation 1002ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > waits for explicit confirmation and snapshots reviewed identity while eligible
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > removes acknowledged deleted row immediately and recovers failed inventory without another delete
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > treats delete transport failure as uncertain and blocks every user mutation until read-only reconciliation
+AssertionError: expected undefined to be 'eligible' // Object.is equality
+
+- Expected:
+"eligible"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-pending-review-recovery.spec.ts:33:72
+     31| async function eligible(component: ReturnType<typeof setup>['component…
+     32|   const action = component.reviewIncompleteProfile(component.users[0]);
+     33|   await vi.waitFor(() => expect(component.pendingProfileReview?.phase)…
+       |                                                                        ^
+     34|   return {action};
+     35| }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > Cancel during a held review ignores the late eligible response and permits a fresh review
+AssertionError: expected undefined to be 'reviewing' // Object.is equality
+
+- Expected:
+"reviewing"
+
++ Received:
+undefined
+
+ ❯ src/app/features/admin/admin-pending-review-recovery.spec.ts:48:51
+     46|     const {component, service} = setup(), read = held<typeof review>()…
+     47|     const action = component.reviewIncompleteProfile(component.users[0…
+     48|     expect(component.pendingProfileReview?.phase).toBe('reviewing');
+       |                                                   ^
+     49|     component.dismissPendingProfileReview(); read.resolve(review); awa…
+     50|     expect(component.pendingProfileReview).toBeNull(); expect(service.…
+ ❯ chunk-M65JKFVJ.js:106:61
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+ ❯ __async chunk-M65JKFVJ.js:90:10
+ ❯ src/app/features/admin/admin-pending-review-recovery.spec.ts:45:110
+ ❯ new ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  12:41:21
+   Duration  4.34s (transform 196ms, setup 355ms, import 260ms, tests 3.03s, environment 523ms)
+

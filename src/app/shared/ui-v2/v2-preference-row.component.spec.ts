@@ -23,4 +23,16 @@ describe('canonical preference row', () => {
     input.checked = true; input.dispatchEvent(new Event('change'));
     expect(input.checked).toBe(false); expect(changed).not.toHaveBeenCalled(); expect(input.disabled).toBe(true);
   });
+  it('supports an unadorned task switch with a distinct accessible purpose', () => {
+    const {fixture, input} = setup();
+    fixture.componentRef.setInput('compact', true);
+    fixture.componentRef.setInput('description', '');
+    fixture.componentRef.setInput('ariaLabel', 'Enable optional stats requests');
+    fixture.detectChanges();
+    expect(input.getAttribute('aria-label')).toBe('Enable optional stats requests');
+    expect(fixture.nativeElement.querySelector('.v2-preference-row > img')).toBeNull();
+    expect(fixture.nativeElement.querySelector('small')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Stats requests');
+  });
+
 });

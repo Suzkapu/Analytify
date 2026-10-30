@@ -1,0 +1,344 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/admin/admin-service-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.124 seconds] - 2026-10-27T19:18:40.418Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > saves the selected user settings at activation even when client readiness is delayed
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'admin_update_sync_user', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_sync_user",
+-   ObjectContaining {
+-     "p_enabled": true,
++   {
++     "p_enabled": false,
+      "p_history_enabled": true,
+-     "p_history_interval_minutes": 30,
++     "p_history_interval_minutes": 90,
+      "p_history_interval_unit": "minutes",
+-     "p_timezone": "Europe/Vienna",
++     "p_long_term_enabled": false,
++     "p_long_term_interval_hours": undefined,
++     "p_long_term_interval_unit": undefined,
++     "p_medium_term_enabled": false,
++     "p_medium_term_interval_hours": undefined,
++     "p_medium_term_interval_unit": undefined,
++     "p_shared_playlist_interval_minutes": undefined,
++     "p_shared_playlist_interval_unit": undefined,
++     "p_shared_playlists_enabled": false,
++     "p_short_term_enabled": false,
++     "p_short_term_interval_hours": undefined,
++     "p_short_term_interval_unit": undefined,
++     "p_song_league_playlist_fridays_only": undefined,
++     "p_song_league_playlist_interval_minutes": undefined,
++     "p_song_league_playlist_interval_unit": undefined,
++     "p_song_league_playlists_enabled": false,
++     "p_timezone": "Europe/London",
+      "p_user_id": "user-a",
+    },
+  ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin-service-boundaries.spec.ts:47:17
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > keeps policy values selected at activation while the client becomes ready
+AssertionError: expected "vi.fn()" to be called once with arguments: [ …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_sync_schedule_policy",
+    {
+-     "p_available": true,
++     "p_available": false,
+      "p_interval_unit": "hours",
+-     "p_interval_value": 2,
++     "p_interval_value": 7,
+      "p_task_key": "stats_short_term",
+    },
+  ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin-service-boundaries.spec.ts:61:17
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > saves the selected announcement without consuming subsequent website edits
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'admin_update_site_settings', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_site_settings",
+    {
+-     "p_allow_song_league_creation": false,
+-     "p_announcement": "Scheduled maintenance",
++     "p_allow_song_league_creation": true,
++     "p_announcement": "Next unsaved draft",
+    },
+  ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin-service-boundaries.spec.ts:73:17
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+stderr | src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > submits exactly the moderation decision activated before client readiness
+AssertionError: expected "vi.fn()" to be called once with arguments: [ …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_moderation_report",
+    {
+-     "p_affected_notice": "Review complete",
+-     "p_decision_reason": "Reviewed context",
++     "p_affected_notice": null,
++     "p_decision_reason": "Unsaved follow-up",
+      "p_outcome": "no_violation",
+      "p_report_id": "report-a",
+-     "p_reporter_notice": "No violation found",
++     "p_reporter_notice": "Do not send yet",
+      "p_status": "resolved_no_action",
+    },
+  ]
+
+
+Number of calls: 1
+
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1504:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/core/admin/admin-service-boundaries.spec.ts:86:17
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+
+ ❯ |SpotiFront| src/app/core/admin/admin-service-boundaries.spec.ts (33 tests | 4 failed) 228ms
+     × saves the selected user settings at activation even when client readiness is delayed 23ms
+     × keeps policy values selected at activation while the client becomes ready 4ms
+     × saves the selected announcement without consuming subsequent website edits 3ms
+     × submits exactly the moderation decision activated before client readiness 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > saves the selected user settings at activation even when client readiness is delayed
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'admin_update_sync_user', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_sync_user",
+-   ObjectContaining {
+-     "p_enabled": true,
++   {
++     "p_enabled": false,
+      "p_history_enabled": true,
+-     "p_history_interval_minutes": 30,
++     "p_history_interval_minutes": 90,
+      "p_history_interval_unit": "minutes",
+-     "p_timezone": "Europe/Vienna",
++     "p_long_term_enabled": false,
++     "p_long_term_interval_hours": undefined,
++     "p_long_term_interval_unit": undefined,
++     "p_medium_term_enabled": false,
++     "p_medium_term_interval_hours": undefined,
++     "p_medium_term_interval_unit": undefined,
++     "p_shared_playlist_interval_minutes": undefined,
++     "p_shared_playlist_interval_unit": undefined,
++     "p_shared_playlists_enabled": false,
++     "p_short_term_enabled": false,
++     "p_short_term_interval_hours": undefined,
++     "p_short_term_interval_unit": undefined,
++     "p_song_league_playlist_fridays_only": undefined,
++     "p_song_league_playlist_interval_minutes": undefined,
++     "p_song_league_playlist_interval_unit": undefined,
++     "p_song_league_playlists_enabled": false,
++     "p_timezone": "Europe/London",
+      "p_user_id": "user-a",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/admin/admin-service-boundaries.spec.ts:47:17
+     45|     expect(rpc).not.toHaveBeenCalled();
+     46|     client.resolve({rpc}); await saving;
+     47|     expect(rpc).toHaveBeenCalledExactlyOnceWith('admin_update_sync_use…
+       |                 ^
+     48|       p_user_id: 'user-a', p_enabled: true, p_timezone: 'Europe/Vienna…
+     49|       p_history_enabled: true, p_history_interval_minutes: 30, p_histo…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > keeps policy values selected at activation while the client becomes ready
+AssertionError: expected "vi.fn()" to be called once with arguments: [ …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_sync_schedule_policy",
+    {
+-     "p_available": true,
++     "p_available": false,
+      "p_interval_unit": "hours",
+-     "p_interval_value": 2,
++     "p_interval_value": 7,
+      "p_task_key": "stats_short_term",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/admin/admin-service-boundaries.spec.ts:61:17
+     59|     draft.intervalValue = 7; draft.available = false;
+     60|     client.resolve({rpc}); await saving;
+     61|     expect(rpc).toHaveBeenCalledExactlyOnceWith('admin_update_sync_sch…
+       |                 ^
+     62|       p_task_key: 'stats_short_term', p_available: true, p_interval_va…
+     63|     });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > saves the selected announcement without consuming subsequent website edits
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'admin_update_site_settings', …(1) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_site_settings",
+    {
+-     "p_allow_song_league_creation": false,
+-     "p_announcement": "Scheduled maintenance",
++     "p_allow_song_league_creation": true,
++     "p_announcement": "Next unsaved draft",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/admin/admin-service-boundaries.spec.ts:73:17
+     71|     draft.announcement = 'Next unsaved draft'; draft.allowSongLeagueCr…
+     72|     client.resolve({rpc}); await saving;
+     73|     expect(rpc).toHaveBeenCalledExactlyOnceWith('admin_update_site_set…
+       |                 ^
+     74|       p_announcement: 'Scheduled maintenance', p_allow_song_league_cre…
+     75|     });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |SpotiFront| src/app/core/admin/admin-service-boundaries.spec.ts > AdminService retained RPC boundaries > submits exactly the moderation decision activated before client readiness
+AssertionError: expected "vi.fn()" to be called once with arguments: [ …(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "admin_update_moderation_report",
+    {
+-     "p_affected_notice": "Review complete",
+-     "p_decision_reason": "Reviewed context",
++     "p_affected_notice": null,
++     "p_decision_reason": "Unsaved follow-up",
+      "p_outcome": "no_violation",
+      "p_report_id": "report-a",
+-     "p_reporter_notice": "No violation found",
++     "p_reporter_notice": "Do not send yet",
+      "p_status": "resolved_no_action",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/app/core/admin/admin-service-boundaries.spec.ts:86:17
+     84|     draft.decisionReason = 'Unsaved follow-up'; draft.reporterNotice =…
+     85|     client.resolve({rpc}); await saving;
+     86|     expect(rpc).toHaveBeenCalledExactlyOnceWith('admin_update_moderati…
+       |                 ^
+     87|       p_report_id: 'report-a', p_status: 'resolved_no_action', p_outco…
+     88|       p_decision_reason: 'Reviewed context', p_reporter_notice: 'No vi…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 29 passed (33)
+   Start at  20:18:40
+   Duration  931ms (transform 109ms, setup 201ms, import 119ms, tests 228ms, environment 289ms)
+

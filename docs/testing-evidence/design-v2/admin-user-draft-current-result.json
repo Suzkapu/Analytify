@@ -1,0 +1,114 @@
+{
+  "recorded": "2026-10-29",
+  "verificationDate": "2026-10-27",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "complete": false,
+  "sourceHashes": {
+    "file": "admin-user-draft-source-hashes.json",
+    "count": 668,
+    "drift": []
+  },
+  "tests": {
+    "focused": {
+      "passed": 224,
+      "files": 17,
+      "log": "admin-user-draft-ownership-final-unit.log"
+    },
+    "ci": {
+      "frontend": 2518,
+      "files": 199,
+      "documentedHostedSkip": 1,
+      "worker": 218,
+      "edge": 83,
+      "log": "admin-user-draft-current-ci.log"
+    },
+    "browser": {
+      "passed": 28,
+      "projects": [
+        "Chromium desktop",
+        "Chromium mobile",
+        "Firefox",
+        "WebKit"
+      ],
+      "log": "admin-user-draft-current-browser.log",
+      "scope": "targeted ownership and retained policy/save/recovery cases; not full Admin matrix"
+    },
+    "native": {
+      "passed": 114,
+      "status": "prior result retained; unchanged component sources, not rerun"
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "lines": {
+        "total": 11670,
+        "covered": 10689,
+        "skipped": 0,
+        "pct": 91.59
+      },
+      "statements": {
+        "total": 13818,
+        "covered": 12460,
+        "skipped": 0,
+        "pct": 90.17
+      },
+      "functions": {
+        "total": 2813,
+        "covered": 2496,
+        "skipped": 0,
+        "pct": 88.73
+      },
+      "branches": {
+        "total": 8996,
+        "covered": 7610,
+        "skipped": 0,
+        "pct": 84.59
+      },
+      "branchesTrue": {
+        "total": 0,
+        "covered": 0,
+        "skipped": 0,
+        "pct": 100
+      }
+    },
+    "frontendProductionSources": 173,
+    "workerLSFB": [
+      99.66,
+      99.72,
+      100,
+      98.81
+    ],
+    "edgeLSFB": [
+      100,
+      99.88,
+      100,
+      99.74
+    ],
+    "backendReports": "retained source/config matched; final inventory gates rerun 29 October",
+    "finalGateExit": {
+      "frontend": 1,
+      "worker": 0,
+      "edge": 0
+    },
+    "frontendReportEntries": 178
+  },
+  "figma": {
+    "file": "5v8ckmlbfhMDWwP5sTdSXd",
+    "cardSet": "1125:35373",
+    "taskEditorSet": "1125:33476",
+    "references": "1125:35374",
+    "reviewed": [
+      "admin-user-card-ready-collapsed.png",
+      "admin-user-card-ready-expanded.png"
+    ],
+    "status": "canonical library in progress; other capability/compact states still require visual review; prototype/page composition and Angular card remain pending"
+  },
+  "remaining": [
+    "Frontend below 98 percent on all metrics",
+    "Complete canonical validation/busy states and review all capability/compact variants",
+    "Implement and verify full responsive Angular card",
+    "Full original feature, parity, service and completion gates remain open"
+  ]
+}

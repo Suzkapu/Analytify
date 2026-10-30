@@ -1,0 +1,26 @@
+✔ registered preview dispatch defaults to a required boolean test-only mode (1.162292ms)
+✔ actual job conditions prevent test-only deployment and preserve ordinary release boundaries (9.5429ms)
+✔ test-only mode preserves the real isolated contract and failure behavior (0.419774ms)
+✔ isolated job uses only pinned reviewed actions and retains evidence on failure (0.659072ms)
+✔ hosted runner repairs only the known writable pgcrypto control before dependencies run (0.346067ms)
+✔ PostgREST provenance matches the previously verified official release archive and binary (10.267263ms)
+✔ accepts only offline flag and Linux x64 Ubuntu24.04; refuses external backends and runtime overrides (1.673867ms)
+✔ cache refuses symlink root and ancestor while retaining an unrelated sentinel (2.99725ms)
+✔ cache refuses a world-writable cache without changing its contents (1.030014ms)
+✔ verified extraction refuses changed or symlinked cache bytes before invoking tar (2.132424ms)
+✔ checksum-verified local archive extracts data into its owned destination (18.078116ms)
+✔ system executable trust rejects symlinks, non-root ownership, writable ancestors and non-files (1.465328ms)
+✔ preinstalled PostgreSQL probe checks all four binaries and pgcrypto assets without service startup (4.384692ms)
+✔ PostgreSQL probe fails closed for wrong/mixed versions, missing binaries and missing extension assets (0.623736ms)
+✔ download fails closed for HTTP errors and redirects leaving official HTTPS hosts (17.349404ms)
+✔ official redirect bytes remain untrusted until the exact checksum is verified (3.07743ms)
+✔ archive size bound rejects oversized network input (1.15117ms)
+✔ CLI refuses external connection arguments before inspecting host or writing a cache (44.38696ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 178.980074

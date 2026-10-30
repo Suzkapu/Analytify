@@ -1,0 +1,57 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-user-recovery-final-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:93425) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:93425) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 36 tests using 1 worker
+
+(node:94827) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (5.1s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (5.0s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:175:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.6s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:186:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (10.1s)
+  ✓   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with no-preference motion (17.0s)
+  ✓   6 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with reduce motion (17.7s)
+  ✓   7 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:389:5 › user save retains edits made during the write without submitting them or duplicating work (3.6s)
+  ✓   8 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (16.3s)
+  ✓   9 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with reduce motion (13.5s)
+(node:103618) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (8.8s)
+  ✓  11 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (8.6s)
+  ✓  12 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:175:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (2.0s)
+  ✓  13 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:186:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (13.7s)
+  ✓  14 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with no-preference motion (17.5s)
+  ✓  15 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with reduce motion (16.5s)
+  ✓  16 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:389:5 › user save retains edits made during the write without submitting them or duplicating work (2.4s)
+  ✓  17 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (11.5s)
+  ✓  18 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with reduce motion (10.3s)
+(node:111030) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (4.7s)
+  ✓  20 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (3.8s)
+  ✓  21 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:175:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.1s)
+  ✓  22 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:186:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (10.6s)
+  ✓  23 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with no-preference motion (23.8s)
+  ✓  24 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with reduce motion (22.9s)
+  ✓  25 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:389:5 › user save retains edits made during the write without submitting them or duplicating work (4.3s)
+  ✓  26 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (26.0s)
+  ✓  27 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with reduce motion (22.9s)
+(node:124115) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (12.5s)
+  ✓  29 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:107:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (12.7s)
+  ✓  30 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:175:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.6s)
+  ✓  31 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:186:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (24.9s)
+  ✓  32 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with no-preference motion (33.8s)
+  ✓  33 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:285:7 › audit records and read-only recovery with reduce motion (18.2s)
+  ✓  34 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:389:5 › user save retains edits made during the write without submitting them or duplicating work (4.3s)
+  ✓  35 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (23.1s)
+  ✓  36 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with reduce motion (13.0s)
+
+  36 passed (7.7m)

@@ -34,7 +34,7 @@ test('canonical library records navigation and interaction performance evidence'
     categories: 'devtools.timeline,blink.user_timing,toplevel,disabled-by-default-devtools.timeline',
     transferMode: 'ReturnAsStream'
   });
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const search = page.getByRole('searchbox', {name: 'Search your playlists'});
   await expect(search).toBeVisible();
   await expect(page.getByText('Test Playlist', {exact: true})).toBeVisible();

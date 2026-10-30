@@ -1,0 +1,10 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=e2e/components/admin-pending-review.native.ts
+An exception occurred while getting runner-specific build options:
+Error: No tests found matching the following patterns:
+- Included: e2e/components/admin-pending-review.native.ts
+
+Please check the 'test' target configuration in your project's 'angular.json' file.
+    at getVitestBuildOptions (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/build/src/builders/unit-test/runners/vitest/build-options.js:187:15)
+    at async execute (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular/build/src/builders/unit-test/builder.js:305:13)
+    at async handleAsyncIterator (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@angular-devkit/architect/src/api.js:38:28)

@@ -18,7 +18,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       const url = new URL(request.url());
       if (request.method() === 'DELETE' || url.pathname.endsWith('/logout')) destructiveRequests.push(url.pathname);
     });
-    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/new/settings/account');
+    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/settings/account');
     const panel = page.locator('v2-settings-account');
     await expect(panel.getByRole('heading', {name: 'Browser test user'})).toBeVisible();
     const spotify = panel.getByRole('link', {name: 'Spotify connection'});
@@ -59,7 +59,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await data.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
     await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true})).toBeVisible();
     await page.keyboard.press('Escape'); await expect(page.getByRole('alertdialog')).toHaveCount(0);
-    await expect(page).toHaveURL(/\/new\/settings\/data$/); expect(destructiveRequests).toEqual([]); expect(runtimeErrors).toEqual([]);
+    await expect(page).toHaveURL(/\/settings\/data$/); expect(destructiveRequests).toEqual([]); expect(runtimeErrors).toEqual([]);
     await writeFile(info.outputPath('settings-account-data.json'), JSON.stringify({motion, geometry, destructiveRequests, runtimeErrors}, null, 2));
   });
 }

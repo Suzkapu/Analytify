@@ -161,7 +161,7 @@ async function setupFriends(page: Page, motion: 'no-preference' | 'reduce', revo
     const encode = (value: object) => btoa(JSON.stringify(value)).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
     localStorage.setItem('sb-127-auth-token', JSON.stringify({access_token: `${encode({alg: 'HS256', typ: 'JWT'})}.${encode({sub: actorId, role: 'authenticated', exp})}.fixture-signature`, refresh_token: 'synthetic-refresh-only', token_type: 'bearer', expires_at: exp, expires_in: 3600, user: {id: actorId, aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {}}}));
   }, actor);
-  await page.goto(revokedToken ? '/new/friends/invite/' + revokedToken : '/new/friends');
+  await page.goto(revokedToken ? '/friends/invite/' + revokedToken : '/friends');
   const panel = page.locator('v2-friends-page');
   return {panel, writes, unexpected, runtimeErrors, counters: () => ({authLogouts, friendsReads, inventoryReads: [...inventoryReads]}),
     friendsReadWaiting: () => !!releaseFriendsRead, releaseFriendsRead: () => releaseFriendsRead?.(),
@@ -190,7 +190,7 @@ test('Friends uncertain creation and terminal owner feedback require explicit re
 
 for (const accept of [true, false]) test(`Friends confirmed ${accept ? 'accepted' : 'declined'} feedback stays request-owned`, async ({page}, info) => {
   const {panel, writes, unexpected, runtimeErrors} = await setupFriends(page, 'reduce');
-  await page.goto('/new/friends/invite/' + 'b'.repeat(64));
+  await page.goto('/friends/invite/' + 'b'.repeat(64));
   await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
   await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
   await panel.getByRole('button', {name: accept ? 'Accept' : 'Decline', exact: true}).press('Enter');
@@ -259,13 +259,13 @@ test('Friends invitation revoked before confirming read shows unavailable feedba
 
 test('Friends unverified personal connection is gated before private inventory access', async ({page}) => {
   const {panel, writes, unexpected, runtimeErrors, counters} = await setupFriends(page, 'reduce', undefined, undefined, [], {unverifiedPersonalConnection: true});
-  await expect(page).toHaveURL(/\/new\/spotify\/cloud-access\?/);
+  await expect(page).toHaveURL(/\/spotify\/cloud-access\?/);
   expect(new URL(page.url()).searchParams.get('returnUrl')).toBe('/friends');
   await expect(page.getByRole('heading', {name: 'Enable this workspace feature', exact: true})).toBeVisible();
   await expect(panel).toHaveCount(0);
   expect(counters().inventoryReads).toEqual([]); expect(writes).toEqual([]);
   await page.getByRole('button', {name: 'Not now', exact: true}).press('Enter');
-  await expect(page).toHaveURL(/\/new\/playlists$/); await expect(panel).toHaveCount(0);
+  await expect(page).toHaveURL(/\/playlists$/); await expect(panel).toHaveCount(0);
   expect(counters().inventoryReads).toEqual([]); expect(writes).toEqual([]);
   expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
 });
@@ -402,7 +402,7 @@ test('Friends secondary content has deterministic canonical visual candidates', 
   await panel.getByRole('link', {name: 'Invitations', exact: true}).click();
   await expect(panel.getByRole('link', {name: 'View link & QR'})).toBeVisible();
   await capture('invitations');
-  await page.goto('/new/friends/invite/' + 'b'.repeat(64));
+  await page.goto('/friends/invite/' + 'b'.repeat(64));
   await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
   await panel.getByRole('button', {name: 'Retry', exact: true}).click();
   await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
@@ -470,7 +470,7 @@ test('Friends empty content preserves canonical geometry and starts only an expl
   }
   await writeFile(info.outputPath('friends-empty-geometry.json'), JSON.stringify(samples, null, 2));
   await expectNoBlockingAxeViolations(page); expect(writes).toEqual([]);
-  await action.click(); await expect(page).toHaveURL(/\/new\/friends\/add$/);
+  await action.click(); await expect(page).toHaveURL(/\/friends\/add$/);
   await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
   expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(1);
   expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
@@ -685,7 +685,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     const creations = writes.filter(write => write.name === 'create_friend_invitation');
     expect(creations).toHaveLength(3); expect(creations[2].body.p_claim_token).toMatch(/^[a-f0-9]{64}$/);
     expect(creations[2].body.p_claim_token).not.toBe(creations[0].body.p_claim_token);
-    const expectedUrl = `http://127.0.0.1:4214/new/friends/invite/${creations[2].body.p_claim_token}`;
+    const expectedUrl = `http://127.0.0.1:4214/friends/invite/${creations[2].body.p_claim_token}`;
     await expect(panel.locator('.invitation-url')).toHaveText(expectedUrl);
     await panel.getByRole('link', {name: 'Invitations', exact: true}).click();
     await expect(panel.getByRole('link', {name: 'View link & QR'})).toBeVisible();
@@ -701,7 +701,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await page.evaluate(() => document.fonts.ready);
     await panel.screenshot({path: info.outputPath('friends-add.png'), animations: 'disabled'});
     const incomingToken = 'b'.repeat(64);
-    await page.goto('/new/friends/invite/' + incomingToken);
+    await page.goto('/friends/invite/' + incomingToken);
     await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
     await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
     await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
@@ -813,20 +813,20 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       await page.getByRole('button', {name: 'Open navigation menu', exact: true}).press('Enter');
       await page.getByRole('dialog', {name: 'Navigation menu', exact: true}).getByRole('link', {name: 'Settings', exact: true}).press('Enter');
     }
-    await expect(page).toHaveURL(/\/new\/settings\/account$/);
+    await expect(page).toHaveURL(/\/settings\/account$/);
     await expect(panel).toHaveCount(0);
     await page.getByRole('button', {name: 'Log out', exact: true}).press('Enter');
     try {
       await expect.poll(() => counters().authLogouts).toBe(1);
       await page.goBack();
-      await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+      await expect(page).toHaveURL(/\/login(?:[/?#]|$)/);
       await expect(panel.locator('.invitation-url, .qr-slot img, .friend-row')).toHaveCount(0);
     } finally {releaseLogout();}
-    await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+    await expect(page).toHaveURL(/\/login(?:[/?#]|$)/);
     await expect(panel.locator('.invitation-url, .qr-slot img')).toHaveCount(0);
     expect(counters().authLogouts).toBe(1);
     await page.goBack();
-    await expect(page).toHaveURL(/\/new\/login(?:[/?#]|$)/);
+    await expect(page).toHaveURL(/\/login(?:[/?#]|$)/);
     await expect(panel.locator('.invitation-url, .qr-slot img')).toHaveCount(0);
     expect(counters().authLogouts).toBe(1);
     try {await expectNativeNavigationRecovery(page);}

@@ -1,0 +1,100 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:53679) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:53679) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:54055) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (6.8s)
+(node:54522) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (7.0s)
+(node:55046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:90:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.7s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('app-admin').getByText('Synthetic appeal preserved', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('app-admin').getByText('Synthetic appeal preserved', { exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin').getByText('Synthetic appeal preserved', { exact: true })
+
+
+      50 |     await expect(admin.getByText('Synthetic schedule user', {exact: true})).toBeVisible();
+      51 |     await expect(admin.getByText('TEST-ADMIN-RECEIPT', {exact: true})).toBeVisible();
+    > 52 |     await expect(admin.getByText('Synthetic appeal preserved', {exact: true})).toBeVisible();
+         |                                                                                ^
+      53 |     await expect(admin.getByRole('spinbutton', {name: 'Listening history minimum interval'})).toHaveValue('60');
+      54 |     await expect(admin.getByRole('heading', {name: 'Runtime health', exact: true})).toHaveCount(0);
+      55 |     await expect(admin.locator('.operations-panel')).toHaveCount(0);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:52:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('app-admin').getByText('Synthetic appeal preserved', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('app-admin').getByText('Synthetic appeal preserved', { exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin').getByText('Synthetic appeal preserved', { exact: true })
+
+
+      50 |     await expect(admin.getByText('Synthetic schedule user', {exact: true})).toBeVisible();
+      51 |     await expect(admin.getByText('TEST-ADMIN-RECEIPT', {exact: true})).toBeVisible();
+    > 52 |     await expect(admin.getByText('Synthetic appeal preserved', {exact: true})).toBeVisible();
+         |                                                                                ^
+      53 |     await expect(admin.getByRole('spinbutton', {name: 'Listening history minimum interval'})).toHaveValue('60');
+      54 |     await expect(admin.getByRole('heading', {name: 'Runtime health', exact: true})).toHaveCount(0);
+      55 |     await expect(admin.locator('.operations-panel')).toHaveCount(0);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:52:80
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 
+  1 passed (26.7s)

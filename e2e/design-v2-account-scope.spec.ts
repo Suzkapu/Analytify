@@ -7,7 +7,7 @@ for (const cloudIdentity of [false, true]) for (const motion of ['no-preference'
     await page.emulateMedia({reducedMotion: motion});
     await mockSpotify(page);
     await seedAuthenticatedBrowser(page, {cloudIdentity});
-    await page.goto('/new/stats');
+    await page.goto('/stats');
     await expect(page.getByRole('status', {name: 'Loading Analytify', exact: true})).toHaveCount(0);
     await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
     const trigger = page.getByRole('button', {name: 'Open account and data settings', exact: true});
@@ -21,7 +21,7 @@ for (const cloudIdentity of [false, true]) for (const motion of ['no-preference'
     await expect(menu.getByRole('button', {name: 'Automatic updates', exact: true})).toHaveCount(cloudIdentity ? 1 : 0);
     await expect(menu.getByRole('switch', {name: 'Cloud Backup', exact: true})).toBeVisible();
     await expect(menu.getByRole('link', {name: 'Manage Spotify access', exact: true})).toHaveAttribute('href', 'https://www.spotify.com/account/apps/');
-    await expect(menu.getByRole('link', {name: 'Privacy notice', exact: true})).toHaveAttribute('href', '/new/legal#privacy');
+    await expect(menu.getByRole('link', {name: 'Privacy notice', exact: true})).toHaveAttribute('href', '/legal#privacy');
     await expect(menu.getByRole('button', {name: 'Log out', exact: true})).toBeVisible();
     const geometry = [];
     for (const width of [320, 390, 1440]) for (const height of [480, 1080]) {

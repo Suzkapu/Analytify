@@ -1,0 +1,154 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.152 seconds] - 2026-10-27T19:20:05.284Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts (20 tests | 7 failed) 420ms
+     × keeps a newer unsaved timezone edit after the activated save reads back 36ms
+     × keeps a newer unsaved enabled edit after the activated save reads back 15ms
+     × keeps a newer unsaved historyIntervalMinutes edit after the activated save reads back 15ms
+     × keeps a newer unsaved shortTermEnabled edit after the activated save reads back 12ms
+     × keeps a newer unsaved sharedPlaylistIntervalUnit edit after the activated save reads back 12ms
+     × keeps a newer unsaved songLeaguePlaylistFridaysOnly edit after the activated save reads back 16ms
+     × retains edits made during held readback while accepting untouched server schedule fields 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved timezone edit after the activated save reads back
+AssertionError: expected 'Europe/London' to be 'Europe/Vienna' // Object.is equality
+
+Expected: "Europe/Vienna"
+Received: "Europe/London"
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:62:56
+     60|       backupActive: false, lastError: 'Reconnect needed', requiredTask…
+     61|     writing.resolve(); await saving;
+     62|     expect(service.updateUser.mock.calls[0][0][field]).toBe(before);
+       |                                                        ^
+     63|     expect(component.users[0][field]).toBe(after);
+     64|     expect(component.users[0]).toMatchObject({displayName: 'Updated se…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved enabled edit after the activated save reads back
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved shortTermEnabled edit after the activated save reads back
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved songLeaguePlaylistFridaysOnly edit after the activated save reads back
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:62:56
+     60|       backupActive: false, lastError: 'Reconnect needed', requiredTask…
+     61|     writing.resolve(); await saving;
+     62|     expect(service.updateUser.mock.calls[0][0][field]).toBe(before);
+       |                                                        ^
+     63|     expect(component.users[0][field]).toBe(after);
+     64|     expect(component.users[0]).toMatchObject({displayName: 'Updated se…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved historyIntervalMinutes edit after the activated save reads back
+AssertionError: expected 90 to be 30 // Object.is equality
+
+- Expected
++ Received
+
+- 30
++ 90
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:62:56
+     60|       backupActive: false, lastError: 'Reconnect needed', requiredTask…
+     61|     writing.resolve(); await saving;
+     62|     expect(service.updateUser.mock.calls[0][0][field]).toBe(before);
+       |                                                        ^
+     63|     expect(component.users[0][field]).toBe(after);
+     64|     expect(component.users[0]).toMatchObject({displayName: 'Updated se…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a newer unsaved sharedPlaylistIntervalUnit edit after the activated save reads back
+AssertionError: expected 'days' to be 'hours' // Object.is equality
+
+Expected: "hours"
+Received: "days"
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:62:56
+     60|       backupActive: false, lastError: 'Reconnect needed', requiredTask…
+     61|     writing.resolve(); await saving;
+     62|     expect(service.updateUser.mock.calls[0][0][field]).toBe(before);
+       |                                                        ^
+     63|     expect(component.users[0][field]).toBe(after);
+     64|     expect(component.users[0]).toMatchObject({displayName: 'Updated se…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > retains edits made during held readback while accepting untouched server schedule fields
+AssertionError: expected { userId: 'Alice', …(6) } to match object { timezone: 'Europe/London', …(2) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "historyEnabled": true,
+    "historyIntervalMinutes": 120,
+-   "timezone": "Europe/London",
++   "timezone": "UTC",
+  }
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:78:32
+     76|     draft.timezone = 'Europe/London';
+     77|     reading.resolve([{...user('Alice'), historyEnabled: true, historyI…
+     78|     expect(component.users[0]).toMatchObject({timezone: 'Europe/London…
+       |                                ^
+     79|     expect(service.updateUser).toHaveBeenCalledOnce();
+     80|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 13 passed (20)
+   Start at  20:20:05
+   Duration  1.17s (transform 120ms, setup 208ms, import 156ms, tests 420ms, environment 292ms)
+

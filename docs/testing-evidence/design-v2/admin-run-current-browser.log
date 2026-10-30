@@ -1,0 +1,85 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-run-current-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:11046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:11046) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:11684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (5.4s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (5.6s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.6s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:152:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (10.5s)
+  ✓   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion (17.6s)
+  ✓   6 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with reduce motion (15.4s)
+(node:15591) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (7.1s)
+  ✓   8 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (7.2s)
+  ✓   9 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.7s)
+  ✓  10 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:152:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (11.5s)
+  ✓  11 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion (19.9s)
+  ✓  12 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with reduce motion (17.3s)
+(node:19899) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (6.3s)
+  ✓  14 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (4.9s)
+  ✓  15 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.4s)
+  ✓  16 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:152:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (12.9s)
+  ✓  17 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion (26.4s)
+  ✓  18 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with reduce motion (22.8s)
+(node:25989) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (11.3s)
+  ✓  20 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:73:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (12.5s)
+  ✓  21 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.0s)
+  ✓  22 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:152:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (26.4s)
+  ✘  23 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion (32.5s)
+(node:34568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  24 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with reduce motion (21.3s)
+
+
+  1) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: frame.evaluate: Test timeout of 30000ms exceeded.
+
+       at helpers/authenticated-browser.ts:6
+
+      4 |
+      5 | export async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
+    > 6 |   const result = await new AxeBuilder({page})
+        |                  ^
+      7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+      8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+      9 | }
+        at AxeBuilder.runPartialRecursive (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@axe-core/playwright/dist/index.js:318:34)
+        at AxeBuilder.analyze (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/@axe-core/playwright/dist/index.js:245:28)
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:6:18)
+        at inspectFeedback (/mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:285:9)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:329:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-run-current-browser-artifacts/design-v2-admin-exclusion--0b36d-y-with-no-preference-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-run-current-browser-artifacts/design-v2-admin-exclusion--0b36d-y-with-no-preference-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-run-current-browser-artifacts/design-v2-admin-exclusion--0b36d-y-with-no-preference-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-run-current-browser-artifacts/design-v2-admin-exclusion--0b36d-y-with-no-preference-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:251:7 › audit records and read-only recovery with no-preference motion 
+  23 passed (5.3m)

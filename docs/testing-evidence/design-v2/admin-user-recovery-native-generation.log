@@ -1,0 +1,148 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-feedback.native.ts --runner-config=/tmp/admin-user-recovery-review.config.mjs
+Using Vitest configuration file: /tmp/admin-user-recovery-review.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [1.859 seconds] - 2026-10-27T19:37:20.843Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |webkit| e2e/components/admin-user-feedback.native.ts (14 tests | 2 failed) 1620ms
+     × renders the independent recovery action in 900px space 99ms
+     × renders the independent recovery action in 358px space 85ms
+ ❯ |firefox| e2e/components/admin-user-feedback.native.ts (14 tests | 2 failed) 1571ms
+     × renders the independent recovery action in 900px space 108ms
+     × renders the independent recovery action in 358px space 73ms
+ ❯ |chromium| e2e/components/admin-user-feedback.native.ts (14 tests | 2 failed) 2295ms
+     × renders the independent recovery action in 900px space 126ms
+     × renders the independent recovery action in 358px space 98ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 900px space
+ FAIL  |chromium| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 358px space
+AssertionError: expected '760' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-900px-space-1.png
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-358px-space-1.png
+
+Expected: [32m"6[7m0[27m0"[39m
+Received: [31m"[7m7[27m60"[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts:51:50
+     49|       expect(button.getBoundingClientRect().width).toBe(220);
+     50|       expect(button.getBoundingClientRect().height).toBe(48);
+     51|       expect(getComputedStyle(button).fontWeight).toBe('600');
+       |                                                  ^
+     52|       expect(getComputedStyle(button).backgroundColor).toBe('rgb(18, 2…
+     53|       expect(button.textContent?.trim()).toBe('Refresh user settings');
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 900px space
+ FAIL  |firefox| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 358px space
+AssertionError: expected '760' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-900px-space-1.png
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-358px-space-1.png
+
+Expected: [32m"6[7m0[27m0"[39m
+Received: [31m"[7m7[27m60"[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts/</</< e2e/components/admin-user-feedback.native.ts:51:50
+     49|       expect(button.getBoundingClientRect().width).toBe(220);
+     50|       expect(button.getBoundingClientRect().height).toBe(48);
+     51|       expect(getComputedStyle(button).fontWeight).toBe('600');
+       |                                                  ^
+     52|       expect(getComputedStyle(button).backgroundColor).toBe('rgb(18, 2…
+     53|       expect(button.textContent?.trim()).toBe('Refresh user settings');
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-feedback.native.ts/ready/< e2e/components/admin-user-feedback.native.ts:19:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 900px space
+ FAIL  |webkit| e2e/components/admin-user-feedback.native.ts > canonical native user schedule save and recovery > renders the independent recovery action in 358px space
+AssertionError: expected '760' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-900px-space-1.png
+  - e2e/components/__screenshots__/admin-user-feedback.native.ts/canonical-native-user-schedule-save-and-recovery-renders-the-independent-recovery-action-in-358px-space-1.png
+
+Expected: [32m"6[7m0[27m0"[39m
+Received: [31m"[7m7[27m60"[39m
+
+ ❯ e2e/components/admin-user-feedback.native.ts:51:55
+     49|       expect(button.getBoundingClientRect().width).toBe(220);
+     50|       expect(button.getBoundingClientRect().height).toBe(48);
+     51|       expect(getComputedStyle(button).fontWeight).toBe('600');
+       |                                                       ^
+     52|       expect(getComputedStyle(button).backgroundColor).toBe('rgb(18, 2…
+     53|       expect(button.textContent?.trim()).toBe('Refresh user settings');
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  6 failed | 36 passed (42)
+   Start at  20:37:21
+   Duration  4.36s (transform 0ms, setup 1.99s, import 329ms, tests 5.49s, environment 0ms)
+

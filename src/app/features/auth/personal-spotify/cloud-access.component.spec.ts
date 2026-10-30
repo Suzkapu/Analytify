@@ -24,7 +24,7 @@ describe('CloudAccessComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [CloudAccessComponent],
       providers: [
-        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ backup: '1', returnUrl: '/new/song-league' }) } } },
+        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ backup: '1', returnUrl: '/song-league' }) } } },
         { provide: Router, useValue: router },
         { provide: SpotifyAuthService, useValue: auth },
         DesignNavigationService
@@ -41,7 +41,7 @@ describe('CloudAccessComponent', () => {
     expect(auth.enableBackup).not.toHaveBeenCalled();
     await component.confirm();
     expect(auth.enableBackup).toHaveBeenCalledOnce();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/song-league');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/song-league');
   });
 
   it('keeps a failed request recoverable and announces the error', async () => {
@@ -54,6 +54,6 @@ describe('CloudAccessComponent', () => {
 
   it('cancels to the canonical playlists route', () => {
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/playlists');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/playlists');
   });
 });

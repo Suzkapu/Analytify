@@ -1,0 +1,3235 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config playwright.admin-exclusion.config.ts --grep pending registration dialog|user save retains|user readback recovery|independent user drafts|older policy snapshot|non-admin cloud identity --workers 2 --fully-parallel --output docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:59000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:59000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 64 tests using 2 workers
+
+(node:59190) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59189) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:220:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.3s)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:455:5 › user save retains edits made during the write without submitting them or duplicating work (5.8s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with reduce motion (20.6s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (23.1s)
+  ✓   5 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:594:5 › independent user drafts survive policy recovery and explicit dashboard refresh (7.4s)
+  ✓   6 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:624:5 › an older policy snapshot cannot rewind a completed user save (7.4s)
+  ✓   7 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus (4.2s)
+  ✘   8 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion (4.1s)
+(node:61894) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration present without a second delete (3.5s)
+  ✘  11 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete (3.6s)
+(node:62445) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   9 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only (10.0s)
+(node:62689) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  12 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:942:5 › pending registration dialog Close preserves uncertain deletion lock until Administration Refresh (5.6s)
+  ✘  13 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion (4.4s)
+(node:63104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  14 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion (5.2s)
+(node:63607) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion (4.8s)
+(node:63817) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion (4.7s)
+  ✓  17 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:220:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.1s)
+(node:64203) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  19 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:455:5 › user save retains edits made during the write without submitting them or duplicating work (5.2s)
+  ✓  18 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (24.1s)
+  ✓  20 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with reduce motion (22.3s)
+  ✓  21 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:594:5 › independent user drafts survive policy recovery and explicit dashboard refresh (8.4s)
+  ✓  22 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:624:5 › an older policy snapshot cannot rewind a completed user save (7.0s)
+  ✓  23 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus (4.8s)
+  ✘  24 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion (4.7s)
+(node:66991) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  26 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration present without a second delete (3.3s)
+  ✘  25 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only (9.7s)
+(node:67444) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  27 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete (3.5s)
+(node:67543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  28 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:942:5 › pending registration dialog Close preserves uncertain deletion lock until Administration Refresh (5.5s)
+  ✘  29 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion (4.6s)
+(node:67991) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  30 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion (4.7s)
+(node:68353) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  31 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion (3.9s)
+(node:68363) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  32 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion (4.3s)
+  ✓  33 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:220:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.4s)
+(node:68932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  35 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:455:5 › user save retains edits made during the write without submitting them or duplicating work (6.4s)
+  ✓  34 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (32.1s)
+  ✓  36 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with reduce motion (30.1s)
+  ✓  37 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:594:5 › independent user drafts survive policy recovery and explicit dashboard refresh (5.9s)
+  ✓  39 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus (5.2s)
+  ✓  38 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:624:5 › an older policy snapshot cannot rewind a completed user save (6.2s)
+  ✘  40 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion (5.2s)
+(node:73065) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  42 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration present without a second delete (5.0s)
+  ✘  41 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only (10.9s)
+(node:73766) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  43 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete (4.0s)
+(node:74276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  44 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:942:5 › pending registration dialog Close preserves uncertain deletion lock until Administration Refresh (5.8s)
+  ✘  45 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion (6.6s)
+  ✘  46 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion (5.1s)
+(node:75150) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:75202) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  47 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion (5.7s)
+(node:76109) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  48 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion (5.7s)
+(node:76149) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  49 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:220:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (4.4s)
+  ✓  50 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:455:5 › user save retains edits made during the write without submitting them or duplicating work (11.4s)
+  ✓  52 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with reduce motion (28.9s)
+  ✓  53 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:594:5 › independent user drafts survive policy recovery and explicit dashboard refresh (15.4s)
+  ✓  51 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:483:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (54.2s)
+  ✓  55 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:834:5 › pending registration dialog cancels held review, ignores late eligibility and restores safe keyboard focus (6.3s)
+  ✓  54 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:624:5 › an older policy snapshot cannot rewind a completed user save (11.2s)
+  ✘  56 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion (5.9s)
+(node:81790) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  58 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration present without a second delete (10.3s)
+  ✘  57 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only (18.0s)
+(node:82842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  59 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete (9.7s)
+(node:83232) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  60 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:942:5 › pending registration dialog Close preserves uncertain deletion lock until Administration Refresh (9.8s)
+  ✘  61 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion (8.3s)
+(node:83932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  62 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion (7.8s)
+(node:84193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  63 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion (4.6s)
+  ✘  64 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion (4.3s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:878:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+        14 × locator resolved to <button type="button" class="admin-secondary" _ngcontent-ng-c2075214252="">…</button>
+           - unexpected value "inactive"
+
+
+      911 |   await page.keyboard.press('Enter'); await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Registration deleted');
+      912 |   releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(0);
+    > 913 |   await expect(page.locator('app-admin .admin-hero').getByRole('button', {name: 'Refresh', exact: true})).toBeFocused();
+          |                                                                                                           ^
+      914 |   expect(fixture.deleteCalls).toEqual([{p_user_id: 'synthetic-user', p_expected_spotify_id: 'pending:server-reviewed-synthetic-user'}]);
+      915 |   expect(fixture.writes).toEqual(fixture.deleteCalls); expect(fixture.unexpected).toEqual([]); expect(fixture.runtimeErrors).toEqual([]);
+      916 |   await info.attach('pending-acknowledged-read-only-recovery', {body: JSON.stringify({reads: fixture.reads, writes: fixture.writes}), contentType: 'application/json'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:913:107
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('app-admin').getByRole('status')
+    Expected substring: "no longer listed"
+    Error: strict mode violation: locator('app-admin').getByRole('status') resolved to 3 elements:
+        1) <div role="status" _ngcontent-ng-c2075214252="" class="admin-notice success">…</div> aka getByText('The registration is no longer')
+        2) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Listening history schedule' }).getByText('Users may choose this')
+        3) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Short-term stats schedule' }).getByText('Users may choose this')
+
+    Call log:
+      - Expect "toContainText" locator('app-admin').getByRole('status') with timeout 5000ms
+      - waiting for locator('app-admin').getByRole('status')
+
+
+      930 |     await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Checking deletion outcome');
+      931 |     releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(absent ? 0 : 1);
+    > 932 |     if (absent) await expect(page.locator('app-admin').getByRole('status')).toContainText('no longer listed');
+          |                                                                             ^
+      933 |     else {
+      934 |       await expect(reviewButton).toBeFocused(); await expect(reviewButton).toBeEnabled();
+      935 |       await expect(card.getByRole('button', {name: 'Save', exact: true})).toBeEnabled();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:932:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:878:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+        14 × locator resolved to <button type="button" class="admin-secondary" _ngcontent-ng-c2075214252="">…</button>
+           - unexpected value "inactive"
+
+
+      911 |   await page.keyboard.press('Enter'); await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Registration deleted');
+      912 |   releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(0);
+    > 913 |   await expect(page.locator('app-admin .admin-hero').getByRole('button', {name: 'Refresh', exact: true})).toBeFocused();
+          |                                                                                                           ^
+      914 |   expect(fixture.deleteCalls).toEqual([{p_user_id: 'synthetic-user', p_expected_spotify_id: 'pending:server-reviewed-synthetic-user'}]);
+      915 |   expect(fixture.writes).toEqual(fixture.deleteCalls); expect(fixture.unexpected).toEqual([]); expect(fixture.runtimeErrors).toEqual([]);
+      916 |   await info.attach('pending-acknowledged-read-only-recovery', {body: JSON.stringify({reads: fixture.reads, writes: fixture.writes}), contentType: 'application/json'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:913:107
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('app-admin').getByRole('status')
+    Expected substring: "no longer listed"
+    Error: strict mode violation: locator('app-admin').getByRole('status') resolved to 3 elements:
+        1) <div role="status" _ngcontent-ng-c2075214252="" class="admin-notice success">…</div> aka getByText('The registration is no longer')
+        2) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Listening history schedule' }).getByText('Users may choose this')
+        3) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Short-term stats schedule' }).getByText('Users may choose this')
+
+    Call log:
+      - Expect "toContainText" locator('app-admin').getByRole('status') with timeout 5000ms
+      - waiting for locator('app-admin').getByRole('status')
+
+
+      930 |     await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Checking deletion outcome');
+      931 |     releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(absent ? 0 : 1);
+    > 932 |     if (absent) await expect(page.locator('app-admin').getByRole('status')).toContainText('no longer listed');
+          |                                                                             ^
+      933 |     else {
+      934 |       await expect(reviewButton).toBeFocused(); await expect(reviewButton).toBeEnabled();
+      935 |       await expect(card.getByRole('button', {name: 'Save', exact: true})).toBeEnabled();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:932:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:878:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+        13 × locator resolved to <button type="button" class="admin-secondary" _ngcontent-ng-c2075214252="">…</button>
+           - unexpected value "inactive"
+
+
+      911 |   await page.keyboard.press('Enter'); await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Registration deleted');
+      912 |   releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(0);
+    > 913 |   await expect(page.locator('app-admin .admin-hero').getByRole('button', {name: 'Refresh', exact: true})).toBeFocused();
+          |                                                                                                           ^
+      914 |   expect(fixture.deleteCalls).toEqual([{p_user_id: 'synthetic-user', p_expected_spotify_id: 'pending:server-reviewed-synthetic-user'}]);
+      915 |   expect(fixture.writes).toEqual(fixture.deleteCalls); expect(fixture.unexpected).toEqual([]); expect(fixture.runtimeErrors).toEqual([]);
+      916 |   await info.attach('pending-acknowledged-read-only-recovery', {body: JSON.stringify({reads: fixture.reads, writes: fixture.writes}), contentType: 'application/json'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:913:107
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('app-admin').getByRole('status')
+    Expected substring: "no longer listed"
+    Error: strict mode violation: locator('app-admin').getByRole('status') resolved to 3 elements:
+        1) <div role="status" _ngcontent-ng-c2075214252="" class="admin-notice success">…</div> aka getByText('The registration is no longer')
+        2) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Listening history schedule' }).getByText('Users may choose this')
+        ...
+
+    Call log:
+      - Expect "toContainText" locator('app-admin').getByRole('status') with timeout 5000ms
+      - waiting for locator('app-admin').getByRole('status')
+
+
+      930 |     await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Checking deletion outcome');
+      931 |     releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(absent ? 0 : 1);
+    > 932 |     if (absent) await expect(page.locator('app-admin').getByRole('status')).toContainText('no longer listed');
+          |                                                                             ^
+      933 |     else {
+      934 |       await expect(reviewButton).toBeFocused(); await expect(reviewButton).toBeEnabled();
+      935 |       await expect(card.getByRole('button', {name: 'Save', exact: true})).toBeEnabled();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:932:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-firefox-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-firefox-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-firefox-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-firefox-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:878:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--662a0-iew-errors-without-deletion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+
+    Error: expect(locator).toBeFocused() failed
+
+    Locator:  locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+    Expected: focused
+    Received: inactive
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeFocused" locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true }) with timeout 5000ms
+      - waiting for locator('app-admin .admin-hero').getByRole('button', { name: 'Refresh', exact: true })
+        13 × locator resolved to <button type="button" class="admin-secondary" _ngcontent-ng-c2075214252="">…</button>
+           - unexpected value "inactive"
+
+
+      911 |   await page.keyboard.press('Enter'); await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Registration deleted');
+      912 |   releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(0);
+    > 913 |   await expect(page.locator('app-admin .admin-hero').getByRole('button', {name: 'Refresh', exact: true})).toBeFocused();
+          |                                                                                                           ^
+      914 |   expect(fixture.deleteCalls).toEqual([{p_user_id: 'synthetic-user', p_expected_spotify_id: 'pending:server-reviewed-synthetic-user'}]);
+      915 |   expect(fixture.writes).toEqual(fixture.deleteCalls); expect(fixture.unexpected).toEqual([]); expect(fixture.runtimeErrors).toEqual([]);
+      916 |   await info.attach('pending-acknowledged-read-only-recovery', {body: JSON.stringify({reads: fixture.reads, writes: fixture.writes}), contentType: 'application/json'});
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:913:107
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--60146-d-deletion-using-reads-only-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('app-admin').getByRole('status')
+    Expected substring: "no longer listed"
+    Error: strict mode violation: locator('app-admin').getByRole('status') resolved to 3 elements:
+        1) <div role="status" _ngcontent-ng-c2075214252="" class="admin-notice success">…</div> aka getByText('The registration is no longer')
+        2) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Listening history schedule' }).getByText('Users may choose this')
+        3) <p role="status" aria-live="polite" _ngcontent-ng-c200210343="">Users may choose this interval or a slower one. C…</p> aka getByRole('region', { name: 'Short-term stats schedule' }).getByText('Users may choose this')
+
+    Call log:
+      - Expect "toContainText" locator('app-admin').getByRole('status') with timeout 5000ms
+      - waiting for locator('app-admin').getByRole('status')
+
+
+      930 |     await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Checking deletion outcome');
+      931 |     releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(absent ? 0 : 1);
+    > 932 |     if (absent) await expect(page.locator('app-admin').getByRole('status')).toContainText('no longer listed');
+          |                                                                             ^
+      933 |     else {
+      934 |       await expect(reviewButton).toBeFocused(); await expect(reviewButton).toBeEnabled();
+      935 |       await expect(card.getByRole('button', {name: 'Save', exact: true})).toBeEnabled();
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:932:77
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--323a6-ent-without-a-second-delete-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  25) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--0395c-0-with-no-preference-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  26) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--8c2ca-0-with-no-preference-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  27) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--06e56-ight-480-with-reduce-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28) [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+
+    Error: [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag211",
+          "wcag213",
+          "TTv5",
+          "TT4.a",
+          "EN-301-549",
+          "EN-9.2.1.1",
+          "EN-9.2.1.3",
+          "RGAAv4",
+          "RGAA-7.3.2"
+        ],
+        "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+        "help": "Scrollable region must have keyboard access",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "focusable-content",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should have focusable content"
+              },
+              {
+                "id": "focusable-element",
+                "data": null,
+                "relatedNodes": [],
+                "impact": "serious",
+                "message": "Element should be focusable"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+            "target": [
+              ".review-body"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div _ngcontent-ng-c2413213908=\"\" class=\"review-body\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".review-body",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:986:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-dialog-current-browser-artifacts/design-v2-admin-exclusion--952ee-ght-1000-with-reduce-motion-webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+    [mobile] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+    [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:866:5 › pending registration dialog keeps blocked data literal and retries review errors without deletion 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:891:5 › pending registration dialog deletes exact reviewed identity once and recovers acknowledged deletion using reads only 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:920:7 › pending registration dialog reconciles uncertain deletion with registration absent without a second delete 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with no-preference motion 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with no-preference motion 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 480 with reduce motion 
+    [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:960:7 › pending registration dialog scrolls long blocked reasons at height 1000 with reduce motion 
+  36 passed (5.5m)

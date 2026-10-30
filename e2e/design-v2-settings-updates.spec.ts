@@ -57,7 +57,7 @@ async function setup(page: Page) {
       effective_active: body.p_enabled, interval_value: body.p_interval_value, interval_unit: body.p_interval_unit} : row);
     await route.fulfill({json: null});
   });
-  await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/new/settings/updates');
+  await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/settings/updates');
   await expect(page.locator('.v2-update-summary')).toHaveCount(6);
   await page.evaluate(async () => {await document.fonts.ready;});
   return {errors, expectedSaveFailures, expectedReadFailures, writes, release: () => release?.(), pending: () => !!release,

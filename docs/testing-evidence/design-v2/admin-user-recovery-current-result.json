@@ -1,0 +1,421 @@
+{
+  "date": "2026-10-27",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "state": "Per-user save feedback and acknowledged-save/read-only recovery verified; full migration incomplete",
+  "changes": [
+    "Committed saves and rejected writes have distinct per-user states",
+    "A failed private inventory read after acknowledged save retains the activated baseline and exposes Refresh user settings; Save entry also routes to read-only recovery",
+    "Recovery never repeats updateUser, blocks duplicate Save/Refresh/Run while busy, preserves newer editable values and other users drafts, and obeys route/explicit-refresh ownership",
+    "Newer-draft classification compares later edits with current server values; matching values are reported saved without a redundant mutation",
+    "Shared polite status component supplies audit and user feedback with literal text interpolation",
+    "Canonical48px recovery action uses exact18px exported SVG and600weight Outfit; footer wrapping preserves one-line text at intermediate widths"
+  ],
+  "tests": {
+    "focused": {
+      "passed": 206,
+      "files": 16,
+      "exit": 0,
+      "log": "admin-user-recovery-current-unit.log",
+      "newCases": 24
+    },
+    "redEvidence": [
+      {
+        "log": "admin-user-recovery-red.log",
+        "result": "Initial API absence prevented compilation; not counted as runtime behavior evidence"
+      },
+      {
+        "log": "admin-user-recovery-runtime-red.log",
+        "failed": 7,
+        "exit": 1
+      },
+      {
+        "log": "admin-user-recovery-refresh-red.log",
+        "failed": 1,
+        "passed": 10,
+        "exit": 1
+      },
+      {
+        "log": "admin-user-feedback-missing-component-red.log",
+        "result": "Expected missing presentation components; compile-only absence"
+      },
+      {
+        "log": "admin-user-recovery-native-generation.log",
+        "failed": 6,
+        "passed": 36,
+        "reason": "Actual native font weight760 overrode canonical600; assertion retained and specificity fixed"
+      },
+      {
+        "log": "admin-user-recovery-intermediate-width.log",
+        "failed": 1,
+        "reason": "Recovery label wrapped to two lines at intermediate desktop card width; footer now wraps actions, assertion retained"
+      },
+      {
+        "log": "admin-user-recovery-equal-server-red.log",
+        "failed": 1,
+        "passed": 11,
+        "reason": "Later edit matching current server value was incorrectly labelled unsaved"
+      }
+    ],
+    "fullCI": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "log": "admin-user-recovery-current-ci.log",
+      "frontendPassed": 2500,
+      "frontendFiles": 198,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849164,
+      "budgets": "All index/bundle/release/security gates unchanged and passing",
+      "earlierPassingCI": "admin-user-recovery-final-ci.log preceded the genuine equal-server classification correction and is historical"
+    },
+    "native": {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npm run test:native-components",
+      "exit": 0,
+      "passed": 114,
+      "files": 9,
+      "newUserChecks": 42,
+      "priorAuditAndFriendsChecks": 72,
+      "log": "admin-user-recovery-native-final.log",
+      "newGoldens": 42,
+      "priorAuditGoldensUnchanged": 66,
+      "friendsGoldenGitDiff": [],
+      "update": "none",
+      "allowedMismatchedPixels": 0,
+      "allowedMismatchedPixelRatio": 0,
+      "threshold": 0.1,
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "widths": [
+        900,
+        358
+      ],
+      "review": "All42 state/width/engine candidates individually reviewed in six sheets against canonical references; only then copied to golden paths",
+      "candidateOnlyConfig": "admin-user-recovery-native-review-config.txt",
+      "candidateLog": "admin-user-recovery-native-corrected-candidates.log",
+      "candidateGenerationIsVerification": false
+    },
+    "browser": {
+      "matrixPassed": 36,
+      "matrixExit": 0,
+      "matrixLog": "admin-user-recovery-final-browser.log",
+      "matrixArtifacts": "admin-user-recovery-final-browser-artifacts",
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "motion": [
+        "no-preference",
+        "reduce"
+      ],
+      "recoveryWidths": [
+        320,
+        390,
+        768,
+        1024,
+        1280,
+        1440
+      ],
+      "heights": [
+        600,
+        1000
+      ],
+      "newRecoveryCases": 8,
+      "finalSourceRacePassed": 4,
+      "finalSourceRaceExit": 0,
+      "finalSourceRaceLog": "admin-user-recovery-server-match-final-browser.log",
+      "finalSourceRaceConfig": "admin-user-recovery-server-match-config.txt",
+      "finalSourceRaceArtifacts": "admin-user-recovery-server-match-final-artifacts",
+      "scope": "36-case matrix server was built before final equal-server classification correction; its existing scenarios have unchanged semantics. Four additional freshly built final-source browser cases specifically prove the correction. Native component sources were unchanged by that controller-only correction.",
+      "assertions": [
+        "One exact22field synthetic activated save",
+        "Later edits retained through acknowledged save and repeated read failure",
+        "Explicit keyboard read-only retry; disabled duplicate Save/Refresh/Run",
+        "Per-user polite saving/refreshing/error/saved/newer-draft feedback",
+        "No action overlap, horizontal overflow or wrapped recovery label across12size combinations",
+        "Native keyboard focus has canonical green border",
+        "axe has no blocking violations; no runtime errors or unexpected service writes"
+      ],
+      "realBackendWrites": false,
+      "realNotifications": false,
+      "isolatedExtraPort": 4217,
+      "initialExtraConfigFailure": "admin-user-recovery-server-match-browser.log: /tmp webServer cwd had no package.json; fixed explicit repo cwd before tests ran"
+    },
+    "lint": {
+      "exit": 0,
+      "log": "admin-user-recovery-current-lint.log"
+    },
+    "nativeTypes": {
+      "exit": 0,
+      "log": "admin-user-recovery-final-native-types.log"
+    },
+    "diffCheck": {
+      "exit": 0,
+      "log": "admin-user-recovery-diff-check.log"
+    }
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "feedbackSet": "1112:33021",
+    "feedbackReference": "1112:32955",
+    "feedbackVariants": 12,
+    "states": [
+      "Saving",
+      "Refreshing",
+      "Saved",
+      "Newer draft",
+      "Save error",
+      "Read error"
+    ],
+    "refreshingVariants": [
+      "1114:32996",
+      "1114:33002"
+    ],
+    "recoveryAction": "1113:32975",
+    "recoveryReference": "1113:32983",
+    "actionWidth": 220,
+    "actionHeight": 48,
+    "iconNode": "I1113:32976;227:11841",
+    "iconMainComponent": "62:2363",
+    "localIcon": "src/assets/design-v2/admin-user-refresh.svg",
+    "iconWidth": 18,
+    "iconHeight": 18,
+    "designedAndReviewedBeforeDependentUI": true,
+    "images": [
+      "admin-user-recovery-canonical-feedback.png",
+      "admin-user-recovery-canonical-action.png"
+    ],
+    "nativeReviewSheets": [
+      "admin-user-recovery-final-review-chromium-900.png",
+      "admin-user-recovery-final-review-chromium-358.png",
+      "admin-user-recovery-final-review-firefox-900.png",
+      "admin-user-recovery-final-review-firefox-358.png",
+      "admin-user-recovery-final-review-webkit-900.png",
+      "admin-user-recovery-final-review-webkit-358.png"
+    ],
+    "mountedBrowserReview": "Root reviewed actual390px feedback and1440px recovery-action captures in responsive-fixed artifacts; final matrix retains more viewport/engine samples",
+    "fullAdministrationParity": false
+  },
+  "coverage": {
+    "frontend": {
+      "productionSources": 172,
+      "metrics": {
+        "lines": {
+          "total": 11633,
+          "covered": 10649,
+          "skipped": 0,
+          "pct": 91.54
+        },
+        "statements": {
+          "total": 13775,
+          "covered": 12414,
+          "skipped": 0,
+          "pct": 90.11
+        },
+        "functions": {
+          "total": 2806,
+          "covered": 2489,
+          "skipped": 0,
+          "pct": 88.7
+        },
+        "branches": {
+          "total": 8965,
+          "covered": 7578,
+          "skipped": 0,
+          "pct": 84.52
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "missingProductionSources": [],
+      "final98Exit": 1,
+      "summary": "admin-user-recovery-current-frontend-coverage-summary.json",
+      "newComponents": {
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-refresh-action.component.ts": {
+          "lines": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 1,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 5,
+            "covered": 5,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 0,
+            "covered": 0,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-save-feedback.component.ts": {
+          "lines": {
+            "total": 6,
+            "covered": 6,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 3,
+            "covered": 3,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 9,
+            "covered": 9,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 2,
+            "covered": 2,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-status-feedback.component.ts": {
+          "lines": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 1,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 5,
+            "covered": 5,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 0,
+            "covered": 0,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      "exclusions": "Independent AST inventory; admin-user-save-state.ts is type-only, automatically justified in current-source-inventory.json; no new broad exclusions or ignore annotations"
+    },
+    "worker": {
+      "productionSources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 916,
+          "skipped": 0,
+          "pct": 98.81
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source/config matched report; current full CI reran application tests"
+    },
+    "edge": {
+      "productionSources": 12,
+      "metrics": {
+        "lines": {
+          "total": 763,
+          "covered": 763,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 903,
+          "covered": 902,
+          "skipped": 0,
+          "pct": 99.88
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 799,
+          "covered": 797,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source/config matched report; current full CI reran application tests"
+    }
+  },
+  "sourceHashes": "admin-user-recovery-evidence-source-hashes.json",
+  "sourceHashCount": 666,
+  "sourceDrift": [],
+  "fullCiStartSnapshot": "admin-user-recovery-current-source-hashes.json",
+  "postCiStartTestOnlyChange": "e2e/design-v2-admin-exclusion.spec.ts gained the final equal-server scenario and planned read timezone; independently linted and executed on four fresh browser projects",
+  "backendSourceAndConfigurationHashesCompared": 76,
+  "backendDrift": [],
+  "visualHashes": "admin-user-recovery-visual-hashes.json",
+  "remaining": [
+    "Full identified-user card canonical design and responsive Angular editor",
+    "Independent drafts must survive unrelated policy/dashboard model replacement; current controller still has this known gap",
+    "Client-side user-schedule validation and per-field errors remain part of the future editor; backend remains authoritative",
+    "Pending-profile canonical review/deletion modal and Admin Operations/Users/Reports composition/appeal context",
+    "Frontend below98% on all four metrics; original feature/service/motion gates stay open",
+    "Live cloud-identity replacement is not established by route-destruction tests",
+    "Selected real hosted Admin transport contracts were not run; current new browser writes are synthetic only"
+  ],
+  "nextSlice": "Finish identified-user card in canonical Figma and move editable schedules into independently owned responsive Angular drafts, then validate actual save/queue/review workflows",
+  "releaseBoundaries": "No commit, push, main merge, shared backend/service/database changes, deployment or real notifications"
+}

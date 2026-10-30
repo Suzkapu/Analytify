@@ -14,7 +14,7 @@ for (const [scene, path] of [['Library', 'playlists'], ['Insights', 'history'], 
     await page.route('https://**', route => {isolatedRequests.push(new URL(route.request().url()).origin); return route.fulfill({status: 503, json: {message: 'Isolated glow fixture'}});});
     await mockSpotify(page); await seedAuthenticatedBrowser(page);
     await page.emulateMedia({reducedMotion: 'reduce'});
-    await page.goto(`/new/${path}`);
+    await page.goto(`/${path}`);
     const ambient = page.locator('app-ambient-background');
     await expect(ambient.locator('.ambient-primary img, .ambient-secondary img')).toHaveCount(2);
     await expect.poll(() => ambient.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
@@ -68,7 +68,7 @@ test('actual route changes move glows smoothly and preserve the independent part
   await mockSpotify(page); await seedAuthenticatedBrowser(page);
   await page.emulateMedia({reducedMotion: 'no-preference'});
   await page.setViewportSize({width: 1440, height: 810});
-  await page.goto('/new/playlists');
+  await page.goto('/playlists');
   const ambient = page.locator('app-ambient-background');
   await expect.poll(() => ambient.evaluate(element => element.style.getPropertyValue('--ambient-primary-x'))).toBe('25.0000%');
   await page.locator('.ambient-dot').first().evaluate(async element => {

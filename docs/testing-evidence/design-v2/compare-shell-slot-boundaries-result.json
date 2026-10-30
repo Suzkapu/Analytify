@@ -1,0 +1,43 @@
+{
+  "feature": "Compare Room local slot selection ownership",
+  "production_change": "Shell-scoped per-participant async selection ownership; removal, teardown and replacement invalidate stale token/track completions. No coordinator or UI changes.",
+  "red": {
+    "log": "compare-shell-slot-boundaries-expanded-red.log",
+    "exit": 1,
+    "failed": 5,
+    "passed": 1
+  },
+  "green": {
+    "log": "compare-shell-slot-boundaries-green.log",
+    "exit": 0,
+    "passed": 12,
+    "files": 2
+  },
+  "lint": {
+    "log": "compare-shell-slot-boundaries-lint.log",
+    "exit": 0
+  },
+  "test_types": {
+    "log": "compare-shell-slot-boundaries-types.log",
+    "exit": 0
+  },
+  "coverage": "Not measured by this focused slice.",
+  "boundaries": [
+    "Removed slot late success",
+    "Removed slot late failure",
+    "Removal during actual Observable token refresh prevents track-source call",
+    "Current error stays retryable and retry succeeds",
+    "Older success cannot replace newer playlist selection",
+    "Teardown prevents late success recreating room participants"
+  ],
+  "source_sha256": {
+    "src/app/features/compare-room/compare-room-shell.component.ts": "fd48e64541305a02b8db73790ea3a33e253c1927a610ef01f1789ab651cdcaae",
+    "src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts": "6925ab8c8be0d243d20b5d8277ed3a4b00bb98ec3a6bc5c41d0fbecf5b89728d",
+    "src/app/features/compare-room/compare-room-shell.component.spec.ts": "028b04e9192cc1a3b73fbc1fee65d5153a80a83769b10e4ec750ae3bc0782cc3"
+  },
+  "limitations": [
+    "Focused service/controller tests; no mounted UI/browser check in this slice.",
+    "No full CI or fresh coverage run.",
+    "No commit/push/deployment."
+  ]
+}

@@ -1,0 +1,62 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/admin/admin-retained-boundaries.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.626 seconds] - 2026-10-24T12:34:30.794Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-retained-boundaries.spec.ts (3 tests | 2 failed) 447ms
+     × loads retained settings, policies, users, audit runs and moderation without the excluded health backend 335ms
+     × renders retained administration controls without a runtime-health panel 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-retained-boundaries.spec.ts > retained administration boundaries > loads retained settings, policies, users, audit runs and moderation without the excluded health backend
+AssertionError: expected 'Excluded runtime service is unavailab…' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Excluded runtime service is unavailable
+
+ ❯ src/app/features/admin/admin-retained-boundaries.spec.ts:48:36
+     46|   it('loads retained settings, policies, users, audit runs and moderat…
+     47|     const {component, service, retained} = await mountAdmin(true);
+     48|     expect(component.errorMessage).toBe('');
+       |                                    ^
+     49|     expect(component.isLoading).toBe(false);
+     50|     expect(component.siteSettings).toEqual(retained.site);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-retained-boundaries.spec.ts > retained administration boundaries > renders retained administration controls without a runtime-health panel
+AssertionError: expected [ 'Runtime health', …(7) ] to not include 'Runtime health'
+ ❯ src/app/features/admin/admin-retained-boundaries.spec.ts:69:26
+     67|     expect(page.textContent).toContain('Please review');
+     68|     expect(page.querySelector('.runs-panel')).not.toBeNull();
+     69|     expect(headings).not.toContain('Runtime health');
+       |                          ^
+     70|     expect(page.textContent).not.toContain('Worker never observed');
+     71|     expect(page.querySelector('.operations-panel')).toBeNull();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  14:34:30
+   Duration  1.39s (transform 155ms, setup 239ms, import 245ms, tests 447ms, environment 341ms)
+

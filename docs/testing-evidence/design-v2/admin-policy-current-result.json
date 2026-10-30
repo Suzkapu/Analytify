@@ -1,0 +1,231 @@
+{
+  "collectedDate": "2026-10-26",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "branch": "codex/design-v2",
+  "uncommitted": true,
+  "status": "Policy implementation and bounded regression pass; Administration/full migration incomplete",
+  "changes": [
+    "Responsive shared policy editor with native labels, keyboard focus, semantic asset masks and container reflow",
+    "Validate whole interval values against actual seven-day SQL boundary before mutation",
+    "Preserve unrelated policy drafts and publish both readbacks atomically",
+    "Acknowledged-write/read failure exposes explicit read-only recovery; no duplicate write",
+    "Current CI also includes preceding admin authorization generation/demo navigation fixes"
+  ],
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "componentSet": "1100:32712",
+    "variantCount": 18,
+    "viewports": {
+      "Desktop": 900,
+      "Mobile": 358,
+      "Compact": 230
+    },
+    "states": [
+      "Default",
+      "Saving",
+      "Validation",
+      "Saved",
+      "Save error",
+      "Read error"
+    ],
+    "compactSaved": "1103:32745",
+    "desktopReadError": "1100:32551",
+    "canonicalInstances": [
+      "1100:62619",
+      "1100:62640",
+      "1100:62661",
+      "1100:62682",
+      "1100:62703",
+      "1100:62724",
+      "1100:62745",
+      "1100:62766"
+    ],
+    "reusedFoundations": [
+      "988:32194",
+      "24:124",
+      "29:949",
+      "24:94",
+      "62:2363"
+    ],
+    "reviewed": true,
+    "fullPageParity": false,
+    "strictGoldensApproved": false
+  },
+  "unit": {
+    "command": "npx ng test --watch=false --include='src/app/features/admin/*.spec.ts' --include='src/app/core/admin/*.spec.ts' --progress=false",
+    "passed": 94,
+    "files": 8,
+    "exit": 0,
+    "log": "admin-policy-current-unit.log"
+  },
+  "browser": {
+    "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit npx playwright test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-policy-final-browser-artifacts",
+    "exit": 0,
+    "passed": 16,
+    "projects": [
+      "desktop",
+      "mobile",
+      "firefox-stats",
+      "webkit-stats"
+    ],
+    "widths": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "heights": [
+      600,
+      1000
+    ],
+    "log": "admin-policy-final-browser.log",
+    "artifacts": "docs/testing-evidence/design-v2/admin-policy-final-browser-artifacts",
+    "pngCount": 48,
+    "retries": 0,
+    "screenshotsUpdated": false,
+    "scope": [
+      "route authorization and retained read refresh",
+      "actual synthetic policy write exact payload",
+      "invalid input cannot write",
+      "busy controls and independent other row",
+      "partial failure then read-only refresh",
+      "unrelated draft retained",
+      "native keyboard focus",
+      "reduced motion",
+      "48px within0.005CSSpx float precision",
+      "text fit and nonoverlap",
+      "axe"
+    ],
+    "reviewedRepresentativeImages": [
+      "desktop320/390/768/1440",
+      "firefox1440",
+      "webkit320"
+    ],
+    "serviceIsolation": "loopback fixture, all unexpected mutations/providers aborted; no real notifications"
+  },
+  "combinedCI": {
+    "command": "npm run verify:ci",
+    "exit": 0,
+    "frontendTests": 2388,
+    "frontendFiles": 190,
+    "documentedHostedSkip": 1,
+    "workerTests": 218,
+    "edgeTests": 83,
+    "initialJavaScriptBytes": 849144,
+    "log": "admin-policy-final-ci.log",
+    "sourceHashes": "admin-policy-ci-source-hashes.json",
+    "hashCount": 605,
+    "drift": [],
+    "timingNote": "Final CSS edit completed before the CI application unit/coverage/build phases; no source drift after frozen snapshot."
+  },
+  "coverage": {
+    "frontend": {
+      "sources": 167,
+      "measured": {
+        "lines": {
+          "total": 11474,
+          "covered": 10482,
+          "skipped": 0,
+          "pct": 91.35
+        },
+        "statements": {
+          "total": 13552,
+          "covered": 12188,
+          "skipped": 0,
+          "pct": 89.93
+        },
+        "functions": {
+          "total": 2778,
+          "covered": 2460,
+          "skipped": 0,
+          "pct": 88.55
+        },
+        "branches": {
+          "total": 8788,
+          "covered": 7409,
+          "skipped": 0,
+          "pct": 84.3
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98exit": 1,
+      "log": "admin-policy-frontend-98.log"
+    },
+    "worker": {
+      "sources": 17,
+      "lines": 99.66,
+      "statements": 99.72,
+      "functions": 100,
+      "branches": 98.81,
+      "final98exit": 0,
+      "measurement": "Retained report;73combined backend/config hashes match preceding exclusions checkpoint"
+    },
+    "edge": {
+      "sources": 12,
+      "lines": 100,
+      "statements": 99.88,
+      "functions": 100,
+      "branches": 99.74,
+      "final98exit": 0,
+      "measurement": "Retained report;73combined backend/config hashes match preceding exclusions checkpoint"
+    }
+  },
+  "otherChecks": {
+    "scopedLint": 0,
+    "appTypes": 0,
+    "testTypes": 0,
+    "adminPolicy": 0,
+    "diffCheck": 0
+  },
+  "failuresPreserved": [
+    "admin-policy-validation-red.log",
+    "admin-policy-recovery-red.log",
+    "admin-policy-editor-label-red.log",
+    "admin-policy-atomic-read-regression.log",
+    "admin-policy-desktop-browser.log",
+    "admin-policy-desktop-fixed-browser.log",
+    "admin-policy-before-container-browser.log",
+    "admin-policy-compact-browser.log"
+  ],
+  "runtime": {
+    "webkitBinary": "unmodified Playwright2359 WPE",
+    "temporaryRuntime": "/tmp/analytify-webkit-libs",
+    "hostInstallation": false,
+    "icuSha256": "c9a70989678660eed9a1e904c74fa043da8bec8e2036856fc16e31ced79b04f8",
+    "fliteSha256": "367f1d0da5cd38759a0515eafc27aa133b2d7bf99308cac34831df0212e96b75",
+    "libxml2Version": "2.9.14+dfsg-1.3ubuntu3.10",
+    "libxml2Sha256": "c5a065f85c1e6f605741e365e40cad71c3ceb0e85e2791400bd35b8896e12ad1",
+    "note": "Older documented3.9 URL returned404; current official archive3.10 substituted, hash identifies bytes, not independent signature verification."
+  },
+  "limitations": [
+    "Frontend final98 gate fails;100percent goal not reached",
+    "Full Administration legacy composition/navigation remains unmigrated",
+    "Identified user/audit/appeal canonical controls and states remain unfinished",
+    "Native WebKit select paint differs from canonical field despite functional/geometry/axe passes; further visual correction needed",
+    "Matching-width strict visual goldens and complete per-state motion/focus acceptance are not certified",
+    "Retained broader Artist/Compare/League/hosted-service gaps remain; see progress document"
+  ],
+  "sourceSha256": {
+    "src/app/features/admin/admin.component.ts": "0af0e3a7ebd4f3013220d48a50ce6045e27bcd202a25363bf1d178834e463002",
+    "src/app/features/admin/admin.component.html": "8caab3d0e1098fc88944c62011a3770ef15a19e2390f686bb60c86f96b3ae2f6",
+    "src/app/features/admin/admin.component.scss": "148f05d0ea90dc2e424ddbc8fb5793df94622829e7f46f0dec94e876ff45f068",
+    "src/app/features/admin/admin.module.ts": "17bfeab348f90eab41eafaa6b8a0217b0fb9d979b2087df43c2aa4d420fe6951",
+    "src/app/features/admin/admin-policy-editor.component.ts": "ee4366e07d7dfbaad7e479d003344e4e700adc961ee3a1182d18451034d89683",
+    "src/app/features/admin/admin-policy-editor.component.scss": "0308a4c00e39e69fb2fc41885cf7cf2f20f1222241bab40d725d8b2cb017cf4b",
+    "src/app/features/admin/admin-policy-editor.component.spec.ts": "c9a58b266bc330233b22f8f673946eef0805b8df2d2b7a97f03ee5233ca73d73",
+    "src/app/features/admin/admin-policy-validation.spec.ts": "64ddd5966cc4933d84f198491db96ba55bede17a0715c5872a420c1fd8c332d3",
+    "src/app/features/admin/admin-mutation-boundaries.spec.ts": "fba2e3a66ffba7db2b813a3adba4705895b0aac873c1b9b44d8fdbd76ad77235",
+    "src/app/features/admin/admin-retained-boundaries.spec.ts": "198b14acb89153fed2cd9b12675e8b105e42a3227bc083252896119c1d555133",
+    "src/app/core/admin/admin.service.ts": "32303a61ba62971e3cbed3c44894b471f5fba24e37aada62788dbad6245544b7",
+    "src/app/core/admin/admin-service-boundaries.spec.ts": "fdb7a03f7ec308712b9cd4a221e6ed6ec9331c19c5851b5707c87f56671bd64b",
+    "e2e/design-v2-admin-exclusion.spec.ts": "38247d71ee1cf288b3d30af8c1cdad58dee963428b3c96598f614abed0a847da",
+    "playwright.admin-exclusion.config.ts": "9f54882373c6b08dd52dff3d1b62da2039baa96ab6c2b05c9518b5ffdbd7e10f",
+    "playwright.config.ts": "2d335971a83ef683f433daa9354ff431f72e5f911297b0785d775d4fb0ed274e"
+  }
+}

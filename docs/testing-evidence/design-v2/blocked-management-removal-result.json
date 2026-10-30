@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-24",
+  "scope": "Remove unreachable frontend blocked-user management intentionally excluded by plan section Boundaries and references and figma-feature-gap-audit.md:136.",
+  "beforeConsumerInventory": {
+    "BlockedUsersDialogComponent": "Definition only; zero imports/routes/template consumers across src/e2e/scripts. Selector appears only in its component metadata.",
+    "listBlockedUsers/unblockUser": "Only consumers were that dead dialog and a single obsolete service spec case.",
+    "BlockedStatsUser": "Only references were dead dialog and removed methods/type import.",
+    "dialogSpec": "No blocked-users-dialog spec existed.",
+    "staticGuard": "scripts/check-design-v2-parity.mjs still prohibits restoring blocked users in the live shell."
+  },
+  "deletedFiles": [
+    "src/app/shared/layout/header/blocked-users-dialog.component.ts",
+    "src/app/shared/layout/header/blocked-users-dialog.component.html",
+    "src/app/shared/layout/header/blocked-users-dialog.component.scss"
+  ],
+  "deletedMethods": [
+    "StatsSharingService.listBlockedUsers",
+    "StatsSharingService.unblockUser"
+  ],
+  "deletedType": "BlockedStatsUser",
+  "deletedTest": "lists and unblocks users without restoring access client-side",
+  "addedRetainedBoundaryTest": "propagates denied blocking without attempting to unblock or change access",
+  "preserved": "Live SharedPlaylistsComponent blockUser/reportUser calls; discoverability, consent requests/revocation, moderation notices and appeals; all backend RPCs/schema/security/infrastructure and static guards.",
+  "checks": {
+    "scopedAngularServiceSuite": "PASS 15/15",
+    "scopedESLint": "PASS",
+    "applicationTypes": "PASS",
+    "testTypes": "PASS",
+    "statsSharingConsentAndIsolationPolicy": "PASS",
+    "postRemovalSrcE2eReferences": "No removed symbols/selector/path references remain.",
+    "diffWhitespace": "PASS"
+  },
+  "limits": "No coverage rerun/full CI/browser run. No live UI presentation changed because removed dialog had no consumers. No Figma mutation, commit, push or deployment."
+}

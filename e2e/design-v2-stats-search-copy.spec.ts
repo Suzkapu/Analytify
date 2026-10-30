@@ -8,7 +8,7 @@ for(const motion of ['no-preference','reduce'] as const)test(`canonical inline s
     await route.fulfill({json:{items:offset?[]:artists?[{id:'artist',name:'Neon Coast',genres:['pop'],images:[]}]
       :[{id:'song',name:'Midnight Drive',artists:[{name:'Neon Coast'}],album:{images:[]}}],total:1}});
   });
-  await page.goto('/new/stats');await expect(page.getByRole('status',{name:'Loading Analytify',exact:true})).toHaveCount(0);
+  await page.goto('/stats');await expect(page.getByRole('status',{name:'Loading Analytify',exact:true})).toHaveCount(0);
   const search=page.getByRole('searchbox',{name:'Search songs or artists',exact:true});
   await expect(page.locator('.v2-ranking-list strong')).toHaveText('Midnight Drive');expect(requests).toBe(4);
   await expect(search).toHaveAttribute('placeholder','Search songs');
@@ -23,7 +23,7 @@ for(const motion of ['no-preference','reduce'] as const)test(`canonical inline s
       return {width:innerWidth,height:innerHeight,overflow:document.documentElement.scrollWidth-innerWidth,inputHeight:r.height,inputFont:getComputedStyle(el).fontSize,padding:getComputedStyle(el).paddingLeft,placeholderColor:getComputedStyle(el,'::placeholder').color,placeholderOpacity:getComputedStyle(el,'::placeholder').opacity,
         slotWidth:s.width,slotHeight:s.height,slotInset:s.left-r.left,iconWidth:g.width,iconHeight:g.height,naturalWidth:img.naturalWidth,naturalHeight:img.naturalHeight,loaded:img.complete,src:img.currentSrc};});
     expect(sample).toMatchObject({overflow:0,inputHeight:48,inputFont:'16px',padding:'42px',placeholderColor:'rgb(162, 173, 166)',placeholderOpacity:'1',slotWidth:18,slotHeight:18,slotInset:17,iconWidth:20,iconHeight:20,naturalWidth:20,naturalHeight:20,loaded:true});
-    expect(sample.src).toContain('/new/assets/design-v2/stats-search.svg');geometry.push(sample);
+    expect(sample.src).toContain('/assets/design-v2/stats-search.svg');geometry.push(sample);
     if([390,1440].includes(width))await page.locator('v2-search-filters').screenshot({path:info.outputPath(`search-${width}-${height}.png`)});
   }
   await search.fill('  NEON  ');await expect(page.locator('.v2-ranking-list strong')).toHaveText('Midnight Drive');

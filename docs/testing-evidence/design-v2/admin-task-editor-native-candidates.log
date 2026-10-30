@@ -1,0 +1,295 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-task-editor.native.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [1.770 seconds] - 2026-10-29T18:49:31.913Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |chromium| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 1346ms
+     × renders History at 866px with native fields and exact assets 303ms
+     × renders Required at 866px with native fields and exact assets 118ms
+     × renders League at 866px with native fields and exact assets 142ms
+     × renders History at 324px with native fields and exact assets 130ms
+     × renders Required at 324px with native fields and exact assets 130ms
+     × renders League at 324px with native fields and exact assets 109ms
+     × renders History at 254px with native fields and exact assets 115ms
+     × renders Required at 254px with native fields and exact assets 135ms
+     × renders League at 254px with native fields and exact assets 162ms
+ ❯ |webkit| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 1282ms
+     × renders History at 866px with native fields and exact assets 326ms
+     × renders Required at 866px with native fields and exact assets 145ms
+     × renders League at 866px with native fields and exact assets 97ms
+     × renders History at 324px with native fields and exact assets 105ms
+     × renders Required at 324px with native fields and exact assets 104ms
+     × renders League at 324px with native fields and exact assets 102ms
+     × renders History at 254px with native fields and exact assets 127ms
+     × renders Required at 254px with native fields and exact assets 132ms
+     × renders League at 254px with native fields and exact assets 136ms
+ ❯ |firefox| e2e/components/admin-user-task-editor.native.ts (9 tests | 9 failed) 1291ms
+     × renders History at 866px with native fields and exact assets 244ms
+     × renders Required at 866px with native fields and exact assets 170ms
+     × renders League at 866px with native fields and exact assets 160ms
+     × renders History at 324px with native fields and exact assets 133ms
+     × renders Required at 324px with native fields and exact assets 118ms
+     × renders League at 324px with native fields and exact assets 111ms
+     × renders History at 254px with native fields and exact assets 117ms
+     × renders Required at 254px with native fields and exact assets 118ms
+     × renders League at 254px with native fields and exact assets 116ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 27 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+ FAIL  |chromium| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+AssertionError: expected '400' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-254px-with-native-fields-and-exact-assets-1.png
+
+Expected: [32m"[7m6[27m00"[39m
+Received: [31m"[7m4[27m00"[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:57:113
+     55|         expect(unit.value).toBe(state.unit); expect(field.value).toBe(…
+     56|         expect(getComputedStyle(unit).appearance).toBe('none');
+     57|         for (const label of editor.querySelectorAll('label, strong')) …
+       |                                                                                                                 ^
+     58|         for (const image of editor.querySelectorAll('img')) {
+     59|           expect(image.naturalWidth).toBe(image.classList.contains('un…
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+AssertionError: expected '400' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-254px-with-native-fields-and-exact-assets-1.png
+
+Expected: [32m"[7m6[27m00"[39m
+Received: [31m"[7m4[27m00"[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts/</</< e2e/components/admin-user-task-editor.native.ts:57:113
+     55|         expect(unit.value).toBe(state.unit); expect(field.value).toBe(…
+     56|         expect(getComputedStyle(unit).appearance).toBe('none');
+     57|         for (const label of editor.querySelectorAll('label, strong')) …
+       |                                                                                                                 ^
+     58|         for (const image of editor.querySelectorAll('img')) {
+     59|           expect(image.naturalWidth).toBe(image.classList.contains('un…
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:27:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+AssertionError: expected '400' to be '600' // Object.is equality
+
+Failure screenshot:
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-324px-with-native-fields-and-exact-assets-1.png
+
+Expected: [32m"[7m6[27m00"[39m
+Received: [31m"[7m4[27m00"[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts/</</< e2e/components/admin-user-task-editor.native.ts:57:113
+     55|         expect(unit.value).toBe(state.unit); expect(field.value).toBe(…
+     56|         expect(getComputedStyle(unit).appearance).toBe('none');
+     57|         for (const label of editor.querySelectorAll('label, strong')) …
+       |                                                                                                                 ^
+     58|         for (const image of editor.querySelectorAll('img')) {
+     59|           expect(image.naturalWidth).toBe(image.classList.contains('un…
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-task-editor.native.ts/ready/< e2e/components/admin-user-task-editor.native.ts:29:16
+ ❯ fulfilled chunk-EFV3TZQO.js:68:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-EFV3TZQO.js:80:59
+ ❯ fulfilled chunk-EFV3TZQO.js:68:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/27]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 866px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 324px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders History at 254px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders Required at 254px with native fields and exact assets
+ FAIL  |webkit| e2e/components/admin-user-task-editor.native.ts > canonical user task editor native geometry and visuals > renders League at 254px with native fields and exact assets
+AssertionError: expected '400' to be '600' // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-866px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-324px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-History-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-Required-at-254px-with-native-fields-and-exact-assets-1.png
+  - e2e/components/__screenshots__/admin-user-task-editor.native.ts/canonical-user-task-editor-native-geometry-and-visuals-renders-League-at-254px-with-native-fields-and-exact-assets-1.png
+
+Expected: [32m"[7m6[27m00"[39m
+Received: [31m"[7m4[27m00"[39m
+
+ ❯ e2e/components/admin-user-task-editor.native.ts:57:118
+     55|         expect(unit.value).toBe(state.unit); expect(field.value).toBe(…
+     56|         expect(getComputedStyle(unit).appearance).toBe('none');
+     57|         for (const label of editor.querySelectorAll('label, strong')) …
+       |                                                                                                                      ^
+     58|         for (const image of editor.querySelectorAll('img')) {
+     59|           expect(image.naturalWidth).toBe(image.classList.contains('un…
+ ❯ fulfilled chunk-EFV3TZQO.js:68:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/27]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  27 failed (27)
+   Start at  19:49:32
+   Duration  4.94s (transform 0ms, setup 2.26s, import 390ms, tests 3.92s, environment 0ms)
+

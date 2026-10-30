@@ -1,0 +1,59 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/shared/ui/accessible-dialog.directive.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.793 seconds] - 2026-10-30T11:41:49.364Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+(node:46870) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |SpotiFront| src/app/shared/ui/accessible-dialog.directive.spec.ts (8 tests | 1 failed) 207ms
+     × returns focus to the inventory when deletion removes the original trigger 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/shared/ui/accessible-dialog.directive.spec.ts > AccessibleDialogDirective > returns focus to the inventory when deletion removes the original trigger
+AssertionError: expected <body>…(1)</body> to be <main id="page" tabindex="-1"></main> // Object.is equality
+
+- Expected
++ Received
+
++ <body>
++   <div
++     id="root5"
++     ng-version="22.2.1"
++   >
+      <main
+        id="page"
+        tabindex="-1"
+      >
+        Page content
+      </main>
++     <!--container-->
++   </div>
++ </body>
+
+ ❯ src/app/shared/ui/accessible-dialog.directive.spec.ts:123:40
+    121|         fixture.detectChanges();
+    122|         expect(inventory.inert).not.toBe(true);
+    123|         expect(document.activeElement).toBe(inventory);
+       |                                        ^
+    124|     });
+    125|
+ ❯ fulfilled chunk-EFV3TZQO.js:74:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  12:41:49
+   Duration  1.30s (transform 58ms, setup 367ms, import 20ms, tests 207ms, environment 526ms)
+

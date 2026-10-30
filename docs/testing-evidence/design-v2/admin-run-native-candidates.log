@@ -1,0 +1,602 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [1.986 seconds] - 2026-10-27T19:03:24.195Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |firefox| e2e/components/admin-audit.native.ts (22 tests | 22 failed) 331472ms
+     × renders Queued audit record at 900px 15035ms
+     × renders Running audit record at 900px 15045ms
+     × renders Succeeded audit record at 900px 15050ms
+     × renders Failed audit record at 900px 15137ms
+     × renders Cancelled audit record at 900px 15075ms
+     × renders Warning audit record at 900px 14986ms
+     × renders loading audit feedback at 900px 14991ms
+     × renders refreshing audit feedback at 900px 15112ms
+     × renders empty audit feedback at 900px 15056ms
+     × renders load-error audit feedback at 900px 15065ms
+     × renders refresh-error audit feedback at 900px 15037ms
+     × renders Queued audit record at 358px 15095ms
+     × renders Running audit record at 358px 15103ms
+     × renders Succeeded audit record at 358px 15101ms
+     × renders Failed audit record at 358px 15079ms
+     × renders Cancelled audit record at 358px 15048ms
+     × renders Warning audit record at 358px 15079ms
+     × renders loading audit feedback at 358px 15066ms
+     × renders refreshing audit feedback at 358px 15073ms
+     × renders empty audit feedback at 358px 15055ms
+     × renders load-error audit feedback at 358px 15095ms
+     × renders refresh-error audit feedback at 358px 15082ms
+ ❯ |webkit| e2e/components/admin-audit.native.ts (22 tests | 22 failed) 332315ms
+     × renders Queued audit record at 900px 15008ms
+     × renders Running audit record at 900px 15078ms
+     × renders Succeeded audit record at 900px 15131ms
+     × renders Failed audit record at 900px 15125ms
+     × renders Cancelled audit record at 900px 15214ms
+     × renders Warning audit record at 900px 15083ms
+     × renders loading audit feedback at 900px 15128ms
+     × renders refreshing audit feedback at 900px 15068ms
+     × renders empty audit feedback at 900px 14999ms
+     × renders load-error audit feedback at 900px 15121ms
+     × renders refresh-error audit feedback at 900px 15113ms
+     × renders Queued audit record at 358px 15083ms
+     × renders Running audit record at 358px 15077ms
+     × renders Succeeded audit record at 358px 15124ms
+     × renders Failed audit record at 358px 15114ms
+     × renders Cancelled audit record at 358px 15091ms
+     × renders Warning audit record at 358px 15091ms
+     × renders loading audit feedback at 358px 15163ms
+     × renders refreshing audit feedback at 358px 15083ms
+     × renders empty audit feedback at 358px 15113ms
+     × renders load-error audit feedback at 358px 15179ms
+     × renders refresh-error audit feedback at 358px 15120ms
+ ❯ |chromium| e2e/components/admin-audit.native.ts (22 tests | 22 failed) 333549ms
+     × renders Queued audit record at 900px 15204ms
+     × renders Running audit record at 900px 15206ms
+     × renders Succeeded audit record at 900px 15092ms
+     × renders Failed audit record at 900px 15135ms
+     × renders Cancelled audit record at 900px 15175ms
+     × renders Warning audit record at 900px 15151ms
+     × renders loading audit feedback at 900px 15126ms
+     × renders refreshing audit feedback at 900px 15216ms
+     × renders empty audit feedback at 900px 15190ms
+     × renders load-error audit feedback at 900px 15180ms
+     × renders refresh-error audit feedback at 900px 15149ms
+     × renders Queued audit record at 358px 15149ms
+     × renders Running audit record at 358px 15221ms
+     × renders Succeeded audit record at 358px 15178ms
+     × renders Failed audit record at 358px 15107ms
+     × renders Cancelled audit record at 358px 15161ms
+     × renders Warning audit record at 358px 15117ms
+     × renders loading audit feedback at 358px 15128ms
+     × renders refreshing audit feedback at 358px 15195ms
+     × renders empty audit feedback at 358px 15133ms
+     × renders load-error audit feedback at 358px 15224ms
+     × renders refresh-error audit feedback at 358px 15110ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 66 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Queued-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Warning-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Queued-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Warning-audit-record-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts:42:6
+     40|   for (const [index, width] of [900, 358].entries()) {
+     41|     for (const record of RECORDS) {
+     42|       it(`renders ${record.name} audit record at ${width}px`, async ()…
+       |      ^
+     43|         await page.viewport(1200, 800);
+     44|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/66]⎯
+
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 900px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 358px
+ FAIL  |chromium| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-loading-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-empty-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-loading-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-empty-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts:61:6
+     59|     }
+     60|     for (const state of ['loading', 'refreshing', 'empty', 'load-error…
+     61|       it(`renders ${state} audit feedback at ${width}px`, async () => {
+       |      ^
+     62|         await page.viewport(1200, 800);
+     63|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/66]⎯
+
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Queued-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Queued-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Warning-audit-record-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts/< e2e/components/admin-audit.native.ts:42:9
+     40|   for (const [index, width] of [900, 358].entries()) {
+     41|     for (const record of RECORDS) {
+     42|       it(`renders ${record.name} audit record at ${width}px`, async ()…
+       |         ^
+     43|         await page.viewport(1200, 800);
+     44|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/66]⎯
+
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-audit.native.ts/record-Warning-900-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-audit.native.ts/</</< e2e/components/admin-audit.native.ts:56:35
+     54|         expect(getComputedStyle(card).fontFamily).toContain('Outfit Va…
+     55|         expect(card.querySelector('button, input, select, a')).toBeNul…
+     56|         await expect.element(card).toMatchScreenshot(`record-${record.…
+       |                                   ^
+     57|         fixture.destroy();
+     58|       });
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-audit.native.ts/ready/< e2e/components/admin-audit.native.ts:35:16
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:12
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:994:11
+ ❯ globalCallback node_modules/zone.js/fesm2015/zone.js:1015:31
+ ❯ globalZoneAwareCallback node_modules/zone.js/fesm2015/zone.js:1040:11
+ ❯ EventListener.handleEvent*customScheduleGlobal node_modules/zone.js/fesm2015/zone.js:1105:36
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:372:15
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-audit.native.ts/ready/< e2e/components/admin-audit.native.ts:35:16
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:463:12
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:994:11
+ ❯ globalCallback node_modules/zone.js/fesm2015/zone.js:1015:31
+ ❯ globalZoneAwareCallback node_modules/zone.js/fesm2015/zone.js:1040:11
+ ❯ EventListener.handleEvent*customScheduleGlobal node_modules/zone.js/fesm2015/zone.js:1105:36
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:372:15
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/66]⎯
+
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-audit.native.ts/feedback-loading-900-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-audit.native.ts/</</< e2e/components/admin-audit.native.ts:73:39
+     71|         expect(getComputedStyle(feedback).borderColor).toBe('rgb(119, …
+     72|         expect(feedback.querySelector('button, input, select, a')).toB…
+     73|         await expect.element(feedback).toMatchScreenshot(`feedback-${s…
+       |                                       ^
+     74|         fixture.destroy();
+     75|       });
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-audit.native.ts/ready/< e2e/components/admin-audit.native.ts:35:16
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-M65JKFVJ.js:97:59
+ ❯ fulfilled chunk-M65JKFVJ.js:85:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-audit.native.ts/ready/< e2e/components/admin-audit.native.ts:35:16
+ ❯ fulfilled chunk-M65JKFVJ.js:85:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/66]⎯
+
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 900px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 358px
+ FAIL  |firefox| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-empty-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-loading-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-empty-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts/< e2e/components/admin-audit.native.ts:61:9
+     59|     }
+     60|     for (const state of ['loading', 'refreshing', 'empty', 'load-error…
+     61|       it(`renders ${state} audit feedback at ${width}px`, async () => {
+       |         ^
+     62|         await page.viewport(1200, 800);
+     63|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/66]⎯
+
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-audit.native.ts/record-Queued-900-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-audit.native.ts:56:53
+     54|         expect(getComputedStyle(card).fontFamily).toContain('Outfit Va…
+     55|         expect(card.querySelector('button, input, select, a')).toBeNul…
+     56|         await expect.element(card).toMatchScreenshot(`record-${record.…
+       |                                                     ^
+     57|         fixture.destroy();
+     58|       });
+ ❯ fulfilled chunk-M65JKFVJ.js:85:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/66]⎯
+
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Queued audit record at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Running audit record at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Succeeded audit record at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Failed audit record at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Cancelled audit record at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders Warning audit record at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Warning-audit-record-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Queued-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Running-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Succeeded-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Failed-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Cancelled-audit-record-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-Warning-audit-record-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts:42:9
+     40|   for (const [index, width] of [900, 358].entries()) {
+     41|     for (const record of RECORDS) {
+     42|       it(`renders ${record.name} audit record at ${width}px`, async ()…
+       |         ^
+     43|         await page.viewport(1200, 800);
+     44|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/66]⎯
+
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 900px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders loading audit feedback at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refreshing audit feedback at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders load-error audit feedback at 358px
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders refresh-error audit feedback at 358px
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-loading-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-900px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-loading-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refreshing-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-empty-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-load-error-audit-feedback-at-358px-1.png
+  - e2e/components/__screenshots__/admin-audit.native.ts/canonical-native-Administration-audit-components-renders-refresh-error-audit-feedback-at-358px-1.png
+
+ ❯ e2e/components/admin-audit.native.ts:61:9
+     59|     }
+     60|     for (const state of ['loading', 'refreshing', 'empty', 'load-error…
+     61|       it(`renders ${state} audit feedback at ${width}px`, async () => {
+       |         ^
+     62|         await page.viewport(1200, 800);
+     63|         const fixture = TestBed.createComponent(NativeAuditHost);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/66]⎯
+
+ FAIL  |webkit| e2e/components/admin-audit.native.ts > canonical native Administration audit components > renders empty audit feedback at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-audit.native.ts/feedback-empty-900-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-audit.native.ts:73:57
+     71|         expect(getComputedStyle(feedback).borderColor).toBe('rgb(119, …
+     72|         expect(feedback.querySelector('button, input, select, a')).toB…
+     73|         await expect.element(feedback).toMatchScreenshot(`feedback-${s…
+       |                                                         ^
+     74|         fixture.destroy();
+     75|       });
+ ❯ fulfilled chunk-M65JKFVJ.js:85:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/66]⎯
+
+
+ Test Files  3 failed | 3 passed (6)
+      Tests  66 failed | 6 passed (72)
+   Start at  20:03:24
+   Duration  336.60s (transform 0ms, setup 5.24s, import 557ms, tests 998.53s, environment 0ms)
+

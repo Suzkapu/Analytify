@@ -1,0 +1,983 @@
+npm notice run spoti-front@0.0.0 test:native-components
+npm notice run ng run SpotiFront:native-components --include=../e2e/components/admin-user-card.native.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.native-components.config.mjs
+❯ Building...
+✔ Building...
+Application bundle generation complete. [2.485 seconds] - 2026-10-29T19:18:40.004Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |webkit| e2e/components/admin-user-card.native.ts (18 tests | 18 failed) 4290ms
+     × renders Ready collapsed at 900px 436ms
+     × renders Ready expanded at 900px 436ms
+     × renders Backup-off collapsed at 900px 146ms
+     × renders Backup-off expanded at 900px 196ms
+     × renders Reconnect collapsed at 900px 252ms
+     × renders Reconnect expanded at 900px 144ms
+     × renders Pending collapsed at 900px 177ms
+     × renders Pending expanded at 900px 340ms
+     × renders Ready collapsed at 358px 188ms
+     × renders Ready expanded at 358px 356ms
+     × renders Backup-off collapsed at 358px 162ms
+     × renders Backup-off expanded at 358px 166ms
+     × renders Reconnect collapsed at 358px 174ms
+     × renders Reconnect expanded at 358px 153ms
+     × renders Pending collapsed at 358px 171ms
+     × renders Pending expanded at 358px 293ms
+     × renders Ready collapsed at compact288px 188ms
+     × renders Ready expanded at compact288px 308ms
+ ❯ |chromium| e2e/components/admin-user-card.native.ts (18 tests | 18 failed) 4587ms
+     × renders Ready collapsed at 900px 407ms
+     × renders Ready expanded at 900px 409ms
+     × renders Backup-off collapsed at 900px 201ms
+     × renders Backup-off expanded at 900px 158ms
+     × renders Reconnect collapsed at 900px 183ms
+     × renders Reconnect expanded at 900px 231ms
+     × renders Pending collapsed at 900px 215ms
+     × renders Pending expanded at 900px 374ms
+     × renders Ready collapsed at 358px 259ms
+     × renders Ready expanded at 358px 362ms
+     × renders Backup-off collapsed at 358px 190ms
+     × renders Backup-off expanded at 358px 157ms
+     × renders Reconnect collapsed at 358px 215ms
+     × renders Reconnect expanded at 358px 182ms
+     × renders Pending collapsed at 358px 200ms
+     × renders Pending expanded at 358px 312ms
+     × renders Ready collapsed at compact288px 227ms
+     × renders Ready expanded at compact288px 303ms
+ ❯ |firefox| e2e/components/admin-user-card.native.ts (18 tests | 18 failed) 3953ms
+     × renders Ready collapsed at 900px 305ms
+     × renders Ready expanded at 900px 384ms
+     × renders Backup-off collapsed at 900px 163ms
+     × renders Backup-off expanded at 900px 182ms
+     × renders Reconnect collapsed at 900px 167ms
+     × renders Reconnect expanded at 900px 276ms
+     × renders Pending collapsed at 900px 154ms
+     × renders Pending expanded at 900px 379ms
+     × renders Ready collapsed at 358px 150ms
+     × renders Ready expanded at 358px 252ms
+     × renders Backup-off collapsed at 358px 141ms
+     × renders Backup-off expanded at 358px 186ms
+     × renders Reconnect collapsed at 358px 152ms
+     × renders Reconnect expanded at 358px 231ms
+     × renders Pending collapsed at 358px 168ms
+     × renders Pending expanded at 358px 249ms
+     × renders Ready collapsed at compact288px 162ms
+     × renders Ready expanded at compact288px 248ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 54 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-collapsed-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-expanded-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Backup-off-collapsed-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 900px
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 900px
+AssertionError: expected 1270 to be 1278 // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-900px-1.png
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-900px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1278[39m
+[31m+ 1270[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:44:102
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                      ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Reconnect-collapsed-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Pending-collapsed-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 900px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Pending-expanded-900-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-collapsed-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-expanded-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Backup-off-collapsed-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 358px
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 358px
+AssertionError: expected 1854 to be 1862 // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-358px-1.png
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-358px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1862[39m
+[31m+ 1854[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:44:102
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                      ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Reconnect-collapsed-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Pending-collapsed-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 358px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Pending-expanded-358-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at compact288px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-collapsed-288-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/54]⎯
+
+ FAIL  |chromium| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at compact288px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-expanded-288-reference-chromium-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/54]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 900px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at compact288px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at compact288px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-collapsed-900-reference-firefox-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts/assertCard/< e2e/components/admin-user-card.native.ts:70:50
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                  ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:38:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-JBI4KQTL.js:94:59
+ ❯ fulfilled chunk-JBI4KQTL.js:82:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:36:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+
+Caused by: Error: Matcher did not succeed in time.
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-JBI4KQTL.js:94:59
+ ❯ fulfilled chunk-JBI4KQTL.js:82:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:38:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/54]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 900px
+AssertionError: expected 1270 to be 1278 // Object.is equality
+
+Failure screenshot:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-900px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1278[39m
+[31m+ 1270[39m
+
+ ❯ e2e/components/admin-user-card.native.ts/assertCard/< e2e/components/admin-user-card.native.ts:44:102
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                      ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:38:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-JBI4KQTL.js:94:59
+ ❯ fulfilled chunk-JBI4KQTL.js:82:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:36:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/54]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 900px
+AssertionError: expected 1270 to be 1278 // Object.is equality
+
+Failure screenshot:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-900px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1278[39m
+[31m+ 1270[39m
+
+ ❯ e2e/components/admin-user-card.native.ts/assertCard/< e2e/components/admin-user-card.native.ts:44:102
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                      ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:38:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-JBI4KQTL.js:94:59
+ ❯ fulfilled chunk-JBI4KQTL.js:82:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/54]⎯
+
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 358px
+ FAIL  |firefox| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 358px
+AssertionError: expected 1854 to be 1862 // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-358px-1.png
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-358px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1862[39m
+[31m+ 1854[39m
+
+ ❯ e2e/components/admin-user-card.native.ts/assertCard/< e2e/components/admin-user-card.native.ts:44:102
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                      ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:38:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2001:17
+ ❯ resolve node_modules/zone.js/fesm2015/zone.js:2102:15
+ ❯ step chunk-JBI4KQTL.js:94:59
+ ❯ fulfilled chunk-JBI4KQTL.js:82:13
+ ❯ invoke node_modules/zone.js/fesm2015/zone.js:356:157
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:34
+ ❯ patchPromise/</scheduleResolveOrReject/< node_modules/zone.js/fesm2015/zone.js:2083:29
+ ❯ invokeTask node_modules/zone.js/fesm2015/zone.js:382:170
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:36
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:22
+ ❯ promise callback*nativeScheduleMicroTask node_modules/zone.js/fesm2015/zone.js:522:13
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:532:30
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:374:28
+ ❯ scheduleTask node_modules/zone.js/fesm2015/zone.js:202:34
+ ❯ scheduleMicroTask node_modules/zone.js/fesm2015/zone.js:217:18
+ ❯ scheduleResolveOrReject node_modules/zone.js/fesm2015/zone.js:2075:11
+ ❯ resolvePromise node_modules/zone.js/fesm2015/zone.js:2029:36
+ ❯ patchPromise/</makeResolver/< node_modules/zone.js/fesm2015/zone.js:1959:25
+ ❯ patchPromise/</once/wrapper/< node_modules/zone.js/fesm2015/zone.js:1973:26
+ ❯ promise callback*patchPromise/</patchThen/Ctor.prototype.then/< node_modules/zone.js/fesm2015/zone.js:2301:23
+ ❯ ZoneAwarePromise node_modules/zone.js/fesm2015/zone.js:2238:22
+ ❯ patchPromise/</patchThen/Ctor.prototype.then node_modules/zone.js/fesm2015/zone.js:2303:15
+ ❯ allWithCallback node_modules/zone.js/fesm2015/zone.js:2200:18
+ ❯ all node_modules/zone.js/fesm2015/zone.js:2175:32
+ ❯ e2e/components/admin-user-card.native.ts/ready/< e2e/components/admin-user-card.native.ts:36:16
+ ❯ fulfilled chunk-JBI4KQTL.js:82:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/54]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off collapsed at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect collapsed at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending collapsed at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Pending expanded at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready collapsed at compact288px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Ready expanded at compact288px
+Error: [2mexpect([22m[31melement[39m[2m).[22mtoMatchScreenshot[2m()[22m
+
+No existing reference screenshot found.
+
+Reference screenshot:
+  [32m/mnt/Storage/ProgrammingProjects/Analytify/.vitest-attachments/e2e/components/admin-user-card.native.ts/card-Ready-collapsed-900-reference-webkit-linux.png[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:70:68
+     68|     if (busy) expect(getComputedStyle(actions[1]).opacity).toBe('0.45'…
+     69|   } else expect(card.querySelectorAll('input,select')).toHaveLength(0);
+     70|   await expect.element(page.elementLocator(card)).toMatchScreenshot(`c…
+       |                                                                    ^
+     71|   fixture.destroy();
+     72| }
+ ❯ fulfilled chunk-JBI4KQTL.js:82:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+Caused by: Error: Matcher did not succeed in time.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/54]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 900px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 900px
+AssertionError: expected 1270 to be 1278 // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-900px-1.png
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-900px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1278[39m
+[31m+ 1270[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:44:107
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                           ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/54]⎯
+
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Backup-off expanded at 358px
+ FAIL  |webkit| e2e/components/admin-user-card.native.ts > canonical identified user schedule cards > renders Reconnect expanded at 358px
+AssertionError: expected 1854 to be 1862 // Object.is equality
+
+Failure screenshots:
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Backup-off-expanded-at-358px-1.png
+  - e2e/components/__screenshots__/admin-user-card.native.ts/canonical-identified-user-schedule-cards-renders-Reconnect-expanded-at-358px-1.png
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1862[39m
+[31m+ 1854[39m
+
+ ❯ e2e/components/admin-user-card.native.ts:44:107
+     42|   await ready(fixture);
+     43|   const card = (fixture.nativeElement as HTMLElement).querySelector('a…
+     44|   expect(card.getBoundingClientRect().width).toBe(width); expect(card.…
+       |                                                                                                           ^
+     45|   expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth);
+     46|   expect(getComputedStyle(card).backgroundColor).toBe('rgb(24, 32, 25)…
+ ❯ fulfilled chunk-JBI4KQTL.js:82:28
+ ❯ run node_modules/zone.js/fesm2015/zone.js:125:41
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:33
+ ❯ runTask node_modules/zone.js/fesm2015/zone.js:163:47
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/54]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  54 failed (54)
+   Start at  20:18:40
+   Duration  7.09s (transform 0ms, setup 1.87s, import 342ms, tests 12.83s, environment 0ms)
+

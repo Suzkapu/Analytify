@@ -1,0 +1,316 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop --output=docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:55440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:55440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:55640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (2.9s)
+(node:55923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (3.0s)
+(node:56206) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:90:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.7s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 
+
+    Error: [
+      {
+        "id": "nested-interactive",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag412",
+          "TTv5",
+          "TT6.a",
+          "EN-301-549",
+          "EN-9.4.1.2",
+          "RGAAv4",
+          "RGAA-7.1.1"
+        ],
+        "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+        "help": "Interactive controls must not be nested",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/nested-interactive?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "no-focusable-content",
+                "data": null,
+                "relatedNodes": [
+                  {
+                    "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" aria-label=\"Refresh recent runs\" class=\"admin-icon-button\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-refresh\"></i></button>",
+                    "target": [
+                      "button[aria-label=\"Refresh recent runs\"]"
+                    ]
+                  },
+                  {
+                    "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" class=\"admin-icon-button\" aria-expanded=\"true\" aria-label=\"Collapse recent runs\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-chevron-up\"></i></button>",
+                    "target": [
+                      "button[aria-label=\"Collapse recent runs\"]"
+                    ]
+                  }
+                ],
+                "impact": "serious",
+                "message": "Element has focusable descendants"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2606891619=\"\" role=\"button\" tabindex=\"0\" aria-controls=\"admin-runs-content\" class=\"admin-section-heading runs-heading\" aria-expanded=\"true\">",
+            "target": [
+              ".runs-heading"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element has focusable descendants"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 55
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+    +     "help": "Interactive controls must not be nested",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/nested-interactive?application=playwright",
+    +     "id": "nested-interactive",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "no-focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element has focusable descendants",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" aria-label=\"Refresh recent runs\" class=\"admin-icon-button\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-refresh\"></i></button>",
+    +                 "target": Array [
+    +                   "button[aria-label=\"Refresh recent runs\"]",
+    +                 ],
+    +               },
+    +               Object {
+    +                 "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" class=\"admin-icon-button\" aria-expanded=\"true\" aria-label=\"Collapse recent runs\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-chevron-up\"></i></button>",
+    +                 "target": Array [
+    +                   "button[aria-label=\"Collapse recent runs\"]",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has focusable descendants",
+    +         "html": "<div _ngcontent-ng-c2606891619=\"\" role=\"button\" tabindex=\"0\" aria-controls=\"admin-runs-content\" class=\"admin-section-heading runs-heading\" aria-expanded=\"true\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".runs-heading",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "TTv5",
+    +       "TT6.a",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +       "RGAAv4",
+    +       "RGAA-7.1.1",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:69:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--a7551-ry-at-short-tall-height-600-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 
+
+    Error: [
+      {
+        "id": "nested-interactive",
+        "impact": "serious",
+        "tags": [
+          "cat.keyboard",
+          "wcag2a",
+          "wcag412",
+          "TTv5",
+          "TT6.a",
+          "EN-301-549",
+          "EN-9.4.1.2",
+          "RGAAv4",
+          "RGAA-7.1.1"
+        ],
+        "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+        "help": "Interactive controls must not be nested",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/nested-interactive?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "no-focusable-content",
+                "data": null,
+                "relatedNodes": [
+                  {
+                    "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" aria-label=\"Refresh recent runs\" class=\"admin-icon-button\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-refresh\"></i></button>",
+                    "target": [
+                      "button[aria-label=\"Refresh recent runs\"]"
+                    ]
+                  },
+                  {
+                    "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" class=\"admin-icon-button\" aria-expanded=\"true\" aria-label=\"Collapse recent runs\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-chevron-up\"></i></button>",
+                    "target": [
+                      "button[aria-label=\"Collapse recent runs\"]"
+                    ]
+                  }
+                ],
+                "impact": "serious",
+                "message": "Element has focusable descendants"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<div _ngcontent-ng-c2606891619=\"\" role=\"button\" tabindex=\"0\" aria-controls=\"admin-runs-content\" class=\"admin-section-heading runs-heading\" aria-expanded=\"true\">",
+            "target": [
+              ".runs-heading"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element has focusable descendants"
+          }
+        ]
+      }
+    ]
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 55
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+    +     "help": "Interactive controls must not be nested",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/nested-interactive?application=playwright",
+    +     "id": "nested-interactive",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "no-focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element has focusable descendants",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" aria-label=\"Refresh recent runs\" class=\"admin-icon-button\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-refresh\"></i></button>",
+    +                 "target": Array [
+    +                   "button[aria-label=\"Refresh recent runs\"]",
+    +                 ],
+    +               },
+    +               Object {
+    +                 "html": "<button _ngcontent-ng-c2606891619=\"\" type=\"button\" class=\"admin-icon-button\" aria-expanded=\"true\" aria-label=\"Collapse recent runs\"><i _ngcontent-ng-c2606891619=\"\" class=\"pi pi-chevron-up\"></i></button>",
+    +                 "target": Array [
+    +                   "button[aria-label=\"Collapse recent runs\"]",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has focusable descendants",
+    +         "html": "<div _ngcontent-ng-c2606891619=\"\" role=\"button\" tabindex=\"0\" aria-controls=\"admin-runs-content\" class=\"admin-section-heading runs-heading\" aria-expanded=\"true\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".runs-heading",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "TTv5",
+    +       "TT6.a",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +       "RGAAv4",
+    +       "RGAA-7.1.1",
+    +     ],
+    +   },
+    + ]
+
+       at helpers/authenticated-browser.ts:8
+
+       6 |   const result = await new AxeBuilder({page})
+       7 |     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
+    >  8 |   expect(result.violations, JSON.stringify(result.violations, null, 2)).toEqual([]);
+         |                                                                         ^
+       9 | }
+      10 |
+      11 | export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
+        at expectNoBlockingAxeViolations (/mnt/Storage/ProgrammingProjects/Analytify/e2e/helpers/authenticated-browser.ts:8:73)
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:69:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-exclusion-browser-second-artifacts/design-v2-admin-exclusion--dc03e-y-at-short-tall-height-1000-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 600 
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:45:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 
+  1 passed (17.9s)

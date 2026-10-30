@@ -1,0 +1,21 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/library/artist-details/artist-details-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [3.760 seconds] - 2026-10-24T06:53:53.350Z
+
+✘ [ERROR] TS2345: Argument of type 'Promise<void>' is not assignable to parameter of type 'Promise<undefined>'.
+  Type 'void' is not assignable to type 'undefined'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details-boundaries.spec.ts:174:47:
+      174 │     f.storage.hydrateItems.mockReturnValueOnce(pending.promise);
+          ╵                                                ~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type 'Promise<void>' is not assignable to parameter of type 'Promise<undefined>'.
+  Type 'void' is not assignable to type 'undefined'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/library/artist-details/artist-details-boundaries.spec.ts:205:52:
+      205 │ ...f.storage.restoreItemsFromCloud.mockReturnValue(restore.promise);
+          ╵                                                    ~~~~~~~~~~~~~~~
+
+

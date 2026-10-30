@@ -9,12 +9,12 @@ test('first Login renders directly and later Legal navigation retains native tra
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => {if (message.type() === 'error') errors.push(message.text());});
-  await page.goto('/new/login'); await expect(page.locator('app-login-page')).toBeVisible();
+  await page.goto('/login'); await expect(page.locator('app-login-page')).toBeVisible();
   const starts = () => page.evaluate(() => (window as Window & {analytifyNativeTransitionProbe: {starts: number}}).analytifyNativeTransitionProbe.starts);
   expect(await starts()).toBe(0);
   await expectNativeTransitionsSettled(page);
   await page.getByRole('link', {name: 'Terms', exact: true}).press('Enter');
-  await expect(page).toHaveURL(/\/new\/legal#terms$/);
+  await expect(page).toHaveURL(/\/legal#terms$/);
   await expect(page.getByRole('main', {name: 'Legal content'})).toBeVisible();
   await expectNativeTransitionsSettled(page); expect(await starts()).toBeGreaterThan(0);
   // Provider migration must preserve real fragment scrolling below the header.

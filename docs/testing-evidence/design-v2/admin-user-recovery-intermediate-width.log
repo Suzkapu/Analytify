@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop --grep user readback recovery.*no-preference --output=docs/testing-evidence/design-v2/admin-user-recovery-intermediate-width-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:89002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:89002) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:89221) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion (3.7s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 2
+
+      453 |         return [...range.getClientRects()].filter(rect => rect.width > 0).length;
+      454 |       });
+    > 455 |       expect(labelLines).toBe(1);
+          |                          ^
+      456 |       const queue = await card.getByRole('button', {name: 'Run enabled tasks', exact: true}).boundingBox();
+      457 |       expect(queue).not.toBeNull();
+      458 |       const overlapX = Math.min(button!.x + button!.width, queue!.x + queue!.width) - Math.max(button!.x, queue!.x);
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:455:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-user-recovery-intermediate-width-artifacts/design-v2-admin-exclusion--a6220-s-with-no-preference-motion-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-user-recovery-intermediate-width-artifacts/design-v2-admin-exclusion--a6220-s-with-no-preference-motion-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-user-recovery-intermediate-width-artifacts/design-v2-admin-exclusion--a6220-s-with-no-preference-motion-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-user-recovery-intermediate-width-artifacts/design-v2-admin-exclusion--a6220-s-with-no-preference-motion-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:417:7 › user readback recovery preserves drafts without repeating saves with no-preference motion 

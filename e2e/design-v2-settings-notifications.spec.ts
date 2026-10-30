@@ -34,7 +34,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
         statsEnabled = body.p_enabled; await route.fulfill({json: null});
       });
       await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await expectNativeTransitionsSettled(page);
-      await page.goto('/new/settings/notifications');
+      await page.goto('/settings/notifications');
       const panel = page.locator('v2-settings-notifications'); const stats = panel.getByRole('switch', {name: 'Stats access requests'});
       await expect(stats).toBeVisible();
       if (phase === 'preferences') await expect(stats).not.toBeChecked();
@@ -86,13 +86,13 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       await panel.screenshot({path: info.outputPath('notifications.png'), animations: 'disabled'});
       await page.screenshot({path: info.outputPath('notifications-page.png'), fullPage: true, animations: 'disabled'});
       await panel.getByRole('link', {name: 'How to install app'}).press('Enter');
-      await expect(page).toHaveURL(/\/new\/settings\/install$/); const guide = page.locator('v2-settings-install');
+      await expect(page).toHaveURL(/\/settings\/install$/); const guide = page.locator('v2-settings-install');
       await expect(guide.locator('article')).toHaveCount(5); await expect(guide.getByRole('heading', {level: 1})).toHaveText('Install Analytify');
       await expectNativeTransitionsSettled(page);
       await expectNoBlockingAxeViolations(page); await guide.screenshot({path: info.outputPath('install.png')});
       await page.screenshot({path: info.outputPath('install-page.png'), fullPage: true, animations: 'disabled'});
       await guide.getByRole('button', {name: 'Back', exact: true}).press('Enter');
-      await expect(page).toHaveURL(/\/new\/settings\/notifications$/); await expect(stats).toBeChecked();
+      await expect(page).toHaveURL(/\/settings\/notifications$/); await expect(stats).toBeChecked();
       expect(writes).toEqual([]);
       }
       await expectNativeTransitionsSettled(page);

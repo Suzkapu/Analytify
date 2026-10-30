@@ -1,5 +1,7 @@
 # Design v2 UI-surface parity matrix
 
+> Historical checklist, not current completion evidence. Its “Complete” claims require code, canonical-node and runtime verification under `tested-design-v2-implementation-plan.md`. Admin runtime health and blocked-user management are explicitly excluded; their residual frontend scope was removed24October2026. Use `design-v2-testing-progress.md` for current measured results, limitations and acceptance gaps.
+
 This is the release inventory for the canonical Design v2 presentation. A row applies to every surface named in its **Included surfaces** cell; grouping does not waive any surface. `Complete` means the canonical path has intentional states and evidence. Any blank, `Missing`, `Blocked`, or remaining legacy adapter fails the release gate.
 
 Evidence codes: `U` unit, `B` browser/Playwright, `A` Axe, `K` keyboard/focus, `R` responsive/reflow, `P` performance/bundle. Shell modes are `app`, `focus`, and `public`. Layouts are the approved `form`, `default`, `dashboard`, `full`, and `reading` variants.

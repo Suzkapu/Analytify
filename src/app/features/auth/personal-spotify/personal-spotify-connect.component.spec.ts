@@ -33,7 +33,7 @@ describe('PersonalSpotifyConnectComponent', () => {
       providers: [
         { provide: SpotifyAuthService, useValue: auth },
         { provide: TermsAcceptanceService, useValue: terms },
-        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ returnUrl: '/new/stats' }) } } },
+        { provide: ActivatedRoute, useValue: { snapshot: { queryParamMap: convertToParamMap({ returnUrl: '/stats' }) } } },
         { provide: Router, useValue: router },
         DesignNavigationService
       ],
@@ -59,7 +59,7 @@ describe('PersonalSpotifyConnectComponent', () => {
 
     expect(auth.resolvePersonalSpotifyClientId).toHaveBeenCalledWith('spotify-user');
     expect(terms.acceptCurrent).toHaveBeenCalledOnce();
-    expect(auth.startPersonalAppAuthorization).toHaveBeenCalledWith('a'.repeat(32), '/new/stats', undefined, 'spotify-user');
+    expect(auth.startPersonalAppAuthorization).toHaveBeenCalledWith('a'.repeat(32), '/stats', undefined, 'spotify-user');
   });
 
   it('associates recoverable validation errors with both identity inputs', async () => {
@@ -77,6 +77,6 @@ describe('PersonalSpotifyConnectComponent', () => {
     route.snapshot.queryParamMap = convertToParamMap({ returnUrl: '//attacker.example' });
     component.ngOnInit();
     component.cancel();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/new/login');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
   });
 });

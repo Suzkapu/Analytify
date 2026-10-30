@@ -27,7 +27,7 @@ for (const timezoneId of ['UTC', 'America/Los_Angeles', 'Asia/Tokyo']) test.desc
         };
       });
     });
-    await page.goto('/new/stats');
+    await page.goto('/stats');
     await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
     await showStatsDateControls(page);
     const ranking = page.getByRole('button', {name: 'Ranking date', exact: true});

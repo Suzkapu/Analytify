@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-10-24",
+  "scope": "ArtistDetailsController existing cache and service-boundary characterization; no UI redesign",
+  "baseCommit": "99315ee7c844d5d9c6955a9d2d7973df4932fbd2",
+  "productionChange": "Move existing guarded error boundary around the entire hydration/cache/backup/catalog/Spotify read chain. Current failures settle loading with feedback; previous retry content remains; stale route errors cannot overwrite current state. Captures account namespace at request entry and includes current account identity in existing id/generation checks, preventing late outgoing-account publication/cache writes.",
+  "sources": {
+    "src/app/features/library/artist-details/artist-details-boundaries.spec.ts": "fbb2cb3b26919fefbf6fa56eb554e88d4d55781845c00172d9c1f9b7b12663f7",
+    "src/app/features/library/artist-details/artist-details.controller.ts": "3a111d6c95a391f636a8da3d642e9498af03d78b654220790c6865bf893987a6"
+  },
+  "verification": {
+    "red": {
+      "log": "artist-details-service-rejections-red.log",
+      "exit": 1,
+      "passed": 18,
+      "failed": 3,
+      "reason": "Hydration, backup restore and catalog transport rejection left loading true with no recoverable error."
+    },
+    "green": {
+      "command": "npx ng test --watch=false --include=src/app/features/library/artist-details/*.spec.ts --include=src/app/features/library/design-v2/v2-artist-details-page.component.spec.ts --progress=false",
+      "log": "artist-details-account-switch-green.log",
+      "exit": 0,
+      "passed": 28,
+      "files": 3,
+      "newCases": 23
+    },
+    "lint": {
+      "log": "artist-details-boundaries-lint.log",
+      "exit": 0
+    },
+    "testTypes": {
+      "log": "artist-details-boundaries-types.log",
+      "exit": 0
+    },
+    "accountSwitchRed": {
+      "log": "artist-details-account-switch-red.log",
+      "exit": 1,
+      "passed": 22,
+      "failed": 1,
+      "reason": "Held outgoing Spotify response published after account changed and storage cleared."
+    }
+  },
+  "coveredContracts": [
+    "Account-scoped hydration and anonymous namespace",
+    "Daily 01:00 cache cutoff including before-cutoff previous-day validity",
+    "Malformed, missing-timestamp and wrong-artist cache fallback",
+    "Originating playlist data and tracks",
+    "Backup restore before shared catalog",
+    "Catalog persistence and Spotify fallback",
+    "Optional backup sync failure preserves artist",
+    "Spotify failure and successful explicit retry",
+    "Hydration/backup/catalog failure and recovery preserve prior valid artist",
+    "Late hydration and Spotify success cannot replace newer route",
+    "Late catalog failure cannot replace newer route",
+    "Teardown invalidates pending backup restoration and removes route subscription",
+    "Held outgoing-account Spotify result cannot publish or refill cleared account cache; replacement account can call public load method successfully"
+  ],
+  "limitations": [
+    "No coverage rerun or full CI in this bounded task; no new application-wide percentage claim.",
+    "No canonical Figma or browser parity claim; presentation unchanged.",
+    "No hosted or production service accessed.",
+    "Recovery assertions invoke public loadArtistDetails directly. Neither legacy nor V2 page currently renders Retry; user-facing retry affordance/Figma workflow remains an open feature gap.",
+    "Account switch does not subscribe to auth or automatically start replacement-account loading. An invalidated initial response leaves the existing loading state until replacement navigation/load; tested explicit public load settles it. Previously rendered account content is not proactively cleared by an auth subscription in this controller.",
+    "Same-id overlapping manual retries are not certified; no rendered Retry control makes that overlap reachable in the current artist UI."
+  ]
+}

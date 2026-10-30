@@ -1,0 +1,10 @@
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	﻿2026-10-24T06:52:46.7108841Z ##[group]Run mkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7109262Z ^[[36;1mmkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7109780Z ^[[36;1mnode scripts/provision-isolated-friends-runtime.mjs > docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7110415Z ^[[36;1mANALYTIFY_TEST_POSTGRES_ROOT="$(jq -er .postgresRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7110975Z ^[[36;1mANALYTIFY_TEST_POSTGREST_ROOT="$(jq -er .postgrestRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7111658Z ^[[36;1mnode scripts/test-isolated-friends-http-contract.mjs --angular-contract > docs/testing-evidence/design-v2/friends-http-ci-artifacts/contract.log 2>&1^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7165680Z shell: /usr/bin/bash -e {0}
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.7165847Z ##[endgroup]
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.9363197Z Friends runtime provisioning failed: Preinstalled runtime paths must be root-owned and not group/world writable.
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T06:52:46.9437122Z ##[error]Process completed with exit code 1.

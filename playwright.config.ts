@@ -1,6 +1,6 @@
 import {defineConfig, devices} from '@playwright/test';
 
-const isolatedBuildSpecs = ['design-v2-friends.spec.ts', 'design-v2-navigation.spec.ts'];
+const isolatedBuildSpecs = ['design-v2-friends.spec.ts', 'design-v2-navigation.spec.ts', 'design-v2-admin-exclusion.spec.ts'];
 
 export default defineConfig({
   testDir: './e2e',
@@ -12,7 +12,7 @@ export default defineConfig({
   workers: 2,
   reporter: process.env['CI'] ? [['html', {open: 'never'}], ['github']] : 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4200/new/',
+    baseURL: 'http://127.0.0.1:4200/',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure'
   },
@@ -29,7 +29,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm start -- --host 127.0.0.1 --port 4200 --watch=false --hmr=false --live-reload=false',
-    url: 'http://127.0.0.1:4200/new/login',
+    url: 'http://127.0.0.1:4200/login',
     reuseExistingServer: !process.env['CI'],
     timeout: 120_000
   }

@@ -1,0 +1,206 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-card.component.spec.ts --include=src/app/features/admin/admin-run-record.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.523 seconds] - 2026-10-29T19:13:28.111Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts (15 tests | 7 failed) 651ms
+     × identifies the actual user and exposes only its disclosure while collapsed 162ms
+     × edits timezone, optional master, interval and Friday drafts locally until Save is activated 53ms
+     × dispatches Run independently and blocks duplicate save/run activation while busy without freezing edits 24ms
+     × explains unavailable Run while retaining Save for account capability {"backupActive":false} 28ms
+     × explains unavailable Run while retaining Save for account capability {"hasRefreshToken":false} 23ms
+     × offers pending-registration review as a separate action without authorizing deletion 24ms
+     × replaces Save with read-only recovery and blocks repeated recovery while busy 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > identifies the actual user and exposes only its disclosure while collapsed
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:54:40
+     52|     expect(page.querySelectorAll('input,select,textarea')).toHaveLengt…
+     53|     expect(page.querySelectorAll('button')).toHaveLength(1);
+     54|     disclosure.click(); expect(toggle).toHaveBeenCalledExactlyOnceWith…
+       |                                        ^
+     55|     expect(save).not.toHaveBeenCalled(); expect(run).not.toHaveBeenCal…
+     56|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > edits timezone, optional master, interval and Friday drafts locally until Save is activated
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:89:42
+     87|     expect(draft.enabled).toBe(false); expect(draft.songLeaguePlaylist…
+     88|     expect(save).not.toHaveBeenCalled(); expect(run).not.toHaveBeenCal…
+     89|     button('Save').click(); expect(save).toHaveBeenCalledExactlyOnceWi…
+       |                                          ^
+     90|     expect(run).not.toHaveBeenCalled();
+     91|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > dispatches Run independently and blocks duplicate save/run activation while busy without freezing edits
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:101:54
+     99|   it('dispatches Run independently and blocks duplicate save/run activ…
+    100|     const {fixture, button, labelled, edit, draft, save, run} = await …
+    101|     button('Run enabled tasks').click(); expect(run).toHaveBeenCalledE…
+       |                                                      ^
+    102|     fixture.componentRef.setInput('busy', true); fixture.detectChanges…
+    103|     for (const name of ['Save', 'Run enabled tasks']) {expect(button(n…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > explains unavailable Run while retaining Save for account capability {"backupActive":false}
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > explains unavailable Run while retaining Save for account capability {"hasRefreshToken":false}
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:124:87
+    122|     expect(button('Run enabled tasks').disabled).toBe(true); button('R…
+    123|     expect(page.textContent?.toLowerCase()).toMatch(/backup|reconnect/…
+    124|     expect(button('Save').disabled).toBe(false); button('Save').click(…
+       |                                                                                       ^
+    125|   });
+    126|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > offers pending-registration review as a separate action without authorizing deletion
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:131:70
+    129|     expect(page.querySelector('h3')?.textContent).toBe('Incomplete reg…
+    130|     expect(button('Run enabled tasks').disabled).toBe(true);
+    131|     button('Review incomplete registration').click(); expect(review).t…
+       |                                                                      ^
+    132|     expect(run).not.toHaveBeenCalled(); expect(save).not.toHaveBeenCal…
+    133|     expect([...page.querySelectorAll('button')].some(control => /delet…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > replaces Save with read-only recovery and blocks repeated recovery while busy
+AssertionError: expected "vi.fn()" to be called once with arguments: []
+
+Received:
+
+  1st vi.fn() call:
+
+- []
++ [
++   undefined,
++ ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:143:62
+    141|     expect(button('Save')).toBeUndefined();
+    142|     expect(page.textContent).toContain('Settings saved · Refresh neede…
+    143|     button('Refresh user settings').click(); expect(refresh).toHaveBee…
+       |                                                              ^
+    144|     fixture.componentRef.setInput('busy', true); fixture.detectChanges…
+    145|     expect(button('Refresh user settings').disabled).toBe(true); butto…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  7 failed | 38 passed (45)
+   Start at  20:13:28
+   Duration  1.43s (transform 119ms, setup 494ms, import 148ms, tests 940ms, environment 657ms)
+

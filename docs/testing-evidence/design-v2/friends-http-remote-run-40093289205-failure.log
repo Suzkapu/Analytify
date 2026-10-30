@@ -1,0 +1,10 @@
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	﻿2026-10-24T12:18:54.6224304Z ##[group]Run mkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6224972Z ^[[36;1mmkdir -p docs/testing-evidence/design-v2/friends-http-ci-artifacts^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6225746Z ^[[36;1mnode scripts/provision-isolated-friends-runtime.mjs > docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6226730Z ^[[36;1mANALYTIFY_TEST_POSTGRES_ROOT="$(jq -er .postgresRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6228049Z ^[[36;1mANALYTIFY_TEST_POSTGREST_ROOT="$(jq -er .postgrestRoot docs/testing-evidence/design-v2/friends-http-ci-artifacts/runtime.json)" \^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6229121Z ^[[36;1mnode scripts/test-isolated-friends-http-contract.mjs --angular-contract > docs/testing-evidence/design-v2/friends-http-ci-artifacts/contract.log 2>&1^[[0m
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6305729Z shell: /usr/bin/bash -e {0}
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:54.6306171Z ##[endgroup]
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:55.3948818Z Friends runtime provisioning failed: Preinstalled runtime paths must be root-owned and not group/world writable: /usr/share (uid=0, mode=777).
+friends-http-contract	Verify selected real Friends HTTP and Angular contracts	2026-10-24T12:18:55.4010474Z ##[error]Process completed with exit code 1.

@@ -1,4 +1,27 @@
-# Development and stable releases
+# Branch-selected root frontend releases
+
+On 30 October 2026 the user explicitly authorized replacing the root website with
+Design v2 and retaining the ability to switch back by running the main pipeline.
+This supersedes the former `/new/` hosting boundary below; branch and backend
+isolation remain in force.
+
+- Run **Verify and deploy v2 root frontend** (`preview.yml`) on `codex/design-v2`
+  with `friends_contract_only: false` to publish v2 at `/`.
+- Run **Verify and deploy** (`deploy.yml`) on `main` to restore the original
+  interface. Main remains unchanged. Its existing full production pipeline also
+  retains its existing backend release steps; v2 never runs those steps.
+- Both jobs serialize activation using `analytify-production` and select the same
+  frontend target symlink. Each branch retains its own immutable artifacts.
+- V2 uploads only its frontend, preserves previous content-hashed assets, validates
+  the existing HTTPS root, and rolls back the frontend/config on activation failure.
+- Old `/new/` links redirect to root paths. A narrowly scoped retirement worker
+  unregisters only the `/new/` registration and deletes only `ngsw:/new/:` caches.
+  The selected root frontend supplies `/ngsw-worker.js` with scope `/`.
+- Existing verification/security gates remain required. Stopping local tests does
+  not certify the migration or bypass release gates. Deployment is not successful
+  until the pipeline activates the artifact and verifies its commit at `/version.json`.
+
+## Historical preview boundary (before the authorized root promotion)
 
 `main` is the stable, original interface. The redesigned interface and future
 feature development belong on `codex/design-v2`, hosted separately at `/new/`.

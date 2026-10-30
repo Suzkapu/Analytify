@@ -1,0 +1,72 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/*.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [4.801 seconds] - 2026-10-30T11:42:48.196Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts (4 tests | 2 failed) 282ms
+     × removes acknowledged deleted row immediately and recovers failed inventory without another delete 110ms
+     × treats delete transport failure as uncertain and blocks every user mutation until read-only reconciliation 56ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > removes acknowledged deleted row immediately and recovers failed inventory without another delete
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/admin/admin-pending-review-recovery.spec.ts:63:102
+     61|     read.reject(new Error('Synthetic private read interruption')); awa…
+     62|     expect(component.pendingProfileReview?.phase).toBe('deleted-read-e…
+     63|     expect(component.successMessage).toContain('deleted'); expect(comp…
+       |                                                                                                      ^
+     64|     service.listUsers.mockResolvedValue([{...other, timezone: 'UTC'}]);
+     65|     await component.reconcilePendingProfileDeletion();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-pending-review-recovery.spec.ts > reviewed deletion confirmation and read-only recovery > treats delete transport failure as uncertain and blocks every user mutation until read-only reconciliation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/app/features/admin/admin-pending-review-recovery.spec.ts:75:47
+     73|     expect(component.pendingProfileReview?.phase).toBe('delete-error');
+     74|     component.dismissPendingProfileReview(); expect(component.pendingP…
+     75|     expect(component.isUserBusy(user.userId)).toBe(true);
+       |                                               ^
+     76|     await component.saveUser(component.users[0]); await component.runU…
+     77|     expect(service.updateUser).not.toHaveBeenCalled(); expect(service.…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 19 passed (20)
+      Tests  2 failed | 261 passed (263)
+   Start at  12:42:48
+   Duration  8.37s (transform 954ms, setup 6.72s, import 3.02s, tests 8.01s, environment 11.25s)
+

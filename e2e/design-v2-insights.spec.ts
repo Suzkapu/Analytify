@@ -12,7 +12,7 @@ test.beforeEach(async ({page}) => {
 });
 
 test('v2 Stats exposes labeled independent controls and keyboard category tabs', async ({page}) => {
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   await expect(page.getByRole('main', {name: 'Your Top Listening content'})).toBeVisible();
   await expect(page.getByRole('group', {name: 'Ranking period'})).toBeVisible();
 
@@ -46,7 +46,7 @@ test('v2 Stats exposes labeled independent controls and keyboard category tabs',
 });
 
 test('v2 Recently Played groups dates without chart-like position numbers', async ({page}) => {
-  await page.goto('/new/history');
+  await page.goto('/history');
   await expect(page.getByRole('main', {name: 'Recently Played content'})).toBeVisible();
   await expect(page.getByRole('heading', {name: 'Today'})).toBeVisible({timeout: 15_000});
   await expect(page.getByRole('heading', {name: 'Yesterday'})).toBeVisible();
@@ -61,7 +61,7 @@ test('v2 Recently Played groups dates without chart-like position numbers', asyn
 test('v2 Insights reflows at 320 CSS pixels', async ({page}) => {
   await page.setViewportSize({width: 320, height: 800});
   for (const path of ['/stats', '/history']) {
-    await page.goto('/new' + path);
+    await page.goto(path);
     await expect(page.locator('.v2-page')).toBeVisible({timeout: 15_000});
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, `${path} should not overflow horizontally`).toBeLessThanOrEqual(1);
@@ -79,7 +79,7 @@ test('Insights long names and controls reflow across the release matrix and enla
   matrix.push({width: 320, fontSize: '200%'}, {width: 768, fontSize: '200%'});
   const evidence: unknown[] = [];
   for (const path of ['/stats', '/history']) {
-    await page.goto('/new' + path);
+    await page.goto(path);
     await expect(page.locator('.v2-page')).toBeVisible();
     for (const {width, fontSize} of matrix) {
       await page.setViewportSize({width, height: 900});
@@ -120,7 +120,7 @@ test('Insights long names and controls reflow across the release matrix and enla
 });
 
 test('ranking history keyboard focus remains visible and meets non-text contrast', async ({page}, testInfo) => {
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   const history = page.getByRole('button', {name: 'View position history for Test Song'});
   await expect(history).toBeVisible();
   const unfocusedBorder=await history.evaluate(element=>getComputedStyle(element).borderTopColor);

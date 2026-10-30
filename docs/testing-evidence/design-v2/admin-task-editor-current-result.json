@@ -1,0 +1,415 @@
+{
+  "date": "2026-10-29",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "complete": false,
+  "state": "Six responsive task rows mounted; nullable drafts and raw interval validation verified; full card presentation and original migration gates remain open",
+  "changes": [
+    "Shared canonical task editor at desktop/mobile/compact widths; reusable existing preference row gains compact presentation and explicit accessible purpose",
+    "Feature-local nullable interval drafts survive merges; persisted service model stays nonnullable; invalid raw intervals do not write or invalidate reads; acknowledged read-only recovery precedes newer-draft validation",
+    "Manual enqueue accepts only the flags and identity it actually consumes; no interval coercion or persistence side effects",
+    "Canonical18variant card family reviewed,18instant disclosure actions wired, validation feedback added, generic unowned controls replaced with real card instances in both canonical Users/runs pages",
+    "Admin static gate now follows all six exact numeric/unit bindings into the reusable component and checks every supported unit instead of requiring copied markup"
+  ],
+  "verification": {
+    "focused": {
+      "command": "npm exec -- ng test --watch=false --include=src/app/core/admin/*.spec.ts --include=src/app/features/admin/*.spec.ts --include=src/app/shared/ui-v2/v2-preference-row.component.spec.ts --progress=false",
+      "passed": 263,
+      "files": 20,
+      "exit": 0,
+      "log": "admin-task-editor-fixtures-unit.log"
+    },
+    "ci": {
+      "command": "npm run verify:ci",
+      "frontendPassed": 2556,
+      "frontendFiles": 202,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "exit": 0,
+      "initialJavaScriptBytes": 849164,
+      "log": "admin-task-editor-final-ci.log"
+    },
+    "native": {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npm run test:native-components",
+      "passed": 147,
+      "files": 12,
+      "exit": 0,
+      "newReviewedReferences": 33,
+      "engines": [
+        "Chromium",
+        "Firefox",
+        "WebKit"
+      ],
+      "strictComparison": "update none, zero mismatched pixels/ratio, unchanged0.1 threshold",
+      "log": "admin-task-editor-all-native.log"
+    },
+    "newBrowser": {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npx playwright test --config=playwright.admin-exclusion.config.ts --grep='mounted task'",
+      "passed": 20,
+      "exit": 0,
+      "projects": [
+        "Chromium desktop",
+        "Chromium mobile",
+        "Firefox",
+        "WebKit"
+      ],
+      "viewportSamples": 112,
+      "taskGeometrySamples": 672,
+      "widths": [
+        320,
+        390,
+        600,
+        768,
+        1024,
+        1440,
+        1920
+      ],
+      "heights": [
+        480,
+        1000
+      ],
+      "motion": [
+        "normal",
+        "reduced"
+      ],
+      "coverage": "blank/no-write validation, native number arrows, Space switch, exact activated22field synthetic save, held-write later draft, native unit choice, no overflow,48px fields, loaded exact-size assets, retained draft on resize, axe and zero unexpected transport/runtime effects",
+      "log": "admin-task-editor-browser.log"
+    },
+    "retainedBrowser": {
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npx playwright test --config=playwright.admin-exclusion.config.ts --grep-invert='mounted task'",
+      "status": "passed",
+      "log": "admin-task-editor-regression.log",
+      "passed": 48,
+      "exit": 0,
+      "duration": "9.6minutes"
+    },
+    "lint": {
+      "exit": 0,
+      "log": "admin-task-editor-lint.log"
+    },
+    "nativeTypes": {
+      "exit": 0,
+      "log": "admin-task-editor-native-types.log"
+    },
+    "browserTotal": 68
+  },
+  "coverage": {
+    "frontend": {
+      "productionSources": 175,
+      "metrics": {
+        "lines": {
+          "total": 11696,
+          "covered": 10715,
+          "skipped": 0,
+          "pct": 91.61
+        },
+        "statements": {
+          "total": 13846,
+          "covered": 12488,
+          "skipped": 0,
+          "pct": 90.19
+        },
+        "functions": {
+          "total": 2816,
+          "covered": 2499,
+          "skipped": 0,
+          "pct": 88.74
+        },
+        "branches": {
+          "total": 9002,
+          "covered": 7617,
+          "skipped": 0,
+          "pct": 84.61
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 1,
+      "provenance": "Fresh current CI report",
+      "missingProductionSources": [],
+      "changedSources": {
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-interval-validation.ts": {
+          "lines": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 2,
+            "covered": 2,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 5,
+            "covered": 5,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 4,
+            "covered": 4,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-schedule-draft.ts": {
+          "lines": {
+            "total": 7,
+            "covered": 7,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 3,
+            "covered": 3,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 11,
+            "covered": 11,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 8,
+            "covered": 8,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-task-editor.component.ts": {
+          "lines": {
+            "total": 14,
+            "covered": 14,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 1,
+            "covered": 1,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 15,
+            "covered": 15,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 0,
+            "covered": 0,
+            "skipped": 0,
+            "pct": 100
+          }
+        },
+        "/mnt/Storage/ProgrammingProjects/Analytify/src/app/shared/ui-v2/v2-preference-row.component.ts": {
+          "lines": {
+            "total": 13,
+            "covered": 13,
+            "skipped": 0,
+            "pct": 100
+          },
+          "functions": {
+            "total": 2,
+            "covered": 2,
+            "skipped": 0,
+            "pct": 100
+          },
+          "statements": {
+            "total": 15,
+            "covered": 15,
+            "skipped": 0,
+            "pct": 100
+          },
+          "branches": {
+            "total": 2,
+            "covered": 2,
+            "skipped": 0,
+            "pct": 100
+          }
+        }
+      },
+      "exclusions": "AST-justified type-only/declaration/test/bootstrap exclusions in source inventory. No new ignores or broad exclusions. Executable new guard remains included.",
+      "nextCharacterizationSlicesAfterAdmin": [
+        {
+          "source": "src/app/features/insights/user-stats/user-stats.component.ts",
+          "uncoveredBranches": 224,
+          "uncoveredFunctions": 20,
+          "workflow": "Serialized snapshot replacement and failed previous writes; late popup responses after close/range change"
+        },
+        {
+          "source": "src/app/features/song-league/song-league-detail.component.ts",
+          "uncoveredBranches": 111,
+          "uncoveredFunctions": 29,
+          "workflow": "Search and owner playlist/deletion recovery; reconcile current main semantics first"
+        },
+        {
+          "source": "src/app/features/compare-room/compare-room-shell.component.ts",
+          "uncoveredBranches": 86,
+          "uncoveredFunctions": 49,
+          "workflow": "Empty/no-intersection proposals, recomputation, rejected refresh and idempotent creation"
+        },
+        {
+          "source": "src/app/features/shared-playlists/shared-playlists.component.ts",
+          "uncoveredBranches": 83,
+          "uncoveredFunctions": 22,
+          "workflow": "Complete revoke/cancel/denied/acknowledged-write+read-failure recovery and clipboard outcomes; no excluded management"
+        },
+        {
+          "source": "src/app/core/auth/spotify-auth.service.ts",
+          "uncoveredBranches": 82,
+          "uncoveredFunctions": 7,
+          "workflow": "Anonymous credential deletion failure/recovery and concurrent session exit ownership"
+        },
+        {
+          "source": "src/app/features/compare-room/compare-room-join.component.ts",
+          "uncoveredBranches": 63,
+          "uncoveredFunctions": 14,
+          "workflow": "Guest source hydration/publish failures and leave/destroy ownership"
+        },
+        {
+          "source": "src/app/features/shared-playlists/shared-playlist-detail.component.ts",
+          "uncoveredBranches": 60,
+          "uncoveredFunctions": 12,
+          "workflow": "Revision conflict after Spotify success, lease release, retained destination and route-change safety"
+        },
+        {
+          "source": "src/app/features/library/playlists/playlists.component.ts",
+          "uncoveredBranches": 59,
+          "uncoveredFunctions": 9,
+          "workflow": "Real filter reset/account persistence and analysis/songs navigation/cache recovery"
+        }
+      ]
+    },
+    "worker": {
+      "productionSources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 916,
+          "skipped": 0,
+          "pct": 98.81
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained report and all production/coverage runner/pinned-runtime input hashes verified; whole package file drift from23Oct acknowledged and compared to27Oct in admin-task-editor-backend-reconfirmation.json; current CI218/83 tests rerun"
+    },
+    "edge": {
+      "productionSources": 12,
+      "metrics": {
+        "lines": {
+          "total": 763,
+          "covered": 763,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 903,
+          "covered": 902,
+          "skipped": 0,
+          "pct": 99.88
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 799,
+          "covered": 797,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained report and all production/coverage runner/pinned-runtime input hashes verified; whole package file drift from23Oct acknowledged and compared to27Oct in admin-task-editor-backend-reconfirmation.json; current CI218/83 tests rerun"
+    }
+  },
+  "figma": {
+    "file": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "cardSet": "1125:35373",
+    "cardReferences": "1125:35374",
+    "taskSet": "1125:33476",
+    "validation": [
+      "1133:36111",
+      "1133:36117"
+    ],
+    "validationReference": "1133:36110",
+    "productScreens": [
+      "27:1461",
+      "35:2143"
+    ],
+    "compositionManifest": "admin-user-card-canonical-composition.json",
+    "review": "Ready/backup-off/reconnect/pending collapsed+expanded desktop/mobile; compact header/tasks/metadata/actions; updated product screen scroll layouts;33 native candidates visually reviewed before copying only those files into accepted references",
+    "parityLimit": "Task rows and validation feedback have bounded component parity. Surrounding Angular identity/capability card, master/action placement, pending-profile modal and full Administration composition remain legacy. Browser card capture is representative workflow evidence, not an approved full-page golden."
+  },
+  "sourceHashes": "admin-task-editor-source-hashes.json",
+  "sourceHashCount": 717,
+  "sourceDrift": [],
+  "assets": "admin-task-editor-assets.json",
+  "visualHashes": "admin-task-editor-visual-hashes.json",
+  "geometryAudit": "admin-task-editor-geometry-audit.json",
+  "failureEvidence": [
+    "admin-task-switch-red.log: one runtime failure/threepasses before compact inputs existed",
+    "admin-user-interval-validation-red.log: missing module compile-only, no runtimeRED claim",
+    "admin-user-interval-boundaries-first.log: compile-only missing narrowing plus corrected test-method typo",
+    "admin-task-editor-mounted-unit.log:36fail/227pass because legacy fixtures omitted required persisted intervals; completed five fixtures without weakening assertions",
+    "admin-task-editor-native-initial.log: test fixture TypeScript annotation failure",
+    "admin-task-editor-native-candidates.log: incorrect outer wrapper font assertion corrected to actual visible field labels/strong text",
+    "admin-task-editor-native-render.log and admin-user-validation-native-initial.log: missing new references; reviewed33specific candidates before acceptance",
+    "admin-task-editor-current-ci.log: old copied-markup static gate failed; replaced with exact six-row binding and shared-unit gate"
+  ],
+  "remaining": [
+    "Surrounding full identified-user Angular card and Administration navigation/composition",
+    "Per-field validation/server-policy/timezone detail and canonical loading/empty user inventory",
+    "Pending-registration review/confirmation, Cancel-last/focus and appealed-report context",
+    "Canonical switch/checkbox/hover/calendar motion and provisional sidebar follow-up remain original-scope gates",
+    "Frontend all four metrics below98; worker/edge100aim still not reached",
+    "Selected real hosted Admin contracts and live cloud-identity replacement unverified",
+    "All original retained feature/Figma/service/browser/final-commit completion gates remain open"
+  ],
+  "nextSlice": "Replace surrounding legacy identified-user card with reusable canonical Angular presentation, retain mounted draft/save/recovery behavior, then pending-review confirmation and Administration navigation.",
+  "releaseBoundaries": "No commit/push/main merge/deployment/shared service or database changes/production data/real notifications; unrelated work preserved"
+}

@@ -1,0 +1,22 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=mobile --project=firefox-stats --project=webkit-stats --grep user save retains edits --output=docs/testing-evidence/design-v2/admin-user-save-browser-final-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:80391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80391) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:80702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work (2.5s)
+(node:80920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work (3.5s)
+(node:81421) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:375:5 › user save retains edits made during the write without submitting them or duplicating work (4.7s)
+
+  3 passed (19.9s)

@@ -29,7 +29,7 @@ for(const motion of ['no-preference','reduce'] as const) for(const moveFocus of 
       if(requests===1){await initial;return route.fulfill({status:403,json:{error:{status:403,message:'Isolated stale-refresh failure'}}});}
       await retry;return route.fulfill({json:{items:[{id:'fresh-artist',name:'Fresh artist',genres:['pop'],images:[]}],total:1}});
     });
-    await page.goto('/new/stats');const main=page.getByRole('main');
+    await page.goto('/stats');const main=page.getByRole('main');
     await expect(main.getByText('Cached song',{exact:true})).toBeVisible();
     await expect(main.getByText('Refreshing this range… Your cached rankings stay visible.',{exact:true})).toBeVisible();
     await expect.poll(()=>requests).toBe(1);await main.locator('.v2-page').screenshot({path:info.outputPath('cached-refreshing.png')});

@@ -35,6 +35,15 @@ test('native visual checks reject updates and compare all three browser engines 
   assert.match(source, /expect\.element\(alert\)\.toMatchScreenshot/);
 });
 
+test('native screenshot paths keep independent component suites and existing Friends goldens separate', async () => {
+  const {test: configuration} = (await import('../vitest.native-components.config.mjs')).default;
+  const resolvePath = configuration.browser.expect.toMatchScreenshot.resolveScreenshotPath;
+  for (const testFileName of ['friends-feedback.native.ts', 'admin-audit.native.ts', 'admin-user-feedback.native.ts']) {
+    assert.equal(resolvePath({root: '/repo', testFileName, arg: 'sample', browserName: 'chromium', platform: 'linux', ext: '.png'}),
+      `/repo/e2e/components/__screenshots__/${testFileName}/sample-chromium-linux.png`);
+  }
+});
+
 test('preview verification requires native component checks after installing browser engines', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
   const verify = workflow.split(/\n  friends-http-contract:/)[0];
@@ -126,6 +135,21 @@ test('requires the dedicated Friends browser suite in preview CI', () => {
   const configuration = readFileSync('playwright.friends.config.ts', 'utf8');
   assert.match(configuration, /testMatch: 'design-v2-friends\.spec\.ts'/);
   assert.match(configuration, /testIgnore: \[\]/);
+});
+
+test('isolates Admin regression fixtures and requires their browser checks before handoff', () => {
+  const base = readFileSync('playwright.config.ts', 'utf8');
+  const isolated = base.match(/const isolatedBuildSpecs = \[([^\]]+)\]/)?.[1];
+  assert.ok(isolated?.includes("'design-v2-admin-exclusion.spec.ts'"), 'Loopback-only Admin fixtures must not run against the ordinary environment.');
+  const configuration = readFileSync('playwright.admin-exclusion.config.ts', 'utf8');
+  assert.match(configuration, /testMatch: 'design-v2-admin-exclusion\.spec\.ts'/);
+  assert.match(configuration, /--configuration browser-testing/);
+  assert.match(configuration, /reuseExistingServer: false/);
+  const verify = readFileSync('.github/workflows/preview.yml', 'utf8').split(/\n  friends-http-contract:/)[0];
+  const check = verify.indexOf('run: npx playwright test --config=playwright.admin-exclusion.config.ts');
+  assert.ok(check > verify.indexOf('npx playwright install --with-deps'));
+  assert.ok(check < verify.indexOf('- name: Preserve test evidence'));
+  assert.match(verify, /docs\/testing-evidence\/design-v2\/admin-exclusion-browser-artifacts/);
 });
 
 test('requires isolated real Friends HTTP verification before preview deployment', () => {

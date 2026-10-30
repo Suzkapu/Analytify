@@ -1,0 +1,70 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-run-record.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.128 seconds] - 2026-10-26T21:33:08.448Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-run-record.component.spec.ts (25 tests | 2 failed) 349ms
+     × rejects bare year values instead of treating them as ISO audit timestamps 21ms
+     × rejects impossible calendar dates instead of displaying a normalized fabricated date 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-run-record.component.spec.ts > administration run audit record > rejects bare year values instead of treating them as ISO audit timestamps
+AssertionError: expected <time …(2)></time>
+…(2) to have a length of +0 but got 3
+
+- Expected
++ Received
+
+- 0
++ 3
+
+ ❯ src/app/features/admin/admin-run-record.component.spec.ts:58:43
+     56|   it('rejects bare year values instead of treating them as ISO audit t…
+     57|     const {page, text} = await mount({requestedAt: '2026', startedAt: …
+     58|     expect(page.querySelectorAll('time')).toHaveLength(0);
+       |                                           ^
+     59|     expect(text()).toContain('No duration available');
+     60|     expect(text()).not.toContain('0s');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-run-record.component.spec.ts > administration run audit record > rejects impossible calendar dates instead of displaying a normalized fabricated date
+AssertionError: expected <time …(2)></time>
+…(2) to have a length of +0 but got 3
+
+- Expected
++ Received
+
+- 0
++ 3
+
+ ❯ src/app/features/admin/admin-run-record.component.spec.ts:66:43
+     64|     const impossible = '2026-02-30T10:00:00Z';
+     65|     const {page, text} = await mount({requestedAt: impossible, started…
+     66|     expect(page.querySelectorAll('time')).toHaveLength(0);
+       |                                           ^
+     67|     expect(text()).toContain('No duration available');
+     68|     expect(text()).not.toContain('2 Mar');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 23 passed (25)
+   Start at  22:33:08
+   Duration  1.16s (transform 53ms, setup 288ms, import 20ms, tests 349ms, environment 384ms)
+

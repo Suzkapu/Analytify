@@ -20,14 +20,14 @@ for (const motion of ['no-preference', 'reduce'] as const) {
         finally {replySettled = true; completed();}
       } else await route.fulfill({json: null});
     });
-    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/new/stats');
+    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/stats');
     await expect.poll(() => Boolean(old)).toBe(true);
     await page.getByRole('button', {name: 'Open account and data settings', exact: true}).press('Enter');
     await page.getByRole('button', {name: 'Log out', exact: true}).press('Enter');
     // The held reply is released only after logout reaches login. A lifecycle
     // drain that still depends on the old response therefore cannot pass.
     await expect.poll(() => cancelled).toBe(true);
-    await expect(page).toHaveURL(/\/new\/login$/);
+    await expect(page).toHaveURL(/\/login$/);
     await expect(page.locator('app-login-page')).toBeVisible();
     release(); await completion;
     const obsoleteStatus = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {

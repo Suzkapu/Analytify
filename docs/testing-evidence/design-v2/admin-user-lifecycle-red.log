@@ -1,0 +1,189 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --progress=false --include=src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.418 seconds] - 2026-10-26T21:07:23.473Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts (7 tests | 6 failed) 271ms
+     × preserves another user unsaved draft when one user save reads back the inventory 146ms
+     × does not replace a newer dashboard refresh with an earlier held load 20ms
+     × keeps a saved user readback when an older dashboard load completes afterwards 22ms
+     × does not publish private dashboard reads after route destruction 17ms
+     × does not start a private user readback after a held mutation outlives its route 25ms
+     × does not publish late run inventory after route destruction 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > preserves another user unsaved draft when one user save reads back the inventory
+AssertionError: expected 'UTC' to be 'Europe/Vienna' // Object.is equality
+
+Expected: "Europe/Vienna"
+Received: "UTC"
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:40:77
+     38|     await component.saveUser(alice);
+     39|     expect(component.users.find(value => value.userId === 'Alice')?.ti…
+     40|     expect(component.users.find(value => value.userId === 'Bob')?.time…
+       |                                                                             ^
+     41|     expect(service.updateUser).toHaveBeenCalledExactlyOnceWith(alice);
+     42|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > does not replace a newer dashboard refresh with an earlier held load
+AssertionError: expected [ 'Old inventory' ] to deeply equal [ 'New inventory' ]
+
+- Expected
++ Received
+
+  [
+-   "New inventory",
++   "Old inventory",
+  ]
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:70:56
+     68|     await component.load();
+     69|     old.resolve([user('Old inventory')]); await earlier;
+     70|     expect(component.users.map(value => value.userId)).toEqual(['New i…
+       |                                                        ^
+     71|     expect(component.isLoading).toBe(false);
+     72|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > keeps a saved user readback when an older dashboard load completes afterwards
+AssertionError: expected 'UTC' to be 'Europe/Vienna' // Object.is equality
+
+Expected: "Europe/Vienna"
+Received: "UTC"
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:83:41
+     81|     await component.saveUser(alice);
+     82|     old.resolve([user('Alice')]); await initial;
+     83|     expect(component.users[0].timezone).toBe('Europe/Vienna');
+       |                                         ^
+     84|   });
+     85|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > does not publish private dashboard reads after route destruction
+AssertionError: expected [ { userId: 'Private user', …(4) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "displayName": "Private user",
++     "enabled": true,
++     "spotifyId": "Private user",
++     "timezone": "UTC",
++     "userId": "Private user",
++   },
++ ]
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:93:29
+     91|     fixture.destroy();
+     92|     privateUsers.resolve([user('Private user')]); await loading;
+     93|     expect(component.users).toEqual([]);
+       |                             ^
+     94|     expect(component.successMessage).toBe('');
+     95|     expect(component.errorMessage).toBe('');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > does not start a private user readback after a held mutation outlives its route
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array []
+
+
+Number of calls: 1
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:104:35
+    102|     const operation = component.saveUser(user('Alice'));
+    103|     fixture.destroy(); saving.resolve(); await operation;
+    104|     expect(service.listUsers).not.toHaveBeenCalled();
+       |                                   ^
+    105|     expect(component.successMessage).toBe('');
+    106|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts > administration user inventory lifecycle boundaries > does not publish late run inventory after route destruction
+AssertionError: expected [ { id: 'private-run' } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "private-run",
++   },
++ ]
+
+ ❯ src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts:114:28
+    112|     const refresh = component.refreshRuns();
+    113|     fixture.destroy(); runs.resolve([{id: 'private-run'} as AdminSyncR…
+    114|     expect(component.runs).toEqual([]);
+       |                            ^
+    115|   });
+    116| });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed (7)
+   Start at  22:07:23
+   Duration  1.10s (transform 131ms, setup 230ms, import 174ms, tests 271ms, environment 320ms)
+

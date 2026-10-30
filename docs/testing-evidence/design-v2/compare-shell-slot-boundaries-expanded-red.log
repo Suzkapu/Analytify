@@ -1,0 +1,238 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.121 seconds] - 2026-10-24T12:07:00.841Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+Warning: A vi.mock("qrcode") call in "/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts" is not at the top level of the module. Although it appears nested, it will be hoisted and executed before any tests run. Move it to the top level to reflect its actual execution order. This will become an error in a future version.
+See: https://vitest.dev/guide/mocking/modules#how-it-works
+ ❯ |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts (6 tests | 5 failed) 34ms
+     × does not resurrect a removed local group when its held selection settles with success 21ms
+     × does not resurrect a removed local group when its held selection settles with failure 2ms
+     × does not start Spotify selection after a removed slot finishes refreshing its token 2ms
+     × keeps the replacement selection when an older selection finishes last 3ms
+     × keeps the room empty when a held selection completes after shell teardown 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts > Compare Room local slot selection ownership > does not resurrect a removed local group when its held selection settles with success
+AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+    "ec4384be-d28e-4b9f-98b0-4f8973068bb8",
++   "c6e764d6-6af5-45ff-b4a6-37a883d598dc",
+  ]
+
+ ❯ src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts:70:68
+     68|       else held.reject(new Error('Isolated Spotify load failed'));
+     69|       await applying;
+     70|       expect(coordinator.participants$.value.map(item => item.id)).toE…
+       |                                                                    ^
+     71|       expect(shell.participants.map(item => item.id)).toEqual([hostId]…
+     72|       expect(coordinator.getReadyParticipants()).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts > Compare Room local slot selection ownership > does not resurrect a removed local group when its held selection settles with failure
+AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+    "9107abe5-00f2-4f0c-9bdc-a6a4e7a227c0",
++   "8a69e383-6983-4847-ad27-3dba3d529e8c",
+  ]
+
+ ❯ src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts:70:68
+     68|       else held.reject(new Error('Isolated Spotify load failed'));
+     69|       await applying;
+     70|       expect(coordinator.participants$.value.map(item => item.id)).toE…
+       |                                                                    ^
+     71|       expect(shell.participants.map(item => item.id)).toEqual([hostId]…
+     72|       expect(coordinator.getReadyParticipants()).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts > Compare Room local slot selection ownership > does not start Spotify selection after a removed slot finishes refreshing its token
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Array [
+        Object {
+          "id": "mix",
+          "imageUrl": "",
+          "name": "Mix",
+          "ownerName": "Host",
+          "total": 1,
+        },
+      ],
+      "refreshed-isolated-token",
+      "host",
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts:92:42
+     90|     held.resolve({tracks: [track], source: 'spotify'});
+     91|     await applying;
+     92|     expect(source.loadMainSelection).not.toHaveBeenCalled();
+       |                                          ^
+     93|     expect(coordinator.participants$.value.map(item => item.id)).toEqu…
+     94|     shell.ngOnDestroy();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts > Compare Room local slot selection ownership > keeps the replacement selection when an older selection finishes last
+AssertionError: expected { …(15) } to match object { status: 'ready', …(2) }
+(12 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "playlist": {
+-     "id": "replacement",
++     "id": "mix",
+      "imageUrl": "",
+-     "name": "Replacement",
++     "name": "Mix",
+      "ownerName": "Host",
+      "total": 1,
+    },
+    "status": "ready",
+    "tracks": [
+      {
+        "albumName": "",
+        "artists": [],
+-       "id": "current-track",
++       "id": "held-track",
+        "imageUrl": "",
+        "name": "Held track",
+        "playlistIndex": 0,
+        "spotifyUrl": "",
+-       "uri": "spotify:track:current-track",
++       "uri": "spotify:track:held-track",
+      },
+    ],
+  }
+
+ ❯ src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts:120:67
+    118|     held.resolve({tracks: [track], source: 'spotify'});
+    119|     await applying;
+    120|     expect(shell.participants.find(item => item.id === local.id)).toMa…
+       |                                                                   ^
+    121|     shell.ngOnDestroy();
+    122|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |SpotiFront| src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts > Compare Room local slot selection ownership > keeps the room empty when a held selection completes after shell teardown
+AssertionError: expected [ { …(15) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "approvedProposalHash": undefined,
++     "approvedProposalId": undefined,
++     "dataSource": "spotify",
++     "displayName": "Host",
++     "error": undefined,
++     "id": "e89e0d29-6b02-41f2-962d-b1bc9e33e4cc",
++     "imageUrl": "",
++     "isMainProfile": true,
++     "localSlotNumber": 2,
++     "playlist": {
++       "id": "mix",
++       "imageUrl": "",
++       "name": "Mix",
++       "ownerName": "Host",
++       "total": 1,
++     },
++     "playlists": [
++       {
++         "id": "mix",
++         "imageUrl": "",
++         "name": "Mix",
++         "ownerName": "Host",
++         "total": 1,
++       },
++     ],
++     "result": undefined,
++     "spotifyUserId": "host",
++     "status": "ready",
++     "tracks": [
++       {
++         "albumName": "",
++         "artists": [],
++         "id": "held-track",
++         "imageUrl": "",
++         "name": "Held track",
++         "playlistIndex": 0,
++         "spotifyUrl": "",
++         "uri": "spotify:track:held-track",
++       },
++     ],
++   },
++ ]
+
+ ❯ src/app/features/compare-room/compare-room-shell-slot-boundaries.spec.ts:130:45
+    128|     held.resolve({tracks: [track], source: 'spotify'});
+    129|     await applying;
+    130|     expect(coordinator.participants$.value).toEqual([]);
+       |                                             ^
+    131|     expect(coordinator.getReadyParticipants()).toEqual([]);
+    132|     expect(coordinator.sharedTracks$.value).toEqual([]);
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  14:07:01
+   Duration  1.09s (transform 307ms, setup 238ms, import 359ms, tests 34ms, environment 336ms)
+

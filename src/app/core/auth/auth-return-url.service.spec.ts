@@ -16,7 +16,7 @@ describe('AuthReturnUrlService', () => {
     it('returns a private share claim route once after login', () => {
         service.remember('/shared-playlists/claim/private-token');
 
-        expect(service.consume()).toBe('/new/shared-playlists/claim/private-token');
+        expect(service.consume()).toBe('/shared-playlists/claim/private-token');
         expect(service.consume()).toBe('/playlists');
     });
 
@@ -26,8 +26,8 @@ describe('AuthReturnUrlService', () => {
     });
 
     it('preserves a v2 route with query parameters through one callback', () => {
-        service.remember('/new/stats?range=short_term&compare=2026-09-24');
-        expect(service.consume()).toBe('/new/stats?range=short_term&compare=2026-09-24');
-        expect(service.consume('/new/playlists')).toBe('/new/playlists');
+        service.remember('/stats?range=short_term&compare=2026-09-24');
+        expect(service.consume()).toBe('/stats?range=short_term&compare=2026-09-24');
+        expect(service.consume('/playlists')).toBe('/playlists');
     });
 });

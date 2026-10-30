@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --project=desktop --grep=policy save validates --output=docs/testing-evidence/design-v2/admin-policy-desktop-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:18283) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18283) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:18519) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (3.7s)
+
+
+  1) [desktop] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "0s"
+    Received: "1e-05s"
+
+      184 |   }
+      185 |   await page.emulateMedia({reducedMotion: 'reduce'});
+    > 186 |   expect(await history.locator('.switch-track').evaluate(element => getComputedStyle(element, '::after').transitionDuration)).toBe('0s');
+          |                                                                                                                               ^
+      187 |   await page.emulateMedia({reducedMotion: 'no-preference'});
+      188 |   const geometry = [];
+      189 |   for (const height of [600, 1000]) for (const width of [320, 390, 768, 1440]) {
+        at /mnt/Storage/ProgrammingProjects/Analytify/e2e/design-v2-admin-exclusion.spec.ts:186:127
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-policy-desktop-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: docs/testing-evidence/design-v2/admin-policy-desktop-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    docs/testing-evidence/design-v2/admin-policy-desktop-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace docs/testing-evidence/design-v2/admin-policy-desktop-artifacts/design-v2-admin-exclusion--f6764-aves-with-read-only-refresh-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh 

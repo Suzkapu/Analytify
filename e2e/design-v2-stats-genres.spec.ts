@@ -39,7 +39,7 @@ test.beforeEach(async ({page}) => {
       };
     });
   }, {current, previous});
-  await page.goto('/new/stats');
+  await page.goto('/stats');
   await page.getByRole('button', {name: 'Genres', exact: true}).click();
   await expect(page.locator('v2-genre-rankings .v2-genre-row')).toHaveCount(3);
   await page.evaluate(() => document.fonts.ready);

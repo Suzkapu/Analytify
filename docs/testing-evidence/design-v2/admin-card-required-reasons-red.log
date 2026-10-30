@@ -1,0 +1,42 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-card.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [1.534 seconds] - 2026-10-29T19:14:53.724Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts (18 tests | 1 failed) 704ms
+     × shows actual required reasons for every known task without converting them into optional switches 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-card.component.spec.ts > identified administration user card > shows actual required reasons for every known task without converting them into optional switches
+AssertionError: expected 'Synthetic listenersynthetic-listenerC…' to contain 'History required for a retained featu…'
+
+Expected: "History required for a retained feature."
+Received: "Synthetic listenersynthetic-listenerCloud Backup onSpotify connected2 optional schedules selected · 6 feature-required tasks.Schedule timezoneEnable optional schedulesListening historyOptional intervalUnitminuteshoursdaysShort-term statsShort stats required for a league. Optional scheduling remains separate.Optional intervalUnitminuteshoursdaysMedium-term statsOptional intervalUnitminuteshoursdaysLong-term statsOptional intervalUnitminuteshoursdaysSong League playlistsPlaylist required for an active league. Optional scheduling remains separate.Optional intervalUnitminuteshoursdaysOnly refresh on FridaysShared playlistsShared playlist refresh required. Optional scheduling remains separate.Optional intervalUnitminuteshoursdaysChanges stay in this user’s draft until Save.SaveRun enabled tasks"
+
+ ❯ src/app/features/admin/admin-user-card.component.spec.ts:133:75
+    131|     };
+    132|     const {page, draft} = await mount({expanded: true}, user({required…
+    133|     for (const reason of Object.values(reasons)) expect(page.textConte…
+       |                                                                           ^
+    134|     expect(page.textContent).toContain('6 feature-required tasks.');
+    135|     expect(draft.requiredTasks).toEqual(reasons);
+ ❯ fulfilled chunk-JBI4KQTL.js:89:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 passed (18)
+   Start at  20:14:53
+   Duration  1.52s (transform 77ms, setup 246ms, import 92ms, tests 704ms, environment 361ms)
+

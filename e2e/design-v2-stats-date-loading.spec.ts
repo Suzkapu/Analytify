@@ -47,7 +47,7 @@ for(const purpose of ['ranking','comparison'] as const) for(const outcome of ['u
           albums:{id:'saved-album',name:'Saved album',image_url:null},track_artists:[{artist_rank:0,artists:{id:'saved-artist',name:'Saved Artist'}}]}}],
         stats_snapshot_artists:[],stats_snapshot_genres:[]}});
     });
-    await page.goto('/new/stats');
+    await page.goto('/stats');
     await expect(page.locator('.v2-ranking-list strong').filter({hasText:'Test Song'})).toBeVisible();
     expect(requests).toHaveLength(0);
     await showStatsDateControls(page);

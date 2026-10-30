@@ -1,0 +1,242 @@
+{
+  "date": "2026-10-27",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "state": "Save boundary and in-flight user edits protected; identified user card migration remains incomplete",
+  "changes": [
+    "Four retained save services capture RPC parameters before client readiness so later mutable form edits are not submitted",
+    "User save captures its activated draft; readback preserves later edits only to editable schedule fields while accepting fresh server metadata",
+    "Decorative Save/Run icons are hidden from assistive technology so action names match canonical labels",
+    "Canonical user feedback family has10desktop/mobile references for saving/saved/newer-draft/write-error/readback-error; all visually reviewed before future integration"
+  ],
+  "tests": {
+    "serviceRed": {
+      "failed": 4,
+      "passed": 29,
+      "exit": 1,
+      "log": "admin-save-snapshot-red.log"
+    },
+    "draftRed": {
+      "failed": 7,
+      "passed": 13,
+      "exit": 1,
+      "log": "admin-user-inflight-draft-red.log"
+    },
+    "focused": {
+      "passed": 182,
+      "files": 13,
+      "exit": 0,
+      "log": "admin-user-save-final-unit.log"
+    },
+    "fullCI": {
+      "exit": 0,
+      "frontendPassed": 2476,
+      "frontendFiles": 195,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849164,
+      "log": "admin-user-save-final-ci.log",
+      "scope": "Final save logic/tests. Two subsequent aria-hidden annotations on existing decorative user-action icons are covered by final182focused tests, four browser workflows and fresh production build; no later TypeScript production change."
+    },
+    "browser": {
+      "desktopPassed": 1,
+      "desktopLog": "admin-user-save-browser-names.log",
+      "remainingPassed": 3,
+      "remainingLog": "admin-user-save-browser-final.log",
+      "remainingProjects": [
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "exit": 0,
+      "writes": "Exact22field synthetic admin_update_sync_user payload only; blocked unknown/duplicate writes; no real notifications/backend effects",
+      "assertions": [
+        "Exact canonical accessible button names",
+        "One activated write and disabled duplicate save/queue actions",
+        "Later editable timezone retained across saved inventory readback",
+        "Successful feedback and no runtime errors",
+        "No blocking axe violations"
+      ],
+      "earlierFailures": [
+        "Missing settings suffix in new test selector; stopped matrix after diagnosis(EXIT143)",
+        "Decorative icon glyph polluted Save/Run action names; actual accessibility defect fixed",
+        "One restart blocked by confirmed orphaned test server; only that server stopped"
+      ]
+    },
+    "lint": {
+      "exit": 0,
+      "log": "admin-user-save-lint.log"
+    },
+    "testTypes": {
+      "exit": 0,
+      "log": "admin-user-save-types.log"
+    },
+    "productionBuild": {
+      "exit": 0,
+      "log": "admin-user-save-final-build.log",
+      "initialJavaScriptBytes": 849164
+    }
+  },
+  "coverage": {
+    "frontend": {
+      "productionSources": 169,
+      "metrics": {
+        "lines": {
+          "total": 11584,
+          "covered": 10600,
+          "skipped": 0,
+          "pct": 91.5
+        },
+        "statements": {
+          "total": 13719,
+          "covered": 12358,
+          "skipped": 0,
+          "pct": 90.07
+        },
+        "functions": {
+          "total": 2799,
+          "covered": 2482,
+          "skipped": 0,
+          "pct": 88.67
+        },
+        "branches": {
+          "total": 8953,
+          "covered": 7566,
+          "skipped": 0,
+          "pct": 84.5
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 1,
+      "summary": "admin-user-save-frontend-coverage-summary.json"
+    },
+    "worker": {
+      "productionSources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 916,
+          "skipped": 0,
+          "pct": 98.81
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source/config matched report;218tests reran in full CI"
+    },
+    "edge": {
+      "productionSources": 12,
+      "metrics": {
+        "lines": {
+          "total": 763,
+          "covered": 763,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 903,
+          "covered": 902,
+          "skipped": 0,
+          "pct": 99.88
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 799,
+          "covered": 797,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source/config matched report;83tests reran in full CI"
+    }
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "freshExistingContentRead": "139:8442",
+    "feedbackSet": "1112:33021",
+    "referenceFrame": "1112:32955",
+    "referenceRows": [
+      "1112:32956",
+      "1112:32969",
+      "1112:32982",
+      "1112:32995",
+      "1112:33008"
+    ],
+    "widths": [
+      900,
+      358
+    ],
+    "states": [
+      "Saving",
+      "Saved",
+      "Newer draft",
+      "Save error",
+      "Read error"
+    ],
+    "references": 10,
+    "review": "All10visually reviewed at native size; no clipping/overlap. Existing feedback semantic variables and Outfit label/caption styles reused.",
+    "image": "admin-user-feedback-canonical.png",
+    "angularFeedbackIntegration": "pending; no full identified-user card parity claimed"
+  },
+  "sourceHashes": "admin-user-save-source-hashes.json",
+  "sourceChangesFromPriorAudit": [
+    "e2e/design-v2-admin-exclusion.spec.ts",
+    "src/app/core/admin/admin-service-boundaries.spec.ts",
+    "src/app/core/admin/admin.service.ts",
+    "src/app/features/admin/admin-user-lifecycle-boundaries.spec.ts",
+    "src/app/features/admin/admin.component.html",
+    "src/app/features/admin/admin.component.ts"
+  ],
+  "remaining": [
+    "Full identified-user card canonical design and responsive Angular component",
+    "Independent drafts must survive unrelated policy/dashboard readbacks",
+    "Per-user local feedback and acknowledged-save/readback-error recovery without repeat mutation",
+    "Canonical pending-profile review modal and full Admin composition/appeals",
+    "Frontend still below98% in all four metrics; original migration/service/motion acceptance gates remain open"
+  ],
+  "nextSlice": "Finish canonical identified-user card states, then mount reusable editor with independent local drafts and the designed feedback/read-only recovery",
+  "releaseBoundaries": "No commits/pushes/deployments/main merge/shared service/database changes or real notifications"
+}

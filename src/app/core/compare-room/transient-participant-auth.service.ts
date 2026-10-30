@@ -11,6 +11,8 @@ import {TermsAcceptanceService} from '@core/legal/terms-acceptance.service';
 export class TransientParticipantAuthService {
   private readonly requestKey = 'analytify_compare_auth_request';
   private session: SpotifyTransientSession | null = null;
+  private authorizationGeneration = 0;
+  private refreshInFlight: Promise<string> | null = null;
 
   constructor(private http: HttpClient, private termsAcceptance: TermsAcceptanceService) {}
 
@@ -31,29 +33,49 @@ export class TransientParticipantAuthService {
       throw new Error('The temporary Spotify session expired. Please reconnect.');
     }
 
+    if (this.refreshInFlight) return this.refreshInFlight;
+    const session = this.session;
+    const refresh = this.refreshSession(session);
+    this.refreshInFlight = refresh;
+    try {
+      return await refresh;
+    } finally {
+      if (this.refreshInFlight === refresh) this.refreshInFlight = null;
+    }
+  }
+
+  private async refreshSession(session: SpotifyTransientSession): Promise<string> {
     const body = new HttpParams()
       .set('grant_type', 'refresh_token')
-      .set('refresh_token', this.session.refreshToken)
+      .set('refresh_token', session.refreshToken!)
       .set('client_id', this.spotifyClientId());
     const response = await firstValueFrom(this.http.post<any>(
       'https://accounts.spotify.com/api/token',
       body.toString(),
       {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
     ));
+    if (this.session !== session) {
+      throw new DOMException('This temporary Spotify session is no longer current.', 'AbortError');
+    }
+    if (!response?.access_token || typeof response.access_token !== 'string') {
+      throw new Error('Spotify did not return an access token.');
+    }
     this.session = {
       accessToken: response.access_token,
-      refreshToken: response.refresh_token || this.session.refreshToken,
+      refreshToken: response.refresh_token || session.refreshToken,
       expiresAt: Date.now() + (response.expires_in || 3600) * 1000,
-      scope: response.scope || this.session.scope
+      scope: response.scope || session.scope
     };
     return this.session.accessToken;
   }
 
   async startAuthorization(returnUrl: string): Promise<void> {
     this.termsAcceptance.assertCurrentAcceptance();
+    const generation = ++this.authorizationGeneration;
     const clientId = this.spotifyClientId();
     const verifier = this.randomUrlSafeString(64);
     const challenge = await this.createChallenge(verifier);
+    this.assertCurrentAuthorization(generation);
     const request: CompareRoomAuthRequest = {
       state: this.randomUrlSafeString(32),
       verifier,
@@ -91,6 +113,7 @@ export class TransientParticipantAuthService {
       throw new Error('The Compare Room authorization request expired.');
     }
 
+    const generation = ++this.authorizationGeneration;
     const body = new HttpParams()
       .set('client_id', this.spotifyClientId())
       .set('grant_type', 'authorization_code')
@@ -102,9 +125,11 @@ export class TransientParticipantAuthService {
       body.toString(),
       {headers: new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'})}
     ));
-    if (!response?.access_token) {
+    this.assertCurrentAuthorization(generation);
+    if (!response?.access_token || typeof response.access_token !== 'string') {
       throw new Error('Spotify did not return an access token.');
     }
+    this.refreshInFlight = null;
     this.session = {
       accessToken: response.access_token,
       refreshToken: response.refresh_token || null,
@@ -115,8 +140,16 @@ export class TransientParticipantAuthService {
   }
 
   clear(): void {
+    ++this.authorizationGeneration;
+    this.refreshInFlight = null;
     this.session = null;
     sessionStorage.removeItem(this.requestKey);
+  }
+
+  private assertCurrentAuthorization(generation: number): void {
+    if (generation !== this.authorizationGeneration) {
+      throw new DOMException('This temporary Spotify authorization is no longer current.', 'AbortError');
+    }
   }
 
   private spotifyClientId(): string {

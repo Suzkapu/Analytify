@@ -1,0 +1,48 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/library/artist-details/artist-details-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [3.769 seconds] - 2026-10-24T06:54:30.982Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stdout | src/app/features/library/artist-details/artist-details-boundaries.spec.ts > Artist details cache and service boundaries > settles loading with recoverable feedback when the catalog service rejects a retry
+[Analytify][0020][+01040ms][Artist Details][STEP] Cache missing. Loading artist details from Spotify API...
+
+ ❯ |SpotiFront| src/app/features/library/artist-details/artist-details-boundaries.spec.ts (19 tests | 1 failed) 1081ms
+     × settles loading with recoverable feedback when the catalog service rejects a retry 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/library/artist-details/artist-details-boundaries.spec.ts > Artist details cache and service boundaries > settles loading with recoverable feedback when the catalog service rejects a retry
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/app/features/library/artist-details/artist-details-boundaries.spec.ts:231:42
+    229|     // to obscure the actual user-visible failure contract.
+    230|     await f.controller.loadArtistDetails('artist-a').catch(() => undef…
+    231|     expect(f.controller.isLoadingArtist).toBe(false);
+       |                                          ^
+    232|     expect(f.controller.artistLoadError).not.toBe('');
+    233|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  08:54:31
+   Duration  2.68s (transform 244ms, setup 446ms, import 328ms, tests 1.08s, environment 642ms)
+

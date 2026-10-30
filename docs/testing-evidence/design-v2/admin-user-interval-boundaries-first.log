@@ -1,0 +1,42 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-interval-boundaries.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [3.005 seconds] - 2026-10-29T18:52:16.004Z
+
+✘ [ERROR] TS2345: Argument of type '{ userId: string; spotifyId: string; historyEnabled: boolean; shortTermEnabled: boolean; mediumTermEnabled: boolean; longTermEnabled: boolean; songLeaguePlaylistsEnabled: boolean; ... 24 more ...; sharedPlaylistIntervalMinutes: number | null; }' is not assignable to parameter of type 'AdminUserSyncSettings'.
+  Types of property 'historyIntervalMinutes' are incompatible.
+    Type 'number | null' is not assignable to type 'number'.
+      Type 'null' is not assignable to type 'number'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.ts:208:34:
+      208 │       await this.admin.updateUser(submitted);
+          ╵                                   ~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type '{ userId: string; spotifyId: string; historyEnabled: boolean; shortTermEnabled: boolean; mediumTermEnabled: boolean; longTermEnabled: boolean; songLeaguePlaylistsEnabled: boolean; ... 24 more ...; sharedPlaylistIntervalMinutes: number | null; }' is not assignable to parameter of type 'AdminUserSyncSettings'.
+  Types of property 'historyIntervalMinutes' are incompatible.
+    Type 'number | null' is not assignable to type 'number'.
+      Type 'null' is not assignable to type 'number'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.ts:212:49:
+      212 │       this.userReadbackRequired.set(user.userId, submitted);
+          ╵                                                  ~~~~~~~~~
+
+
+✘ [ERROR] TS2345: Argument of type '{ userId: string; spotifyId: string; historyEnabled: boolean; shortTermEnabled: boolean; mediumTermEnabled: boolean; longTermEnabled: boolean; songLeaguePlaylistsEnabled: boolean; ... 24 more ...; sharedPlaylistIntervalMinutes: number | null; }' is not assignable to parameter of type 'AdminUserSyncSettings'.
+  Types of property 'historyIntervalMinutes' are incompatible.
+    Type 'number | null' is not assignable to type 'number'.
+      Type 'null' is not assignable to type 'number'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.ts:213:33:
+      213 │       await this.reloadSavedUser(submitted, refresh);
+          ╵                                  ~~~~~~~~~
+
+
+✘ [ERROR] TS2339: Property 'savePolicy' does not exist on type 'AdminComponent'. [plugin angular-compiler]
+
+    /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-interval-boundaries.spec.ts:107:20:
+      107 │     await component.savePolicy(policy);
+          ╵                     ~~~~~~~~~~
+
+

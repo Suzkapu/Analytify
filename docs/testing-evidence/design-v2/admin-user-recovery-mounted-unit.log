@@ -1,0 +1,19 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/core/admin/*.spec.ts --include=src/app/features/admin/*.spec.ts --include=src/app/shared/ui-v2/v2-status-feedback.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation failed. [2.708 seconds] - 2026-10-27T19:35:09.498Z
+
+✘ [ERROR] Could not resolve "../../../assets/design-v2/update-sync.svg" [plugin angular-css-resource]
+
+    angular:styles/component:scss;8c4fbcd5c9d16a01;/mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-refresh-action.component.ts:31:12:
+      31 │   mask: url("../../../assets/design-v2/update-sync.svg") center/co...
+         ╵             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Preprocessor stylesheets may not show the exact file location of the error.
+  The plugin "angular-compiler" was triggered by this import
+
+    src/app/features/admin/admin-user-refresh-action.component.ts:2:33:
+      2 │ ...CE__0 from "angular:jit:style:inline;CiAgICA6aG9zdCB7IGRpc3BsYXk...
+        ╵               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

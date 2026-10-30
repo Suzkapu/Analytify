@@ -1,0 +1,482 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/admin-user-draft-ownership.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [2.236 seconds] - 2026-10-27T20:02:59.415Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps edited values through policy readback while refreshing untouched fields and server metadata
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/London', …(7) }
+(7 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:43:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: {
+    timezone: 'Europe/London',
+    historyEnabled: false,
+    historyIntervalMinutes: 120,
+    displayName: 'Fresh Alice',
+    backupActive: false,
+    hasRefreshToken: false,
+    lastError: 'Reconnect needed',
+    requiredTasks: { shared_playlists: 'Owned snapshot' }
+  },
+  actual: {
+    displayName: 'Fresh Alice',
+    timezone: 'UTC',
+    backupActive: false,
+    hasRefreshToken: false,
+    historyEnabled: true,
+    historyIntervalMinutes: 120,
+    lastError: 'Reconnect needed',
+    requiredTasks: { shared_playlists: 'Owned snapshot' }
+  }
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > preserves both users drafts during an explicit dashboard refresh
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/London', …(1) }
+(13 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:56:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { timezone: 'Europe/London', displayName: 'Updated profile' },
+  actual: { displayName: 'Updated profile', timezone: 'UTC' }
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > rebases untouched values on each fresh server read without keeping reverted edits dirty
+AssertionError: expected 'Europe/Vienna' to be 'Europe/London' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:76:41
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'Europe/Vienna',
+  expected: 'Europe/London',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > rebases a successful user save before protecting subsequent edits from policy refresh
+AssertionError: expected 'Europe/London' to be 'Europe/Paris' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:91:41
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'Europe/London',
+  expected: 'Europe/Paris',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps all live edit choices while a write is pending, including a change back to the old baseline
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'UTC', …(1) }
+(13 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:135:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { timezone: 'UTC', shortTermIntervalHours: 24 },
+  actual: { timezone: 'Europe/London', shortTermIntervalHours: 48 }
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps acknowledged readback recovery and later drafts through an unrelated successful inventory refresh
+AssertionError: expected 'Europe/London' to be 'UTC' // Object.is equality
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:150:41
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: 'Europe/London',
+  expected: 'UTC',
+  showDiff: true,
+  operator: 'strictEqual'
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not rewind newer server metadata when two independent policy reads finish in reverse order
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/Vienna', …(1) }
+(13 matching properties omitted from actual)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1283:10)
+    at Proxy.<anonymous> (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/@vitest/expect/dist/index.js:1156:15)
+    at Proxy.methodWrapper (file:///mnt/Storage/ProgrammingProjects/Analytify/node_modules/chai/index.js:1737:25)
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:173:32
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171) {
+  showDiff: true,
+  expected: { timezone: 'Europe/Vienna', displayName: 'Fresh profile' },
+  actual: { displayName: 'Alice', timezone: 'UTC' }
+}
+
+stderr | src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not remove a freshly saved user merely because an older policy response omitted them
+AssertionError: expected [ 'Bob' ] to deeply equal [ 'Bob', 'Alice' ]
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin-user-draft-ownership.spec.ts:184:56
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23) {
+  actual: [ 'Bob' ],
+  expected: [ 'Bob', 'Alice' ],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts (13 tests | 11 failed) 182ms
+     × keeps edited values through policy readback while refreshing untouched fields and server metadata 13ms
+     × preserves both users drafts during an explicit dashboard refresh 2ms
+     × includes edits made while an unrelated policy inventory read is pending 54ms
+     × rebases untouched values on each fresh server read without keeping reverted edits dirty 1ms
+     × rebases a successful user save before protecting subsequent edits from policy refresh 1ms
+     × does not let an earlier policy read rewind a user save that finishes later 52ms
+     × does not accept an old policy snapshot begun while a user write was still pending 52ms
+     × keeps all live edit choices while a write is pending, including a change back to the old baseline 1ms
+     × keeps acknowledged readback recovery and later drafts through an unrelated successful inventory refresh 1ms
+     × does not rewind newer server metadata when two independent policy reads finish in reverse order 1ms
+     × does not remove a freshly saved user merely because an older policy response omitted them 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps edited values through policy readback while refreshing untouched fields and server metadata
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/London', …(7) }
+(7 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "backupActive": false,
+    "displayName": "Fresh Alice",
+    "hasRefreshToken": false,
+-   "historyEnabled": false,
++   "historyEnabled": true,
+    "historyIntervalMinutes": 120,
+    "lastError": "Reconnect needed",
+    "requiredTasks": {
+      "shared_playlists": "Owned snapshot",
+    },
+-   "timezone": "Europe/London",
++   "timezone": "UTC",
+  }
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:43:32
+     41|       requiredTasks: {shared_playlists: 'Owned snapshot'}}, user('Bob'…
+     42|     await component.saveSchedulePolicy(history);
+     43|     expect(component.users[0]).toMatchObject({timezone: 'Europe/London…
+       |                                ^
+     44|       historyIntervalMinutes: 120, displayName: 'Fresh Alice', backupA…
+     45|       lastError: 'Reconnect needed', requiredTasks: {shared_playlists:…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > preserves both users drafts during an explicit dashboard refresh
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/London', …(1) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "displayName": "Updated profile",
+-   "timezone": "Europe/London",
++   "timezone": "UTC",
+  }
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:56:32
+     54|     service.listUsers.mockResolvedValue([{...user(), displayName: 'Upd…
+     55|     await component.load();
+     56|     expect(component.users[0]).toMatchObject({timezone: 'Europe/London…
+       |                                ^
+     57|     expect(component.users[1]).toMatchObject({shortTermEnabled: true, …
+     58|     expect(service.updateUser).not.toHaveBeenCalled();
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > includes edits made while an unrelated policy inventory read is pending
+AssertionError: expected 'UTC' to be 'Europe/Paris' // Object.is equality
+
+Expected: "Europe/Paris"
+Received: "UTC"
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:68:41
+     66|     component.users[0].timezone = 'Europe/Paris'; component.users[1].e…
+     67|     read.resolve([user(), user('Bob')]); await policySave;
+     68|     expect(component.users[0].timezone).toBe('Europe/Paris'); expect(c…
+       |                                         ^
+     69|   });
+     70|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > rebases untouched values on each fresh server read without keeping reverted edits dirty
+AssertionError: expected 'Europe/Vienna' to be 'Europe/London' // Object.is equality
+
+Expected: "Europe/London"
+Received: "Europe/Vienna"
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:76:41
+     74|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Europe/Vie…
+     75|     await component.refreshPolicy(history);
+     76|     expect(component.users[0].timezone).toBe('Europe/London');
+       |                                         ^
+     77|     component.users[0].timezone = 'Europe/Vienna';
+     78|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Asia/Tokyo…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > rebases a successful user save before protecting subsequent edits from policy refresh
+AssertionError: expected 'Europe/London' to be 'Europe/Paris' // Object.is equality
+
+Expected: "Europe/Paris"
+Received: "Europe/London"
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:91:41
+     89|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Europe/Lon…
+     90|     await component.refreshPolicy(history);
+     91|     expect(component.users[0].timezone).toBe('Europe/Paris');
+       |                                         ^
+     92|     component.users[0].timezone = 'Europe/London';
+     93|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Asia/Tokyo…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not let an earlier policy read rewind a user save that finishes later
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/London', …(1) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "displayName": "Current profile",
+-   "timezone": "Europe/London",
++   "displayName": "Alice",
++   "timezone": "UTC",
+  }
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:108:32
+    106|     await component.saveUser(component.users[0]);
+    107|     old.resolve([user(), user('Bob')]); await policySave;
+    108|     expect(component.users[0]).toMatchObject({timezone: 'Europe/London…
+       |                                ^
+    109|     expect(component.userSaveStates.get('Alice')).toBe('saved');
+    110|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not accept an old policy snapshot begun while a user write was still pending
+AssertionError: expected 'UTC' to be 'Europe/London' // Object.is equality
+
+Expected: "Europe/London"
+Received: "UTC"
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:123:41
+    121|     write.resolve(); await saving;
+    122|     old.resolve([user(), user('Bob')]); await policySave;
+    123|     expect(component.users[0].timezone).toBe('Europe/London');
+       |                                         ^
+    124|     expect(component.userSaveStates.get('Alice')).toBe('saved');
+    125|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps all live edit choices while a write is pending, including a change back to the old baseline
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'UTC', …(1) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "shortTermIntervalHours": 24,
+-   "timezone": "UTC",
++   "shortTermIntervalHours": 48,
++   "timezone": "Europe/London",
+  }
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:135:32
+    133|     service.listUsers.mockResolvedValueOnce([{...user('Alice', 'Europe…
+    134|     await component.refreshPolicy(history);
+    135|     expect(component.users[0]).toMatchObject({timezone: 'UTC', shortTe…
+       |                                ^
+    136|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Europe/Lon…
+    137|     write.resolve(); await saving;
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > keeps acknowledged readback recovery and later drafts through an unrelated successful inventory refresh
+AssertionError: expected 'Europe/London' to be 'UTC' // Object.is equality
+
+Expected: "UTC"
+Received: "Europe/London"
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:150:41
+    148|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Europe/Lon…
+    149|     await component.refreshPolicy(history);
+    150|     expect(component.users[0].timezone).toBe('UTC');
+       |                                         ^
+    151|     expect(component.userReadbackRequired.has('Alice')).toBe(true);
+    152|     service.listUsers.mockResolvedValueOnce([user('Alice', 'Europe/Lon…
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not rewind newer server metadata when two independent policy reads finish in reverse order
+AssertionError: expected { userId: 'Alice', …(14) } to match object { timezone: 'Europe/Vienna', …(1) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "displayName": "Fresh profile",
+-   "timezone": "Europe/Vienna",
++   "displayName": "Alice",
++   "timezone": "UTC",
+  }
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:173:32
+    171|     await component.refreshPolicy(stats);
+    172|     old.resolve([user(), user('Bob')]); await first;
+    173|     expect(component.users[0]).toMatchObject({timezone: 'Europe/Vienna…
+       |                                ^
+    174|   });
+    175|
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin-user-draft-ownership.spec.ts > independent user schedule drafts and server inventory ownership > does not remove a freshly saved user merely because an older policy response omitted them
+AssertionError: expected [ 'Bob' ] to deeply equal [ 'Bob', 'Alice' ]
+
+- Expected
++ Received
+
+  [
+    "Bob",
+-   "Alice",
+  ]
+
+ ❯ src/app/features/admin/admin-user-draft-ownership.spec.ts:184:56
+    182|     await component.saveUser(component.users[0]);
+    183|     old.resolve([user('Bob')]); await policySave;
+    184|     expect(component.users.map(value => value.userId)).toEqual(['Bob',…
+       |                                                        ^
+    185|     expect(component.users.find(value => value.userId === 'Alice')?.ti…
+    186|   });
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 2 passed (13)
+   Start at  21:02:59
+   Duration  940ms (transform 124ms, setup 203ms, import 158ms, tests 182ms, environment 290ms)
+

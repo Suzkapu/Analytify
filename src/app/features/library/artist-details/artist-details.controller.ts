@@ -68,98 +68,99 @@ export class ArtistDetailsController implements OnDestroy {
   }
 
   async loadArtistDetails(id: string, generation = this.loadGeneration) {
-    const canApply = () => this.artistId === id && this.loadGeneration === generation;
+    const userId = this.authService.getUserId() || 'anonymous';
+    const canApply = () => this.artistId === id && this.loadGeneration === generation
+      && (this.authService.getUserId() || 'anonymous') === userId;
     if (!canApply()) return;
     this.isLoadingArtist = true;
     this.artistLoadError = '';
-    const userId = this.authService.getUserId() || 'anonymous';
-    const artistCacheKey = `${userId}_artist_${id}`;
-    const artistUpdatedKey = `${artistCacheKey}_lastUpdated`;
-    if (this.storageService.hydrateItems) {
-      await this.storageService.hydrateItems([
-        artistCacheKey,
-        ...(this.playlistId ? [`${userId}_${this.playlistId}`] : [])
-      ]);
-    }
-    if (!canApply()) return;
-
-    const readArtistCache = (): any | null => {
-      const cachedArtist = this.storageService.getItem(artistCacheKey);
-      if (!cachedArtist || this.isCacheExpired(this.storageService.getItem(artistUpdatedKey))) {
-        return null;
+    try {
+      const artistCacheKey = `${userId}_artist_${id}`;
+      const artistUpdatedKey = `${artistCacheKey}_lastUpdated`;
+      if (this.storageService.hydrateItems) {
+        await this.storageService.hydrateItems([
+          artistCacheKey,
+          ...(this.playlistId ? [`${userId}_${this.playlistId}`] : [])
+        ]);
       }
-      try {
-        const parsed = JSON.parse(cachedArtist);
-        return parsed?.id === id ? parsed : null;
-      } catch {
-        return null;
-      }
-    };
-
-    let cachedArtist = readArtistCache();
-    if (cachedArtist) {
-      this.finishArtistLoading(cachedArtist, id, generation);
-      return;
-    }
-
-    if (this.playlistId) {
-      const storageKey = `${userId}_${this.playlistId}`;
-      const storedArtists = this.storageService.getItem(storageKey);
-      if (storedArtists) {
-        try {
-          const parsed = JSON.parse(storedArtists);
-          const found = Array.isArray(parsed)
-            ? parsed.find((a: any) => a.id === id)
-            : null;
-          if (found) {
-            console.log('[ArtistDetails] Loading artist details from the local IndexedDB playlist cache.');
-            this.finishArtistLoading(found, id, generation);
-            return;
-          }
-        } catch (error) {
-          console.warn('[ArtistDetails] Ignoring an invalid playlist cache entry:', error);
-        }
-      }
-    }
-
-    if (this.authService.isBackupActive()) {
-      await this.storageService.restoreItemsFromCloud(
-        [artistCacheKey, artistUpdatedKey],
-        canApply
-      );
       if (!canApply()) return;
-      cachedArtist = readArtistCache();
+
+      const readArtistCache = (): any | null => {
+        const cachedArtist = this.storageService.getItem(artistCacheKey);
+        if (!cachedArtist || this.isCacheExpired(this.storageService.getItem(artistUpdatedKey))) {
+          return null;
+        }
+        try {
+          const parsed = JSON.parse(cachedArtist);
+          return parsed?.id === id ? parsed : null;
+        } catch {
+          return null;
+        }
+      };
+
+      let cachedArtist = readArtistCache();
       if (cachedArtist) {
         this.finishArtistLoading(cachedArtist, id, generation);
         return;
       }
-    }
 
-    const dbArtist = await this.supabaseService.loadArtistById(id);
-    if (!canApply()) return;
-    if (dbArtist) {
-      console.log('[ArtistDetails] Loading artist details from Supabase.');
-      this.finishArtistLoading(dbArtist, id, generation);
-      this.storageService.setItem(artistCacheKey, JSON.stringify(dbArtist));
-      this.storageService.setItem(artistUpdatedKey, Date.now().toString());
-      return;
-    }
+      if (this.playlistId) {
+        const storageKey = `${userId}_${this.playlistId}`;
+        const storedArtists = this.storageService.getItem(storageKey);
+        if (storedArtists) {
+          try {
+            const parsed = JSON.parse(storedArtists);
+            const found = Array.isArray(parsed)
+              ? parsed.find((a: any) => a.id === id)
+              : null;
+            if (found) {
+              console.log('[ArtistDetails] Loading artist details from the local IndexedDB playlist cache.');
+              this.finishArtistLoading(found, id, generation);
+              return;
+            }
+          } catch (error) {
+            console.warn('[ArtistDetails] Ignoring an invalid playlist cache entry:', error);
+          }
+        }
+      }
 
-    console.log("[ArtistDetails] Cache missing. Loading artist details from Spotify API...");
-    try {
+      if (this.authService.isBackupActive()) {
+        await this.storageService.restoreItemsFromCloud(
+          [artistCacheKey, artistUpdatedKey],
+          canApply
+        );
+        if (!canApply()) return;
+        cachedArtist = readArtistCache();
+        if (cachedArtist) {
+          this.finishArtistLoading(cachedArtist, id, generation);
+          return;
+        }
+      }
+
+      const dbArtist = await this.supabaseService.loadArtistById(id);
+      if (!canApply()) return;
+      if (dbArtist) {
+        console.log('[ArtistDetails] Loading artist details from Supabase.');
+        this.finishArtistLoading(dbArtist, id, generation);
+        this.storageService.setItem(artistCacheKey, JSON.stringify(dbArtist));
+        this.storageService.setItem(artistUpdatedKey, Date.now().toString());
+        return;
+      }
+
+      console.log("[ArtistDetails] Cache missing. Loading artist details from Spotify API...");
       const artist = await firstValueFrom(this.spotifyDataService.getSingleArtist(id));
       if (!canApply()) return;
       this.finishArtistLoading(artist, id, generation);
-        this.storageService.setItem(artistCacheKey, JSON.stringify(artist));
-        this.storageService.setItem(artistUpdatedKey, Date.now().toString());
-        if (this.authService.isBackupActive()) {
-          this.supabaseService.syncArtists([artist]).catch(err => {
-            console.warn('[ArtistDetails] Failed to persist artist metadata:', err);
-          });
-        }
+      this.storageService.setItem(artistCacheKey, JSON.stringify(artist));
+      this.storageService.setItem(artistUpdatedKey, Date.now().toString());
+      if (this.authService.isBackupActive()) {
+        this.supabaseService.syncArtists([artist]).catch(err => {
+          console.warn('[ArtistDetails] Failed to persist artist metadata:', err);
+        });
+      }
     } catch (err) {
       if (canApply()) {
-        console.error('[ArtistDetails] Failed to load artist from Spotify:', err);
+        console.error('[ArtistDetails] Failed to load artist details:', err);
         this.isLoadingArtist = false;
         this.artistLoadError = 'Artist details could not be loaded.';
         this.changeDetector?.markForCheck();

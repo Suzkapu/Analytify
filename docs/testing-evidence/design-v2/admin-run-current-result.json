@@ -1,0 +1,299 @@
+{
+  "date": "2026-10-27",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "state": "Audit records and inventory feedback implemented and verified; overall migration incomplete",
+  "changes": [
+    "Canonical read-only audit records with semantic UTC times, strict calendar validation and ordered duration",
+    "Canonical polite loading/refreshing/empty/read-error feedback; cached records survive failed refresh",
+    "Responsive standalone Angular components; independent disclosure and explicit read-only recovery",
+    "Suite-specific native screenshot paths preserve existing Friends goldens"
+  ],
+  "tests": {
+    "focused": {
+      "passed": 170,
+      "files": 13,
+      "log": "admin-run-current-unit.log"
+    },
+    "fullCI": {
+      "command": "npm run verify:ci",
+      "exit": 0,
+      "frontendPassed": 2464,
+      "frontendFiles": 195,
+      "documentedHostedSkip": 1,
+      "workerPassed": 218,
+      "edgePassed": 83,
+      "initialJavaScriptBytes": 849144,
+      "log": "admin-run-final-ci.log"
+    },
+    "browser": {
+      "initialPassed": 23,
+      "initialFailed": 1,
+      "initialLog": "admin-run-current-browser.log",
+      "failure": "WebKit no-preference exhausted default 30s during eighteen geometry/axe/screenshot checks",
+      "targetedRerunPassed": 1,
+      "targetedSeconds": 55.8,
+      "targetedExit": 0,
+      "targetedLog": "admin-run-webkit-recovery.log",
+      "change": "90s limit on this multi-viewport workflow; all assertions retained",
+      "projects": [
+        "desktop",
+        "mobile",
+        "firefox-stats",
+        "webkit-stats"
+      ],
+      "widths": [
+        320,
+        390,
+        768,
+        1440
+      ],
+      "heights": [
+        600,
+        1000
+      ],
+      "motion": [
+        "no-preference",
+        "reduce"
+      ],
+      "scope": "Synthetic loopback RPC reads only, denied non-admin access, keyboard, policy fixture and audit read/recovery; no real service writes/notifications"
+    },
+    "native": {
+      "state": "Strict final pass after individual review of all66 exact-width state/engine candidates",
+      "scaledInitial": {
+        "passed": 6,
+        "failed": 66,
+        "log": "admin-run-native-candidates.log",
+        "limitation": "Missing baselines; viewport auto-fit scaled candidates to 90%, rejected before acceptance"
+      },
+      "unscaledLog": "admin-run-native-unscaled-candidates.log",
+      "viewportCorrection": "1000x600 viewport fits native runner at 1:1; actual900/358pixel candidate dimensions checked",
+      "strictMismatchPixels": 0,
+      "updates": "none",
+      "passed": 72,
+      "auditPassed": 66,
+      "existingFriendsPassed": 6,
+      "files": 6,
+      "exit": 0,
+      "log": "admin-run-native-final.log",
+      "acceptedGoldens": 66,
+      "widths": [
+        900,
+        358
+      ],
+      "engines": [
+        "chromium",
+        "firefox",
+        "webkit"
+      ],
+      "unscaledRejected": {
+        "exit": 143,
+        "reason": "Stopped rejected candidate run after detecting next-state captures following failed missing-reference assertions",
+        "log": "admin-run-native-unscaled-candidates.log"
+      },
+      "locatorFix": "Use page.elementLocator so screenshot comparison does not poll a bare DOM element after missing-reference failure",
+      "generation": {
+        "log": "admin-run-native-review-generation.log",
+        "config": "admin-run-native-review-generation.config.txt",
+        "purpose": "Temporary candidate-only output under /tmp, not verification or acceptance; all66 candidates individually reviewed before copying to required goldens"
+      },
+      "reviewSheets": [
+        "admin-review-chromium-900.png",
+        "admin-review-chromium-358.png",
+        "admin-review-firefox-900.png",
+        "admin-review-firefox-358.png",
+        "admin-review-webkit-900.png",
+        "admin-review-webkit-358.png"
+      ],
+      "webKitRuntime": "Playwright2359 WPE with existing prepare-local-webkit.py verified cached ICU74/flite/libxml2 2.9.14+dfsg-1.3ubuntu3.9 runtime; no host installation"
+    },
+    "redEvidence": [
+      "admin-run-inventory-red.log",
+      "admin-run-record-calendar-red.log",
+      "admin-run-native-path-red.log"
+    ],
+    "nativeTypes": {
+      "exit": 0,
+      "log": "admin-run-native-types.log"
+    },
+    "scopedLint": {
+      "exit": 0,
+      "log": "admin-run-current-final-lint.log"
+    },
+    "policy": {
+      "exit": 0,
+      "log": "admin-run-final-policy.log"
+    },
+    "diffCheck": {
+      "exit": 0,
+      "log": "admin-run-diff-check.log"
+    }
+  },
+  "figma": {
+    "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "records": "1108:32913",
+    "recordsReference": "1109:32855",
+    "recordVariants": 12,
+    "feedback": "1110:32965",
+    "feedbackReference": "1110:32966",
+    "feedbackVariants": 10,
+    "widths": [
+      900,
+      358
+    ],
+    "designedBeforeImplementation": true,
+    "referenceReview": "All22canonical states reviewed before implementation; current failed-mobile/warning/refresh-error renders saved for comparison",
+    "fullAdministrationParity": false,
+    "visualAcceptance": "All22 canonical state/width variants compared with66 clean native engine candidates; exact heights, typography, colors, padding, wrapping and read-only affordances reviewed. Component-level acceptance only; full Administration remains open."
+  },
+  "coverage": {
+    "frontend": {
+      "sources": 169,
+      "metrics": {
+        "lines": {
+          "total": 11574,
+          "covered": 10590,
+          "skipped": 0,
+          "pct": 91.49
+        },
+        "statements": {
+          "total": 13708,
+          "covered": 12347,
+          "skipped": 0,
+          "pct": 90.07
+        },
+        "functions": {
+          "total": 2798,
+          "covered": 2481,
+          "skipped": 0,
+          "pct": 88.67
+        },
+        "branches": {
+          "total": 8951,
+          "covered": 7564,
+          "skipped": 0,
+          "pct": 84.5
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 1,
+      "summary": "admin-run-final-frontend-coverage-summary.json"
+    },
+    "worker": {
+      "sources": 17,
+      "metrics": {
+        "lines": {
+          "total": 891,
+          "covered": 888,
+          "skipped": 0,
+          "pct": 99.66
+        },
+        "statements": {
+          "total": 1110,
+          "covered": 1107,
+          "skipped": 0,
+          "pct": 99.72
+        },
+        "functions": {
+          "total": 197,
+          "covered": 197,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 927,
+          "covered": 916,
+          "skipped": 0,
+          "pct": 98.81
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source-matched report; current full CI reran application tests"
+    },
+    "edge": {
+      "sources": 12,
+      "metrics": {
+        "lines": {
+          "total": 763,
+          "covered": 763,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 903,
+          "covered": 902,
+          "skipped": 0,
+          "pct": 99.88
+        },
+        "functions": {
+          "total": 113,
+          "covered": 113,
+          "skipped": 0,
+          "pct": 100
+        },
+        "branches": {
+          "total": 799,
+          "covered": 797,
+          "skipped": 0,
+          "pct": 99.74
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "final98Exit": 0,
+      "provenance": "Retained source-matched report; current full CI reran application tests"
+    }
+  },
+  "sourceHashes": "admin-run-source-hashes.json",
+  "limitations": [
+    "Frontend below98% in every metric",
+    "Full Administration composition/navigation, identified user cards, pending-registration canonical modal and appealed-report context remain open",
+    "Hosted service transport and live account-replacement behavior not established by synthetic browser tests",
+    "Long scoped workflow screenshots include fixed shell overlays; isolated native component images provide clean matching-width references",
+    "Original remaining migration, motion and coverage gates stay open"
+  ],
+  "nextSlice": "Canonical identified-user schedule cards and independent editable draft ownership, followed by actual browser mutation workflows and full Administration composition",
+  "releaseBoundary": "No commit, push, main merge, deployment, shared backend/database/service changes or real notifications",
+  "sourceValidation": {
+    "sourceHashCount": 656,
+    "productionDriftSinceFullCI": [],
+    "postCiHarnessChange": [
+      "e2e/components/admin-audit.native.ts"
+    ],
+    "postChangeVerification": [
+      "native72strictPASS",
+      "nativeTypesPASS",
+      "scopedLintPASS",
+      "policyPASS"
+    ],
+    "backendSourceAndConfigurationHashesComparedToPriorCI": 76,
+    "backendDrift": []
+  },
+  "visualHashes": "admin-run-visual-hashes.json",
+  "commands": {
+    "focused": "npx ng test --watch=false --include=src/app/core/admin/*.spec.ts --include=src/app/features/admin/*.spec.ts --progress=false",
+    "fullCI": "npm run verify:ci",
+    "browserInitial": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npx playwright test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-run-current-browser-artifacts",
+    "browserTargeted": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npx playwright test --config=playwright.admin-exclusion.config.ts --project=webkit-stats --grep \"audit records.*no-preference\" --output=docs/testing-evidence/design-v2/admin-run-webkit-recovery-artifacts",
+    "nativeFinal": "ANALYTIFY_WEBKIT_EXECUTABLE=/tmp/analytify-webkit-libs/run-webkit.sh npm run test:native-components",
+    "nativeTypes": "npx tsc -p tsconfig.native-components.json --noEmit",
+    "finalCoverage": "node scripts/check-application-coverage-inventory.mjs <frontend|worker|edge> --final"
+  }
+}

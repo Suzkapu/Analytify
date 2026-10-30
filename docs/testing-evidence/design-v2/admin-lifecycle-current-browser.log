@@ -1,0 +1,37 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config=playwright.admin-exclusion.config.ts --output=docs/testing-evidence/design-v2/admin-lifecycle-current-browser-artifacts
+[WebServer] npm notice run spoti-front@0.0.0 start
+[WebServer] npm notice run ng serve --configuration browser-testing --host 127.0.0.1 --port 4216 --watch=false --hmr=false --live-reload=false
+[WebServer] (node:58270) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:58270) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 16 tests using 1 worker
+
+(node:59499) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (5.7s)
+  ✓   2 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (5.6s)
+  ✓   3 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:130:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.6s)
+  ✓   4 [desktop] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (11.5s)
+(node:62553) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   5 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (7.5s)
+  ✓   6 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (7.7s)
+  ✓   7 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:130:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (1.8s)
+  ✓   8 [mobile] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (14.5s)
+(node:64886) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (8.5s)
+  ✓  10 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (7.5s)
+  ✓  11 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:130:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (2.3s)
+  ✓  12 [firefox-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (20.7s)
+(node:68501) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 600 (12.8s)
+  ✓  14 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:62:7 › retained administration survives health removal and refresh recovery at short/tall height 1000 (14.6s)
+  ✓  15 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:130:5 › a non-admin cloud identity cannot mount administration or read privileged inventories (3.7s)
+  ✓  16 [webkit-stats] › e2e/design-v2-admin-exclusion.spec.ts:141:5 › policy save validates, blocks duplicate writes and recovers acknowledged saves with read-only refresh (26.7s)
+
+  16 passed (2.8m)

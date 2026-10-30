@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-24",
+  "fileKey": "5v8ckmlbfhMDWwP5sTdSXd",
+  "page": "7:2",
+  "reason": "User explicitly excludes admin runtime health. Fresh canonical read found the obsolete heading/explanation in both Operations references; corrected Figma before website edits.",
+  "before": {
+    "desktopParent": {
+      "id": "442:19543",
+      "name": "10 — Administration",
+      "type": "SECTION"
+    },
+    "references": [
+      {
+        "id": "27:1429",
+        "name": "Desktop / Administration · Operations",
+        "width": 1440,
+        "height": 810,
+        "parent": "10 — Administration",
+        "health": [
+          {
+            "id": "I139:8435;139:7720",
+            "text": "Manage scheduled updates and service health.",
+            "font": {
+              "family": "Outfit",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400
+              }
+            },
+            "parent": "I139:8435;210:11524"
+          },
+          {
+            "id": "27:1435",
+            "text": "Runtime health",
+            "font": {
+              "family": "Outfit",
+              "style": "SemiBold",
+              "variationSettings": {
+                "wght": 600
+              }
+            },
+            "parent": "139:8438"
+          },
+          {
+            "id": "27:1436",
+            "text": "Deployed frontend, worker and database release identifiers.",
+            "font": {
+              "family": "Outfit",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400
+              }
+            },
+            "parent": "139:8438"
+          }
+        ]
+      },
+      {
+        "id": "35:2107",
+        "name": "Mobile / Administration · Operations",
+        "width": 390,
+        "height": 866.6666870117188,
+        "parent": "10 — Administration",
+        "health": [
+          {
+            "id": "I139:8591;139:7723",
+            "text": "Manage scheduled updates and service health.",
+            "font": {
+              "family": "Outfit",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400
+              }
+            },
+            "parent": "139:8591"
+          },
+          {
+            "id": "35:2112",
+            "text": "Runtime health",
+            "font": {
+              "family": "Outfit",
+              "style": "SemiBold",
+              "variationSettings": {
+                "wght": 600
+              }
+            },
+            "parent": "139:8594"
+          },
+          {
+            "id": "35:2113",
+            "text": "Deployed frontend, worker and database release identifiers.",
+            "font": {
+              "family": "Outfit",
+              "style": "Regular",
+              "variationSettings": {
+                "wght": 400
+              }
+            },
+            "parent": "139:8594"
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "createdNodeIds": [],
+    "mutatedNodeIds": [
+      "139:8438",
+      "139:8594",
+      "I139:8435;139:7720",
+      "I139:8591;139:7723"
+    ],
+    "removedNodeIds": [
+      "27:1435",
+      "27:1436",
+      "35:2112",
+      "35:2113"
+    ],
+    "description": "Manage scheduled updates and website settings.",
+    "references": [
+      {
+        "id": "27:1429",
+        "name": "Desktop / Administration · Operations",
+        "width": 1440,
+        "height": 810,
+        "remainingHealth": [],
+        "retainedActions": [
+          "Announcement banner",
+          "Allow new Song Leagues",
+          "Allow new Song Leagues",
+          "Save website settings",
+          "Demo league name",
+          "Schedule limits",
+          "Report inbox",
+          "Schedule limits"
+        ]
+      },
+      {
+        "id": "35:2107",
+        "name": "Mobile / Administration · Operations",
+        "width": 390,
+        "height": 866.6666870117188,
+        "remainingHealth": [],
+        "retainedActions": [
+          "Announcement banner",
+          "Allow new Song Leagues",
+          "Allow new Song Leagues",
+          "Save website settings",
+          "Demo league name",
+          "Schedule limits",
+          "Report inbox",
+          "Schedule limits"
+        ]
+      }
+    ]
+  },
+  "screenshots": "Live desktop and mobile post-change screenshots reviewed: obsolete heading/explanation absent; retained website settings, demos, schedules and moderation links remain.",
+  "scope": "Only excluded health heading/explanation and page description; not full Administration state/parity completion."
+}

@@ -1,0 +1,56 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'ng' test --watch=false --include=src/app/features/admin/**/*.spec.ts --include=src/app/core/admin/**/*.spec.ts --include=src/app/shared/ui-v2/v2-preference-row.component.spec.ts --progress=false
+Using Vitest configuration file: /mnt/Storage/ProgrammingProjects/Analytify/vitest.base.config.mjs
+Application bundle generation complete. [4.121 seconds] - 2026-10-29T19:16:36.374Z
+
+
+ RUN  v4.1.11 /mnt/Storage/ProgrammingProjects/Analytify
+
+stderr | src/app/features/admin/admin.component.spec.ts > AdminComponent > keeps user schedule cards collapsed by default and extends them on toggle
+AssertionError: expected null not to be null
+    at /mnt/Storage/ProgrammingProjects/Analytify/src/app/features/admin/admin.component.spec.ts:199:30
+    at Generator.next (<anonymous>)
+    at fulfilled (/mnt/Storage/ProgrammingProjects/Analytify/chunk-M65JKFVJ.js:93:24)
+    at _ZoneDelegate.invoke (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:356:158)
+    at _ZoneImpl.run (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:125:35)
+    at /mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:2083:30
+    at _ZoneDelegate.invokeTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:382:171)
+    at _ZoneImpl.runTask (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:163:37)
+    at drainMicroTaskQueueSynchronously (/mnt/Storage/ProgrammingProjects/Analytify/node_modules/zone.js/fesm2015/zone.js:549:23)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  actual: null,
+  expected: null,
+  showDiff: true,
+  operator: 'notStrictEqual'
+}
+
+ ❯ |SpotiFront| src/app/features/admin/admin.component.spec.ts (7 tests | 1 failed) 1056ms
+     × keeps user schedule cards collapsed by default and extends them on toggle 137ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |SpotiFront| src/app/features/admin/admin.component.spec.ts > AdminComponent > keeps user schedule cards collapsed by default and extends them on toggle
+AssertionError: expected null not to be null
+ ❯ src/app/features/admin/admin.component.spec.ts:199:30
+    197|         expect(component.isUserExpanded('user-1')).toBe(true);
+    198|         settings = fixture.nativeElement.querySelector('.user-card-set…
+    199|         expect(settings).not.toBeNull();
+       |                              ^
+    200|         expect(settings.textContent).toContain('Timezone');
+    201|         expect(settings.textContent).toContain('Listening history');
+ ❯ fulfilled chunk-M65JKFVJ.js:93:24
+ ❯ _ZoneDelegate.invoke node_modules/zone.js/fesm2015/zone.js:356:158
+ ❯ _ZoneImpl.run node_modules/zone.js/fesm2015/zone.js:125:35
+ ❯ node_modules/zone.js/fesm2015/zone.js:2083:30
+ ❯ _ZoneDelegate.invokeTask node_modules/zone.js/fesm2015/zone.js:382:171
+ ❯ _ZoneImpl.runTask node_modules/zone.js/fesm2015/zone.js:163:37
+ ❯ drainMicroTaskQueueSynchronously node_modules/zone.js/fesm2015/zone.js:549:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 20 passed (21)
+      Tests  1 failed | 281 passed (282)
+   Start at  20:16:36
+   Duration  9.39s (transform 913ms, setup 6.99s, import 3.20s, tests 9.05s, environment 12.10s)
+

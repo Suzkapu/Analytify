@@ -1,0 +1,71 @@
+{
+  "collected": "2026-10-26",
+  "status": "Administration characterization complete; full migration incomplete",
+  "branch": "codex/design-v2",
+  "head": "8bbcd776fdc624929941f253e06ae2934a37e8c7",
+  "uncommitted": true,
+  "changes": [
+    "Fence administrator authorization before delayed RPC and after result using current identity and generation",
+    "Handle cancelled demo navigation without leaving busy state or claiming creation failed",
+    "39 new service/mutation boundary cases, including same-ID session replacement",
+    "Canonical demo navigation failure using existing semantic feedback foundation; full Admin design still incomplete"
+  ],
+  "verification": {
+    "targetedUnit": {
+      "command": "npx ng test --watch=false --include='src/app/features/admin/*.spec.ts' --include='src/app/core/admin/*.spec.ts' --progress=false",
+      "exit": 0,
+      "tests": 63,
+      "files": 6,
+      "log": "admin-boundaries-current-unit.log"
+    },
+    "scopedEslint": {
+      "exit": 0,
+      "log": "admin-boundaries-current-lint.log"
+    },
+    "testTypes": {
+      "command": "npx tsc -p tsconfig.spec.json --noEmit",
+      "exit": 0,
+      "log": "admin-boundaries-current-types.log"
+    }
+  },
+  "redEvidence": {
+    "service": "admin-service-boundaries.log",
+    "serviceResults": "25 pass / 3 fail",
+    "mutation": "admin-mutation-boundaries-red.log",
+    "mutationResults": "9 pass / 1 fail"
+  },
+  "figma": {
+    "file": "5v8ckmlbfhMDWwP5sTdSXd",
+    "page": "7:2",
+    "freshScreenshots": [
+      "27:1429",
+      "35:2107",
+      "27:1461"
+    ],
+    "newComponent": "1098:32432",
+    "responsiveSamples": "1098:32435",
+    "reviewedWidths": [
+      576,
+      358
+    ],
+    "reusedFoundation": "988:32194",
+    "retainedVariableBindings": true,
+    "retainedTextStyles": true,
+    "fullAdminParity": false
+  },
+  "limitations": [
+    "No current-source full CI, coverage or browser pass yet; prior exclusions-current-result.json predates these changes",
+    "Admin layout and feedback styling remain legacy; missing canonical policy/user/run/appeal states require completion",
+    "Hosted services and notifications were not exercised; all new boundaries use synthetic responses",
+    "Demo navigation rejection/recovery interface and creation reuse still need design; no automatic creation retry",
+    "Frontend final98 gate remains unmet; no metric recomputation claimed"
+  ],
+  "sourceSha256": {
+    "src/app/core/admin/admin.service.ts": "32303a61ba62971e3cbed3c44894b471f5fba24e37aada62788dbad6245544b7",
+    "src/app/core/admin/admin-service-boundaries.spec.ts": "fdb7a03f7ec308712b9cd4a221e6ed6ec9331c19c5851b5707c87f56671bd64b",
+    "src/app/features/admin/admin.component.ts": "bd2f542919881e7f27b102c4a672d32080cd47791c376169cbfff83016ca0062",
+    "src/app/features/admin/admin-mutation-boundaries.spec.ts": "d351ab08872c510f47639451a9f17cc68686e78f70c727699eda1cfd55ce1d06",
+    "src/app/features/admin/admin.component.html": "94e3808422f674b4ecd5262ae576094e5f9051bf5b8783add3a6acd14987b5d4",
+    "docs/design-v2-admin-interaction-contract.md": "f431bb305b57dcdde114d10495a784b1771d28171ce29156ed82dbd354f19f64"
+  }
+}
