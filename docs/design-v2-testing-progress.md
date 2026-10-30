@@ -1,3 +1,9 @@
+Publication retry `74396dff` / run
+[41095337299](https://github.com/Suzkapu/Analytify/actions/runs/41095337299)
+was stopped by a policy assertion still expecting the old TypeScript-only
+coverage include list. That assertion now explicitly requires both JavaScript
+and TypeScript, preserving all thresholds and exclusions. Deployment was skipped.
+
 Publication retry `89ebf950` / run
 [41094018273](https://github.com/Suzkapu/Analytify/actions/runs/41094018273)
 passed all 2632 frontend tests (one documented skip), worker/edge tests and the

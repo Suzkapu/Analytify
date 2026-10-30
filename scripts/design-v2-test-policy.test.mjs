@@ -20,7 +20,7 @@ test('keeps native component checks separate from ordinary unit coverage', () =>
   assert.equal(native.options.watch, false);
   assert.equal(native.options.coverageExclude, undefined);
   assert.equal(architect.test.options.runnerConfig, 'vitest.base.config.mjs');
-  assert.deepEqual(architect.test.options.coverageInclude, ['src/**/*.ts']);
+  assert.deepEqual(architect.test.options.coverageInclude, ['src/**/*.js', 'src/**/*.ts']);
 });
 
 test('native visual checks reject updates and compare all three browser engines strictly', async () => {
