@@ -1,3 +1,10 @@
+Publication checkpoint: commit `5122d25c` was pushed. Pipeline
+[41093448144](https://github.com/Suzkapu/Analytify/actions/runs/41093448144)
+passed the isolated real Friends contract job, but failed the protected test-only
+manual-dispatch default check before deployment. The conservative default has
+been restored; manual publication requires `friends_contract_only: false`.
+No release gate was removed and the live site was not activated by this run.
+
 # Root publication requested — 30 October 2026
 
 The user stopped further local testing and authorized committing/pushing v2,
