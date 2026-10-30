@@ -910,7 +910,7 @@ test('pending registration dialog deletes exact reviewed identity once and recov
   await expect(dialog.getByRole('button', {name: 'Close', exact: true})).toBeDisabled();
   await page.keyboard.press('Enter'); await page.keyboard.press('Escape'); await expect(dialog).toHaveAccessibleName('Registration deleted');
   releaseRead(); await expect(dialog).toHaveCount(0); await expect(card).toHaveCount(0);
-  await expect(page.locator('app-admin').getByRole('heading', {name: 'Administration', exact: true})).toBeFocused();
+  await expect(page.locator('app-admin').getByRole('heading', {name: 'Analytify Admin', exact: true})).toBeFocused();
   expect(fixture.deleteCalls).toEqual([{p_user_id: 'synthetic-user', p_expected_spotify_id: 'pending:server-reviewed-synthetic-user'}]);
   expect(fixture.writes).toEqual(fixture.deleteCalls); expect(fixture.unexpected).toEqual([]); expect(fixture.runtimeErrors).toEqual([]);
   await info.attach('pending-acknowledged-read-only-recovery', {body: JSON.stringify({reads: fixture.reads, writes: fixture.writes}), contentType: 'application/json'});

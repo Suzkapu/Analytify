@@ -1,3 +1,11 @@
+Publication checkpoint `3f1dbb76` / run
+[41096239780](https://github.com/Suzkapu/Analytify/actions/runs/41096239780)
+passed verify:ci, coverage/inventory and worker/edge coverage gates. Before browser
+verification, source review found the pending-dialog focus assertion used the
+section label instead of the actual fallback heading's accessible name,
+`Analytify Admin`. The assertion now targets that exact heading. The superseded
+run is canceled to avoid duplicated verification; no deployment had started.
+
 Publication retry `74396dff` / run
 [41095337299](https://github.com/Suzkapu/Analytify/actions/runs/41095337299)
 was stopped by a policy assertion still expecting the old TypeScript-only
