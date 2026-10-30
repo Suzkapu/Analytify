@@ -2,7 +2,8 @@
 
 Figma is the visual and interaction reference for new user-facing work. Angular
 owns the running application, data access, permissions, and product behavior.
-Changes follow this workflow on `codex/design-v2` and the separate `/new` preview.
+Changes follow this workflow on `codex/design-v2`. The user-authorized branch
+pipelines select the root frontend; `/new` is now a compatibility redirect.
 The release boundaries in `development-and-releases.md` still apply.
 
 ## Design reference

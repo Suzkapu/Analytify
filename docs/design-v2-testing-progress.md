@@ -1,3 +1,9 @@
+Root deployment uses the same existing `production` environment as main,
+retaining its configured production protections. Root validation accepts harmless
+trailing slashes/comments while still requiring the exact shared target. Figma
+workflow hosting notes now reference the authorized branch-selected root release.
+No local tests were started; superseded pipelines are canceled before activation.
+
 Publication checkpoint `3f1dbb76` / run
 [41096239780](https://github.com/Suzkapu/Analytify/actions/runs/41096239780)
 passed verify:ci, coverage/inventory and worker/edge coverage gates. Before browser

@@ -20,7 +20,10 @@ for (let row = 0; row < lines.length; row++) {
   const block = lines.slice(row + 1, close).join('\n');
   const names = block.match(/^\s*server_name\s+([^;]+);/m)?.[1].trim().split(/\s+/) || [];
   if (names.includes('analytify.dynv6.net') && /^\s*listen\s+[^;]*\bssl\b[^;]*;/m.test(block)) {
-    if (!block.split('\n').some(line => line.trim() === `root ${target};`)) {
+    if (!block.split('\n').some(line => {
+      const root = line.match(/^\s*root\s+([^;]+);\s*(?:#.*)?$/)?.[1].trim().replace(/\/$/, '');
+      return root === target;
+    })) {
       throw new Error('HTTPS root does not match the shared frontend target; refusing to override it.');
     }
     if (/\blocation\b[^{};]*\/new(?:\/|\s)/.test(block)) throw new Error('Unmanaged /new location.');

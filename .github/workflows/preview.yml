@@ -143,6 +143,7 @@ jobs:
     needs: [verify, friends-http-contract]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2' && (github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only)
     runs-on: ubuntu-latest
+    environment: production
     # Serialize root frontend activation with main; never deploy v2 backend changes.
     concurrency:
       group: analytify-production
