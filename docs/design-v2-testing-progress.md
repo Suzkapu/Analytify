@@ -1,3 +1,13 @@
+Publication retry `89ebf950` / run
+[41094018273](https://github.com/Suzkapu/Analytify/actions/runs/41094018273)
+passed all 2632 frontend tests (one documented skip), worker/edge tests and the
+isolated real Friends contracts. Its coverage inventory correctly rejected the
+new JavaScript retirement worker, absent from the TypeScript-only collector.
+Frontend reported L/S/F/B 91.70/90.29/88.76/84.55 before that missing source was
+included, so those percentages are incomplete. Collection now includes JS and
+bounded worker-scope/cache/client safety cases are saved for pipeline execution.
+No new local tests were run. Deployment was skipped; the live site is unchanged.
+
 Publication checkpoint: commit `5122d25c` was pushed. Pipeline
 [41093448144](https://github.com/Suzkapu/Analytify/actions/runs/41093448144)
 passed the isolated real Friends contract job, but failed the protected test-only
