@@ -1,3 +1,37 @@
+# Parallel publication checks — 31 October 2026
+
+Based on repair commit `3e379cef`, [run41189422168](https://github.com/Suzkapu/Analytify/actions/runs/41189422168)
+finished with **754 browser passes /4 failures** in40.6minutes; deployment skipped.
+Build/static/unit/coverage/inventory and isolated service checks passed. Four
+remaining failures: mobile large-rank screenshot (16 differing pixels), WebKit
+route glow settlement, cached-refresh horizontal geometry, large-rank intrinsic
+containment geometry. Original screenshot reproduced as passing locally without
+baseline changes; pixel artifact inspected, no golden accepted.
+
+CI now runs the main suite as **6 independent shards with2 workers each**.
+Playwright inventory partitions all758 cases exactly127/127/126/126/126/126.
+Friends, Navigation and Admin browser suites run in3 parallel isolated jobs;
+native components run separately alongside verification and real HTTP contracts.
+Deployment requires all job families. Each shard retains separate failure evidence;
+fail-fast is disabled. No release/security gate removed; main untouched.
+27 Node policy checks and YAML/dependency checks passed. Actual hosted speedup
+remains unmeasured and depends on available GitHub runners.
+
+Glow uses Playwright's clock to dispatch real RAF callbacks deterministically,
+retaining intermediate movement, target, particle continuity and reduced-motion
+assertions: Chromium/Firefox/WebKit **3/3 pass**. Geometry polling now includes
+its existing horizontal bounds, and row measurements await render frames after
+scroll/resize: focused WebKit **5/5 pass**. The mobile screenshot check retains
+its baseline and tolerance, with render frames awaited after scrolling: **1/1 pass**. Scoped
+ESLint and diff checks pass. No production code changed in this slice.
+
+Original98%frontend and comprehensive Figma parity goals remain incomplete;
+this scheduling/repair slice does not claim new whole-product parity or coverage.
+Next: inspect the parallel publication run and confirm root activation only after
+all required jobs succeed. Commit: the commit containing this checkpoint.
+
+---
+
 # Root publication repair checkpoint — 31 October 2026
 
 Repair commit: the commit containing this entry, based on `6a516492` on

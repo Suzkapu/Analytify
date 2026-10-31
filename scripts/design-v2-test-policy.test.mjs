@@ -46,11 +46,12 @@ test('native screenshot paths keep independent component suites and existing Fri
 
 test('preview verification requires native component checks after installing browser engines', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
-  const verify = workflow.split(/\n  friends-http-contract:/)[0];
-  const native = verify.indexOf('run: npm run test:native-components');
-  assert.ok(native > verify.indexOf('npx playwright install --with-deps chromium firefox webkit'));
-  assert.ok(native < verify.indexOf('Record preview artifact identity'));
-  assert.match(workflow, /deploy:\s*\n\s+needs: \[verify, friends-http-contract\]/);
+  const nativeJob = workflow.match(/^  native-components:\n([\s\S]*?)(?=^  [\w-]+:\n)/m)?.[1];
+  assert.ok(nativeJob);
+  const native = nativeJob.indexOf('run: npm run test:native-components');
+  assert.ok(native > nativeJob.indexOf('npx playwright install --with-deps chromium firefox webkit'));
+  assert.doesNotMatch(nativeJob, /continue-on-error/);
+  assert.match(workflow, /deploy:\s*\n\s+needs: \[verify, browser, isolated-browser, native-components, friends-http-contract\]/);
 });
 
 test('bounds concurrent test environments without weakening deadlines or coverage', async () => {
@@ -131,7 +132,8 @@ test('documents only the two non-production browser fixture exclusions', () => {
 test('requires the dedicated Friends browser suite in preview CI', () => {
   const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
   assert.match(workflow, /run: npx playwright test --config=playwright\.friends\.config\.ts/);
-  assert.match(workflow, /docs\/testing-evidence\/design-v2\/friends-browser-artifacts/);
+  assert.match(workflow, /suite: \[friends, navigation, admin-exclusion\]/);
+  assert.match(workflow, /docs\/testing-evidence\/design-v2\/\$\{\{ matrix\.suite \}\}-browser-artifacts/);
   const configuration = readFileSync('playwright.friends.config.ts', 'utf8');
   assert.match(configuration, /testMatch: 'design-v2-friends\.spec\.ts'/);
   assert.match(configuration, /testIgnore: \[\]/);
@@ -145,11 +147,14 @@ test('isolates Admin regression fixtures and requires their browser checks befor
   assert.match(configuration, /testMatch: 'design-v2-admin-exclusion\.spec\.ts'/);
   assert.match(configuration, /--configuration browser-testing/);
   assert.match(configuration, /reuseExistingServer: false/);
-  const verify = readFileSync('.github/workflows/preview.yml', 'utf8').split(/\n  friends-http-contract:/)[0];
-  const check = verify.indexOf('run: npx playwright test --config=playwright.admin-exclusion.config.ts');
-  assert.ok(check > verify.indexOf('npx playwright install --with-deps'));
-  assert.ok(check < verify.indexOf('- name: Preserve test evidence'));
-  assert.match(verify, /docs\/testing-evidence\/design-v2\/admin-exclusion-browser-artifacts/);
+  const workflow = readFileSync('.github/workflows/preview.yml', 'utf8');
+  const isolatedJob = workflow.match(/^  isolated-browser:\n([\s\S]*?)(?=^  [\w-]+:\n)/m)?.[1];
+  assert.ok(isolatedJob);
+  const check = isolatedJob.indexOf('run: npx playwright test --config=playwright.admin-exclusion.config.ts');
+  assert.ok(check > isolatedJob.indexOf('npx playwright install --with-deps'));
+  assert.ok(check < isolatedJob.indexOf('- name: Preserve isolated browser evidence'));
+  assert.match(isolatedJob, /suite: \[friends, navigation, admin-exclusion\]/);
+  assert.match(isolatedJob, /docs\/testing-evidence\/design-v2\/\$\{\{ matrix\.suite \}\}-browser-artifacts/);
 });
 
 test('requires isolated real Friends HTTP verification before preview deployment', () => {
@@ -162,5 +167,5 @@ test('requires isolated real Friends HTTP verification before preview deployment
   assert.match(job, /node integration\/friends-http\/verify-isolation\.mjs/);
   assert.doesNotMatch(job, /continue-on-error|--handshake-only|secrets\./);
   assert.match(job, /if: always\(\)/);
-  assert.match(workflow, /deploy:\n\s+needs: \[verify, friends-http-contract\]/);
+  assert.match(workflow, /deploy:\n\s+needs: \[verify, browser, isolated-browser, native-components, friends-http-contract\]/);
 });

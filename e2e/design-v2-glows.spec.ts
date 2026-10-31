@@ -68,6 +68,9 @@ test('actual route changes move glows smoothly and preserve the independent part
   await mockSpotify(page); await seedAuthenticatedBrowser(page);
   await page.emulateMedia({reducedMotion: 'no-preference'});
   await page.setViewportSize({width: 1440, height: 810});
+  // Drive animation time independently of a busy runner's compositor cadence.
+  // runFor dispatches every RAF callback; fastForward would skip the motion.
+  await page.clock.install();
   await page.goto('/playlists');
   const ambient = page.locator('app-ambient-background');
   await expect.poll(() => ambient.evaluate(element => element.style.getPropertyValue('--ambient-primary-x'))).toBe('25.0000%');
@@ -96,6 +99,7 @@ test('actual route changes move glows smoothly and preserve the independent part
   // completion can overwrite the latest route's canonical target.
   await sidebar.getByRole('link', {name: 'History', exact: true}).click();
   await expect(page).toHaveURL(/\/history$/);
+  await page.clock.runFor(2_000);
   await expect.poll(() => page.evaluate(() => (window as any).__glowSettled)).toBe(true);
   expect(await page.locator('.ambient-dot').first().evaluate(element => element.getAnimations()[0] === (window as any).__glowParticle
     && Number(element.getAnimations()[0].currentTime) > Number((window as any).__glowParticleTime))).toBe(true);

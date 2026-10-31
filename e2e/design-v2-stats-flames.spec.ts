@@ -483,7 +483,10 @@ for (const motion of ['no-preference','reduce'] as const) {
       await expect(row.getByRole('img',{name:'Hot mover',exact:true})).toHaveCount(rank===50?1:0);
       for(const width of [320,360,390,760,761,768,1024,1440,1920]) for(const height of [480,1080]) {
         await page.setViewportSize({width,height});await row.scrollIntoViewIfNeeded();
-        const geometry=await row.evaluate(element=>{
+        // WebKit can retain the content-visibility placeholder for a frame after resizing.
+        // Materialize the visible row before sampling its content and outer height together.
+        const geometry=await row.evaluate(async element=>{
+          await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
           const bounds=element.getBoundingClientRect(),column=element.querySelector('.rank')!.getBoundingClientRect();
           const number=element.querySelector('.rank-number')!.getBoundingClientRect();
           const movement=element.querySelector('.rank-movement')!.getBoundingClientRect();
@@ -509,7 +512,10 @@ for (const motion of ['no-preference','reduce'] as const) {
       }
       if(motion==='reduce') for(const width of [390,1440]) {
         await page.setViewportSize({width,height:900});
-        await row.evaluate(element=>element.scrollIntoView({block:'center',behavior:'instant'}));
+        await row.evaluate(async element=>{
+          element.scrollIntoView({block:'center',behavior:'instant'});
+          await new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve())));
+        });
         expect(await row.evaluate(element=>{
           const nav=document.querySelector('.v2-mobile-nav');
           return !nav?.getClientRects().length || element.getBoundingClientRect().bottom<=nav.getBoundingClientRect().top;

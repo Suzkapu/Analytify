@@ -1,0 +1,16 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config .extra_files/root-publication.playwright.config.ts --project webkit-stats --project firefox-stats --project desktop --workers 2 --grep actual route changes move glows
+
+Running 3 tests using 2 workers
+
+(node:12732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:12733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (8.3s)
+(node:13320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox-stats] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (12.1s)
+  ✓  3 [webkit-stats] › e2e/design-v2-glows.spec.ts:65:5 › actual route changes move glows smoothly and preserve the independent particle timeline (12.0s)
+
+  3 passed (25.4s)

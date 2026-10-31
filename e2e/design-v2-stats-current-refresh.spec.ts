@@ -57,6 +57,7 @@ for(const motion of ['no-preference','reduce'] as const) for(const moveFocus of 
       await expect.poll(async()=>{
         sample=await measure();
         return sample.scrollEndGap<=1&&sample.action.top>=0
+          &&sample.action.left>=0&&sample.action.right<=sample.width&&sample.overflow===0
           &&sample.action.bottom<=(sample.navVisible?sample.navTop:sample.height)
           &&(!sample.navVisible||(sample.navTop>=0&&sample.navBottom<=sample.height))&&sample.centerHitsAction;
       }).toBe(true);

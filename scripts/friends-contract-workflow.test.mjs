@@ -11,7 +11,7 @@ test('registered preview dispatch defaults to a required boolean test-only mode'
   assert.match(workflow, /^  workflow_dispatch:\n    inputs:\n      friends_contract_only:\n        description: Run only isolated Friends contracts without deployment\n        type: boolean\n        required: true\n        default: true\n/m);
   assert.equal(condition('verify'), "github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only");
   assert.equal(condition('deploy'), "github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2' && (github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only)");
-  assert.match(jobBody('deploy'), /^    needs: \[verify, friends-http-contract\]$/m);
+  assert.match(jobBody('deploy'), /^    needs: \[verify, browser, isolated-browser, native-components, friends-http-contract\]$/m);
   assert.doesNotMatch(jobBody('friends-http-contract'), /^    if:/m, 'The real contract must still run when the normal verification job is skipped.');
   assert.match(workflow, /^permissions:\n  contents: read$/m);
 });
@@ -30,8 +30,8 @@ test('actual job conditions prevent test-only deployment and preserve ordinary r
   ];
   for (const scenario of scenarios) {
     const context = {github: {event_name: scenario.event, ref: scenario.ref}, inputs: {friends_contract_only: scenario.only}};
-    for (const job of ['verify', 'deploy']) {
-      assert.equal(runInNewContext(condition(job), context, {timeout: 1000}), scenario[job], `${job}: ${JSON.stringify(scenario)}`);
+    for (const job of ['verify', 'browser', 'isolated-browser', 'native-components', 'deploy']) {
+      assert.equal(runInNewContext(condition(job), context, {timeout: 1000}), scenario[job === 'deploy' ? 'deploy' : 'verify'], `${job}: ${JSON.stringify(scenario)}`);
     }
   }
 });
@@ -91,4 +91,34 @@ test('hosted runner hardens only the fixed PostgreSQL share chain and control be
   assert.ok(job.indexOf(repair) < job.indexOf('run: npm ci'));
   const provisioner = readFileSync(new URL('./provision-isolated-friends-runtime.mjs', import.meta.url), 'utf8');
   assert.match(provisioner, /metadata\.uid === 0 && !\(metadata\.mode & 0o022\)/);
+});
+
+
+test('parallel browser jobs retain every release gate and independent failure evidence', () => {
+  const browser = jobBody('browser');
+  assert.match(browser, /fail-fast: false/);
+  assert.match(browser, /shard: \[1, 2, 3, 4, 5, 6\]/);
+  assert.match(browser, /npm run accessibility:browser -- --shard=\$\{\{ matrix\.shard \}\}\/6 --workers=2/);
+  assert.match(browser, /name: preview-browser-\$\{\{ github\.sha \}\}-\$\{\{ matrix\.shard \}\}/);
+  const isolated = jobBody('isolated-browser');
+  assert.match(isolated, /fail-fast: false/);
+  assert.match(isolated, /suite: \[friends, navigation, admin-exclusion\]/);
+  for (const suite of ['friends', 'navigation', 'admin-exclusion']) {
+    assert.ok(isolated.includes(`if: matrix.suite == '${suite}'`));
+    assert.ok(isolated.includes(`run: npx playwright test --config=playwright.${suite}.config.ts`));
+  }
+  for (const name of ['browser', 'isolated-browser', 'native-components']) {
+    const job = jobBody(name);
+    assert.doesNotMatch(job, /needs:|continue-on-error|--update-snapshots|--pass-with-no-tests/);
+    assert.match(job, /npx playwright install --with-deps chromium firefox webkit/);
+    assert.match(job, /if: always\(\)/);
+    assert.doesNotMatch(job, /secrets\.|environment:|deploy-preview/);
+  }
+  const verify = jobBody('verify');
+  for (const gate of ['verify:ci', 'test:coverage:instrumentation', 'test:coverage:worker', 'test:coverage:edge', 'test:supabase-integration']) {
+    assert.ok(verify.includes(`run: npm run ${gate}`), gate);
+  }
+  assert.match(verify, /Record preview artifact identity/);
+  assert.match(verify, /name: preview-web-\$\{\{ github\.sha \}\}/);
+  assert.match(jobBody('deploy'), /name: preview-web-\$\{\{ github\.sha \}\}/);
 });

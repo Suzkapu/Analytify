@@ -1,0 +1,14 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config .extra_files/root-publication.playwright.config.ts --project webkit-stats --workers 1 --grep (cached Stats|large original ranks.*reduce)
+
+Running 5 tests using 1 worker
+
+(node:14058) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:6:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=false) (12.3s)
+  ✓  2 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:6:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (no-preference, moved=true) (12.5s)
+  ✓  3 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:6:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=false) (6.8s)
+  ✓  4 [webkit-stats] › e2e/design-v2-stats-current-refresh.spec.ts:6:7 › cached Stats failure preserves complete rows and recovers without duplicate requests or stolen focus (reduce, moved=true) (6.5s)
+  ✓  5 [webkit-stats] › e2e/design-v2-stats-flames.spec.ts:444:7 › large original ranks wrap movement without shifting actions with motion reduce (12.6s)
+
+  5 passed (52.2s)

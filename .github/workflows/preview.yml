@@ -32,7 +32,6 @@ jobs:
           deno-version: v2.9.6
       - run: npm ci
       - run: npm ci --prefix services/sync-service --ignore-scripts
-      - run: npx playwright install --with-deps chromium firefox webkit
       - run: node --test scripts/preview-nginx.test.mjs
       - run: npm run verify:ci
       - run: npm run test:coverage:instrumentation
@@ -58,15 +57,6 @@ jobs:
       - name: Stop isolated loading-contract stack
         if: always() && steps.supabase-cli.outcome == 'success'
         run: supabase stop --workdir integration --no-backup
-      - run: npm run accessibility:browser
-      - name: Verify isolated Friends browser workflows
-        run: npx playwright test --config=playwright.friends.config.ts
-      - name: Verify native Angular feedback components
-        run: npm run test:native-components
-      - name: Verify isolated device Navigation preferences
-        run: npx playwright test --config=playwright.navigation.config.ts
-      - name: Verify retained administration and excluded-feature boundaries
-        run: npx playwright test --config=playwright.admin-exclusion.config.ts
       - name: Preserve test evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -74,12 +64,6 @@ jobs:
           name: preview-test-evidence-${{ github.sha }}
           path: |
             coverage
-            test-results
-            playwright-report
-            docs/testing-evidence/design-v2/friends-browser-artifacts
-            docs/testing-evidence/design-v2/navigation-browser-artifacts
-            docs/testing-evidence/design-v2/admin-exclusion-browser-artifacts
-            e2e/components/__screenshots__
           retention-days: 7
       - name: Record preview artifact identity
         run: node -e 'require("node:fs").writeFileSync("dist/spoti-front/version.json",JSON.stringify({commit:process.env.GITHUB_SHA,branch:"codex/design-v2",mount:"/"}))'
@@ -89,6 +73,92 @@ jobs:
           path: dist/spoti-front
           if-no-files-found: error
           retention-days: 1
+  browser:
+    if: github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only
+    name: Browser shard ${{ matrix.shard }}/6
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Verify responsive, visual, accessibility and workflow regressions
+        run: npm run accessibility:browser -- --shard=${{ matrix.shard }}/6 --workers=2
+      - name: Preserve browser shard evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-browser-${{ github.sha }}-${{ matrix.shard }}
+          path: |
+            test-results
+            playwright-report
+          retention-days: 7
+  isolated-browser:
+    if: github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only
+    name: Isolated ${{ matrix.suite }} browser workflows
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [friends, navigation, admin-exclusion]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Verify isolated Friends browser workflows
+        if: matrix.suite == 'friends'
+        run: npx playwright test --config=playwright.friends.config.ts
+      - name: Verify isolated device Navigation preferences
+        if: matrix.suite == 'navigation'
+        run: npx playwright test --config=playwright.navigation.config.ts
+      - name: Verify retained administration and excluded-feature boundaries
+        if: matrix.suite == 'admin-exclusion'
+        run: npx playwright test --config=playwright.admin-exclusion.config.ts
+      - name: Preserve isolated browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-isolated-${{ github.sha }}-${{ matrix.suite }}
+          path: |
+            docs/testing-evidence/design-v2/${{ matrix.suite }}-browser-artifacts
+            playwright-report
+          retention-days: 7
+  native-components:
+    if: github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.15.0'
+          cache: npm
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Verify native Angular feedback components
+        run: npm run test:native-components
+      - name: Preserve native component evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: preview-native-${{ github.sha }}
+          path: |
+            e2e/components/__screenshots__
+            test-results
+          retention-days: 7
   friends-http-contract:
     runs-on: ubuntu-24.04
     steps:
@@ -140,7 +210,7 @@ jobs:
           path: docs/testing-evidence/design-v2/friends-http-ci-artifacts
           retention-days: 7
   deploy:
-    needs: [verify, friends-http-contract]
+    needs: [verify, browser, isolated-browser, native-components, friends-http-contract]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/codex/design-v2' && (github.event_name != 'workflow_dispatch' || !inputs.friends_contract_only)
     runs-on: ubuntu-latest
     environment: production
