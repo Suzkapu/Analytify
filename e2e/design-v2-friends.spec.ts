@@ -190,6 +190,9 @@ test('Friends uncertain creation and terminal owner feedback require explicit re
 
 for (const accept of [true, false]) test(`Friends confirmed ${accept ? 'accepted' : 'declined'} feedback stays request-owned`, async ({page}, info) => {
   const {panel, writes, unexpected, runtimeErrors} = await setupFriends(page, 'reduce');
+  // Finish the initial authenticated route before a full-document invite visit.
+  // Otherwise WebKit reports canceled startup reads as access-control page errors.
+  await expect(panel.getByText('Suzkapu', {exact: true})).toBeVisible();
   await page.goto('/friends/invite/' + 'b'.repeat(64));
   await panel.getByRole('button', {name: 'Retry', exact: true}).press('Enter');
   await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
@@ -357,7 +360,7 @@ test('Friends ready content preserves canonical card geometry during resizing', 
   expect(writes).toEqual([]); expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);
 });
 
-test('Friends secondary content has deterministic canonical visual candidates', async ({page}, info) => {
+for (const visualState of ['add', 'invitations', 'review']) test(`Friends secondary ${visualState} content has deterministic canonical visual candidates`, async ({page}, info) => {
   await page.addInitScript(() => {
     const original = crypto.getRandomValues.bind(crypto);
     let sequence = 0;
@@ -398,15 +401,18 @@ test('Friends secondary content has deterministic canonical visual candidates', 
   await expect(panel.getByRole('status')).toContainText('Your invitation is no longer active');
   await panel.getByRole('button', {name: 'Create new invitation', exact: true}).click();
   await expect(panel.getByRole('img', {name: 'Scan to open this single-person friend invitation'})).toBeVisible();
-  await capture('add');
+  // Root publication changes both the displayed URL and the QR payload.
+  await expect(panel.locator('.invitation-url')).toHaveText(new URL('/friends/invite/' +
+    Array.from({length: 32}, (_, index) => ((2 * 37 + index) % 256).toString(16).padStart(2, '0')).join(''), page.url()).href);
+  if (visualState === 'add') await capture('add');
   await panel.getByRole('link', {name: 'Invitations', exact: true}).click();
   await expect(panel.getByRole('link', {name: 'View link & QR'})).toBeVisible();
-  await capture('invitations');
+  if (visualState === 'invitations') await capture('invitations');
   await page.goto('/friends/invite/' + 'b'.repeat(64));
   await expect(panel.getByRole('alert')).toContainText('could not be confirmed');
   await panel.getByRole('button', {name: 'Retry', exact: true}).click();
   await expect(panel.getByRole('heading', {name: 'Incoming friend wants to be your friend', exact: true})).toBeVisible();
-  await capture('review');
+  if (visualState === 'review') await capture('review');
   expect(writes.filter(write => write.name === 'create_friend_invitation')).toHaveLength(3);
   expect(writes.filter(write => write.name === 'respond_friend_request')).toEqual([]);
   expect(unexpected).toEqual([]); expect(runtimeErrors).toEqual([]);

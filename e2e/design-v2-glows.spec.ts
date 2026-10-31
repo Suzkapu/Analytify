@@ -24,13 +24,25 @@ for (const [scene, path] of [['Library', 'playlists'], ['Insights', 'history'], 
       const mobile = width <= 760;
       const reference = canonical.variants.find((variant: {name: string}) => variant.name === `Viewport=${mobile ? 'Mobile' : 'Desktop'}, Scene=${scene}`);
       await expect.poll(() => ambient.locator('img').evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalHeight === (window.innerWidth <= 760 ? 760 : 1050)))).toBe(true);
-      const sample = await ambient.evaluate(element => ({background: getComputedStyle(element).backgroundColor, backgroundImage: getComputedStyle(element).backgroundImage,
+      const readSample = () => ambient.evaluate(element => ({background: getComputedStyle(element).backgroundColor, backgroundImage: getComputedStyle(element).backgroundImage,
         glows: ['.ambient-primary', '.ambient-secondary'].map(selector => {
           const glow = element.querySelector(selector)!; const image = glow.querySelector('img')!;
           const rect = image.getBoundingClientRect(); const style = getComputedStyle(glow);
           return {x: rect.x, y: rect.y, width: rect.width, height: rect.height, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight,
             asset: new URL(image.currentSrc).pathname.split('/').pop(), alt: image.alt, opacity: style.opacity, backgroundImage: style.backgroundImage};
         })}));
+      // Picture selection can finish before WebKit dispatches the resize event
+      // that updates the scene's percentage coordinates. Await the same exact
+      // canonical geometry below, rather than sampling stale desktop vectors.
+      await expect.poll(async () => {
+        const current = await readSample();
+        return Math.max(...current.glows.flatMap((glow, index) => {
+          const target = reference.glows[index];
+          return [Math.abs(glow.x - ((target.x + target.width / 2) / reference.width * width - target.width / 2)),
+            Math.abs(glow.y - ((target.y + target.height / 2) / reference.height * height - target.height / 2))];
+        }));
+      }).toBeLessThan(.03);
+      const sample = await readSample();
       expect(sample.background).toBe('rgb(7, 11, 9)'); expect(sample.backgroundImage).toBe('none');
       for (const [index, glow] of sample.glows.entries()) {
         const target = reference.glows[index];

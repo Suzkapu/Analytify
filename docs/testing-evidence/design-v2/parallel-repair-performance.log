@@ -1,0 +1,13 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config .extra_files/root-publication.playwright.config.ts --project mobile --project desktop --workers 1 --grep canonical library records navigation
+
+Running 2 tests using 1 worker
+
+(node:24825) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop] › e2e/design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence (8.9s)
+(node:25492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [mobile] › e2e/design-v2-chromium-performance.spec.ts:6:5 › canonical library records navigation and interaction performance evidence (9.9s)
+
+  2 passed (23.6s)

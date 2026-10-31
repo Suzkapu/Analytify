@@ -1,0 +1,16 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config .extra_files/motion-repair.playwright.config.ts --project webkit-stats --grep public navigation rejects delayed account success.*no-preference --repeat-each 3
+
+Running 3 tests using 2 workers
+
+(node:33078) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33079) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:15:7 › public navigation rejects delayed account success and reloads on return (no-preference) (26.9s)
+  ✓  1 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:15:7 › public navigation rejects delayed account success and reloads on return (no-preference) (27.6s)
+(node:34398) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit-stats] › e2e/design-v2-shell-account-boundary.spec.ts:15:7 › public navigation rejects delayed account success and reloads on return (no-preference) (20.6s)
+
+  3 passed (53.3s)

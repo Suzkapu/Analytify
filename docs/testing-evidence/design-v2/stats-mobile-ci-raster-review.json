@@ -1,0 +1,22 @@
+{
+  "reference": "e2e/design-v2-stats-flames.spec.ts-snapshots/stats-large-rank-50-1440-mobile-linux.png",
+  "oldSha256": "185cffe47707bb1391556d2fa748d8a16d4f7f624a6af877dbe4623f1d15744b",
+  "candidateSha256": "62ab6f0e8fea52a459c139f487c1ae8b8b9788bfc6c1ddf6c9561840e70ff106",
+  "sourceRun": 41196878592,
+  "previousRun": 41189422168,
+  "samePixelsAcrossCiRuns": true,
+  "oldSize": [
+    1120,
+    92
+  ],
+  "candidateSize": [
+    1120,
+    92
+  ],
+  "reportedDifferingPixels": 16,
+  "review": "Inspected expected/actual/diff and enlarged rank/title crop. Same1120x92 geometry, Outfit typography, text, artwork, flame, rank/movement/action positions and colors; changed raster edges on glyphs. Candidate matches supported hosted Linux renderer in two independent runs. Local Linux rendering passes previous reference; cross-host pixel reproducibility remains a limitation. Only this reviewed reference changes; tolerances and assertions unchanged.",
+  "figmaEvidence": "Existing canonical Stats7:97 fill/layout audit and retained exact rank/row geometry assertions; no change to intended appearance.",
+  "reportedDifferingPixelsMeaning": "16 pixels exceed the existing Playwright comparator threshold; not total raw changed pixels",
+  "rawDifferentPixels": 1856,
+  "independentReview": "Second agent independently viewed expected/actual/diff, verified identical CI pixels across both runs and same1120x92 geometry; approved only this reference without tolerance or mask changes."
+}

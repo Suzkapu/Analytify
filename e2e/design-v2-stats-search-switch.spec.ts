@@ -103,6 +103,10 @@ test('selection follows the native 220ms timeline and responds to reduced motion
   const toggle = page.getByRole('switch', {name: 'Search past rankings'});
   await toggle.press('Tab');
   await toggle.focus();
+  // Commit the unselected style before changing selection. A loaded runner can
+  // otherwise coalesce the initial and checked styles and create no transition.
+  await expect.poll(() => toggle.locator('.thumb').evaluate(element =>
+    new DOMMatrixReadOnly(getComputedStyle(element).transform).m41)).toBe(0);
   await toggle.evaluate(element => {
     const thumb = element.querySelector('.thumb') as HTMLElement & {capturedTransition?: CSSTransition};
     const capture = (event: TransitionEvent) => {

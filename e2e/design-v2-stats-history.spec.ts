@@ -463,7 +463,8 @@ test('canonical history palette distinguishes surfaces, controls, hover and keyb
   await expectNoBlockingAxeViolations(page);
 });
 
-test('category rank grids align with real saved positions through short and tall resizing', async ({page}, testInfo) => {
+for (const [category, name, middle, limit] of [['Songs', 'Midnight Drive', 50, 100], ['Artists', 'History Artist', 25, 50], ['Genres', 'fixture-genre', 8, 15]] as const) for (const widths of [[320,390,600,601],[601,768,1440]]) {
+ test(`category ${category} rank grids align with real saved positions through short and tall resizing (${widths[0]}-${widths[widths.length - 1]})`, async ({page}, testInfo) => {
   await page.emulateMedia({reducedMotion: 'reduce'});
   await page.evaluate(async () => {
     const dates = ['2026-09-05','2026-09-09','2026-09-14','2026-09-18','2026-09-24','2026-09-28','2026-10-04'];
@@ -487,7 +488,7 @@ test('category rank grids align with real saved positions through short and tall
   });
   await page.reload(); await chooseStatsDate(page, 'ranking', '2026-10-04');
   const evidence = [];
-  for (const [category, name, middle, limit] of [['Songs', 'Midnight Drive', 50, 100], ['Artists', 'History Artist', 25, 50], ['Genres', 'fixture-genre', 8, 15]] as const) {
+  {
     await page.getByRole('group', {name: 'Ranking category'}).getByRole('button', {name: category, exact: true}).click();
     const trigger = page.getByRole('button', {name: `View position history for ${name}`, exact: true});
     await trigger.press('Enter');
@@ -497,7 +498,7 @@ test('category rank grids align with real saved positions through short and tall
     await page.mouse.move(0, 0);
     await slider.focus(); await slider.press('Home'); await slider.press('ArrowRight');
     await expect(slider).toHaveAttribute('aria-valuetext', `9 Sep 2026, position ${middle}`);
-    for (const width of [320,390,600,601,768,1440]) for (const height of [480,1000]) {
+    for (const width of widths) for (const height of [480,1000]) {
       await page.setViewportSize({width, height});
       await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
       const projectionDiagnostic = await slider.locator('svg').evaluate(svg => {
@@ -558,6 +559,7 @@ test('category rank grids align with real saved positions through short and tall
   await writeFile(geometryPath, JSON.stringify(evidence, null, 2));
   await testInfo.attach('category-grid-geometry.json', {path: geometryPath, contentType: 'application/json'});
 });
+}
 
 for (const reducedMotion of ['no-preference', 'reduce'] as const) {
   test(`history keyboard focus stays inside its canvas while resizing (${reducedMotion})`, async ({page}, testInfo) => {

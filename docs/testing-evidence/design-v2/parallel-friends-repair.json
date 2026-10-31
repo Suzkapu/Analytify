@@ -1,0 +1,206 @@
+{
+  "run": 41196878592,
+  "job": 124524726911,
+  "failed": 11,
+  "passed": 81,
+  "rootCauses": {
+    "rootPublicationURLAndQR": 4,
+    "hostLigatureGlyphRendering": 4,
+    "canceledInitialDocumentReads": 2,
+    "nativeTransitionResizeSnapshotTimeout": 1
+  },
+  "fixes": [
+    "Wait for initial authenticated Friends content before full-document invite navigation; keep all pageerror checks.",
+    "Review and update eight Add desktop/mobile references after authorized root URL migration; unchanged dimensions and all other secondary references.",
+    "Explicit root invitation URL assertion."
+  ],
+  "snapshotChanges": [
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-desktop-linux.png",
+      "oldSize": [
+        1120,
+        586
+      ],
+      "newSize": [
+        1120,
+        586
+      ],
+      "changedBounds": [
+        33,
+        253,
+        753,
+        473
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-desktop-linux.png",
+      "oldSize": [
+        358,
+        710
+      ],
+      "newSize": [
+        358,
+        710
+      ],
+      "changedBounds": [
+        17,
+        265,
+        339,
+        596
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-firefox-stats-linux.png",
+      "oldSize": [
+        1120,
+        586
+      ],
+      "newSize": [
+        1120,
+        586
+      ],
+      "changedBounds": [
+        33,
+        253,
+        753,
+        473
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-firefox-stats-linux.png",
+      "oldSize": [
+        358,
+        710
+      ],
+      "newSize": [
+        358,
+        710
+      ],
+      "changedBounds": [
+        33,
+        265,
+        225,
+        557
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-mobile-linux.png",
+      "oldSize": [
+        1120,
+        586
+      ],
+      "newSize": [
+        1120,
+        586
+      ],
+      "changedBounds": [
+        33,
+        253,
+        753,
+        473
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-mobile-linux.png",
+      "oldSize": [
+        358,
+        710
+      ],
+      "newSize": [
+        358,
+        710
+      ],
+      "changedBounds": [
+        17,
+        265,
+        339,
+        596
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-desktop-webkit-stats-linux.png",
+      "oldSize": [
+        1120,
+        586
+      ],
+      "newSize": [
+        1120,
+        586
+      ],
+      "changedBounds": [
+        33,
+        253,
+        753,
+        473
+      ]
+    },
+    {
+      "file": "e2e/design-v2-friends.spec.ts-snapshots/friends-add-mobile-webkit-stats-linux.png",
+      "oldSize": [
+        358,
+        710
+      ],
+      "newSize": [
+        358,
+        710
+      ],
+      "changedBounds": [
+        17,
+        265,
+        339,
+        596
+      ]
+    }
+  ],
+  "checks": {
+    "requestOwnedWebKit": "2 passed (23.6s)",
+    "eslint": "passed",
+    "secondaryRegeneration": "2 passed, 2 timed out in snapshot-update mode; independent no-update verification running",
+    "secondaryNoUpdateBeforeSplit": "3 passed;1Firefox30secdeadline; monolith split by captured state with same fullworkflow assertions and deadline",
+    "secondaryPerStateNoUpdate": "6 passed (1.0m), Firefox/WebKit eachadd/invitations/review,2workers,unchanged30secdeadline",
+    "evidenceLogs": [
+      ".extra_files/friends-repair-workflow.log",
+      ".extra_files/friends-repair-root-url.log",
+      ".extra_files/friends-repair-root-url-verify.log",
+      ".extra_files/friends-repair-split-verify.log",
+      ".extra_files/friends-repair-lint.log"
+    ]
+  },
+  "remaining": [
+    "Native transition resize timeout delegated to native navigation investigator.",
+    "Firefox/WebKit fi glyph rasterization discrepancies unchanged pending shared environment diagnosis."
+  ],
+  "snapshotReview": {
+    "method": "Compared each of8 changed images to HEAD; identical dimensions; zero changed pixels outside QR square and invitation URL paragraph. Inspected representative full mobile image and CI desktop diff.",
+    "desktopRegions": [
+      [
+        17,
+        237,
+        193,
+        413
+      ],
+      [
+        17,
+        450,
+        1103,
+        479
+      ]
+    ],
+    "mobileRegions": [
+      [
+        17,
+        249,
+        193,
+        425
+      ],
+      [
+        17,
+        545,
+        341,
+        605
+      ]
+    ],
+    "otherSecondarySnapshotsChanged": false,
+    "comparisonAssertionsRelaxed": false
+  }
+}

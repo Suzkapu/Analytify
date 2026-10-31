@@ -21,8 +21,10 @@ import {PlaylistsUiModule} from '../playlists/playlists.module';
   template: `
     <v2-page eyebrow="Your Spotify library" title="Your playlists"
       description="Open a playlist, search its songs, or see a quick summary.">
-      @if (playlists.length) {
-        <span v2PageActions class="v2-playlist-count" [attr.aria-label]="playlists.length + ' playlists'">{{ playlists.length }} playlists</span>
+      <!-- Reserve the populated header row while the cached library loads. -->
+      @if (isLoadingPlaylists || playlists.length) {
+        <span v2PageActions class="v2-playlist-count" [style.visibility]="isLoadingPlaylists && !playlists.length ? 'hidden' : 'visible'"
+          [attr.aria-hidden]="isLoadingPlaylists && !playlists.length" [attr.aria-label]="playlists.length + ' playlists'">{{ playlists.length }} playlists</span>
       }
       @if (isRefreshingPlaylists) { <p class="v2-library-sync" role="status"><i class="pi pi-spin pi-spinner"></i> Checking Spotify for updates…</p> }
         <v2-toolbar v2PageToolbar label="Playlist controls">

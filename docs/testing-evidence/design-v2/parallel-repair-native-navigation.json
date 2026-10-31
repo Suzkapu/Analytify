@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-31",
+  "failingRun": "https://github.com/Suzkapu/Analytify/actions/runs/41196878592",
+  "native": {
+    "ci": {
+      "passed": 122,
+      "failed": 145,
+      "failedByEngine": {
+        "chromium": 89,
+        "firefox": 28,
+        "webkit": 28
+      }
+    },
+    "localFull": {
+      "passed": 267,
+      "failed": 0,
+      "files": 18,
+      "seconds": 69.93,
+      "command": "ANALYTIFY_WEBKIT_EXECUTABLE=<local-portable-runtime> npm run test:native-components",
+      "log": "parallel-repair-native-local.log"
+    },
+    "targetedAudit": {
+      "passed": 66,
+      "failed": 0
+    },
+    "limitation": "CI artifact omitted hidden .vitest-attachments. Current pipeline change preserves actual and diff images for diagnosis; native CI failures are not declared fixed."
+  },
+  "navigation": {
+    "ci": {
+      "passed": 49,
+      "failed": 3
+    },
+    "localAffected": {
+      "passed": 6,
+      "failed": 0,
+      "seconds": 84,
+      "log": "parallel-repair-navigation-local.log"
+    },
+    "review": "Actual/diff artifacts show changed glyph pixels in fi/tt and brand text, with unchanged layout. References remain unchanged; CI rendering discrepancy remains open."
+  },
+  "shellNativeTransition": {
+    "originalRepeatedWebKit": {
+      "passed": 3,
+      "failed": 0,
+      "log": "parallel-repair-shell-repeat-local.log"
+    },
+    "additiveDiagnosticValidation": {
+      "passed": 1,
+      "failed": 0,
+      "log": "parallel-repair-shell-diagnostics-local.log"
+    },
+    "changes": "Retain original pending=0 and errors=[] assertions. Add native stages, elapsed timings, viewport, document visibility and failure attachment. No production behavior changed."
+  },
+  "friendsImmediateResize": {
+    "status": "6 passed, 0 failed, terminal exit 0",
+    "discardedRun": "A concurrent artifact-output collision caused ENOENT failures; these were not product transition reproductions.",
+    "engines": [
+      "chromium desktop repeated three times",
+      "webkit repeated three times"
+    ],
+    "log": "parallel-repair-friends-resize-local.log",
+    "limitation": "Original CI native timeout was not reproduced; no production motion behavior changed."
+  },
+  "snapshotsChanged": false,
+  "thresholdsChanged": false,
+  "productionChanged": false
+}

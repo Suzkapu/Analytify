@@ -1,3 +1,49 @@
+# Parallel CI failure repair — 31 October 2026
+
+[Run41196878592](https://github.com/Suzkapu/Analytify/actions/runs/41196878592)
+finished failure at `23c79b4d`; deployment skipped. Main browser matrix:
+**752 passed/6 failed**. Friends81/11, Navigation49/3 and native122/145
+passed/failed. Admin, build/unit/static/coverage/inventory and isolated real HTTP
+contracts passed. Most browser shards finished in6–7minutes; shard6 took14.2.
+
+- Fixed a reproduced product layout shift: playlist-count header space now exists
+  while loading, preventing populated content jumping57px. Original desktop/mobile
+  performance tests2/2 pass (mobile formerlyCLS0.10148469864978092 >0.1).
+  Component checks5/5 pass; loaded appearance unchanged.
+- Glow geometry waits for existing exact canonical coordinates after resizing;
+  switch test commits the initial thumb style before native220ms transition.
+  Switch1/1 pass; WebKitglow3/4 pass with all geometry assertions passing.
+  The remaining local Library image differs507pixels although that image passedCI;
+  no Library reference changed. This is not reported as a fully green glow run.
+- History workload split retains every36unique category/viewport/height sample,
+  slider/axis/projection/overflow/focus/axe checks and30sec deadlines. Groups overlap
+  at601 to retain live600→601 resizing inside each dialog. Earlier split6/6 pass;
+  final overlapping narrow-group verification3/3 pass (wide groups unchanged);
+  recorded separately in retained logs.
+- Friends initial-document readiness guard:2/2 WebKit checks pass. Secondary visual
+  workflow split by state:6/6 Firefox/WebKit pass, original deadlines retained.
+  Eight Add references reviewed for authorized root URL/QR change; no pixels change
+  outside QR/URL regions. One mobile Stats reference independently reviewed against
+  identical actual pixels from twoCI runs: same1120x92 geometry/content,16 significant
+  comparator differences (1856 raw differing pixels), glyph rasterization only.
+  No comparator tolerance, mask, ignore, skip or release/security gate changed.
+
+Unresolved: nativeCI145fail versus full local267/267pass; CI upload omitted hidden
+actual/diff images. Upload now preserves `.vitest-attachments` for diagnosis.
+Navigation3 and Friends4 glyph references remain unchanged (affected Navigation
+checks6/6 pass locally). Native immediate-resize and account-return failures did
+not reproduce: Friends6 repeated passes; original account-return3 and diagnostic1
+pass. Added transition-stage failure evidence, retaining pending/error assertions.
+These discrepancies are not declared fixed. See `parallel-repair-native-navigation.json`,
+`parallel-friends-repair.json` and `stats-mobile-ci-raster-review.json` beside logs.
+
+Commit: the commit containing this checkpoint. Next: inspect new hosted native
+actual/diff artifacts and address remaining discrepancies. Original frontend98%
+and comprehensive Figma parity gates remain incomplete; no new local application
+coverage measurement claimed. No main/backend/database/service deployment changes.
+
+---
+
 # Parallel publication checks — 31 October 2026
 
 Based on repair commit `3e379cef`, [run41189422168](https://github.com/Suzkapu/Analytify/actions/runs/41189422168)

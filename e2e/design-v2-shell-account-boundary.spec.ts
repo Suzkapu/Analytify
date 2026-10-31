@@ -11,22 +11,32 @@ async function openSettings(page: Page) {
 }
 
 
+// Keep native failures actionable in CI without changing transition behavior.
+test.afterEach(async ({page}, info) => {
+  if (info.status === info.expectedStatus || page.isClosed()) return;
+  const probe = await page.evaluate(() => (window as Window & {analytifyTransitionProbe?: unknown}).analytifyTransitionProbe).catch(() => undefined);
+  if (probe) await info.attach('account-native-transition-failure', {body: JSON.stringify(probe, null, 2), contentType: 'application/json'});
+});
+
 for (const motion of ['no-preference', 'reduce'] as const) for (const oldOutcome of ['success', 'failure'] as const) {
   test(`public navigation rejects delayed account ${oldOutcome} and reloads on return (${motion})`, async ({page}, info) => {
     await page.addInitScript(() => {
-      const probe = {pending: 0, errors: [] as string[]};
+      const probe = {pending: 0, errors: [] as string[], starts: 0, records: [] as {id: number; stage: string; elapsedMs: number; error?: string; visibility: string; width: number; height: number}[]};
       Object.assign(window, {analytifyTransitionProbe: probe});
       const native = document.startViewTransition?.bind(document);
       if (!native) return;
       document.startViewTransition = (...args: Parameters<typeof native>) => {
-        const transition = native(...args); probe.pending++;
+        const started = performance.now(), id = ++probe.starts;
+        const record = (stage: string, error?: unknown) => probe.records.push({id, stage, elapsedMs: performance.now() - started,
+          visibility: document.visibilityState, width: innerWidth, height: innerHeight, ...(error === undefined ? {} : {error: String(error)})});
+        const transition = native(...args); probe.pending++; record('started');
         const capture = (error: unknown) => {
           const message = String(error);
           if (/TimeoutError|DOM update timed out/i.test(message)) probe.errors.push(message);
         };
-        void transition.ready.catch(capture);
-        void transition.updateCallbackDone.catch(capture);
-        void transition.finished.then(() => {probe.pending--;}, error => {probe.pending--; capture(error);});
+        void transition.ready.then(() => record('ready'), error => {record('ready-rejected', error); capture(error);});
+        void transition.updateCallbackDone.then(() => record('updated'), error => {record('update-rejected', error); capture(error);});
+        void transition.finished.then(() => {probe.pending--; record('finished');}, error => {probe.pending--; record('finish-rejected', error); capture(error);});
         return transition;
       };
     });
@@ -65,7 +75,10 @@ for (const motion of ['no-preference', 'reduce'] as const) for (const oldOutcome
     await expect(page).toHaveURL(/\/legal$/);
     await expect(page.locator('.design-v2')).toHaveAttribute('data-chrome', 'public'); await expect(account).toHaveCount(0);
     await expect.poll(() => oldCancelled).toBe(true);
-    await expect.poll(() => page.evaluate(() => (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe)).toEqual({pending: 0, errors: []});
+    await expect.poll(() => page.evaluate(() => {
+      const {pending, errors} = (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe;
+      return {pending, errors};
+    })).toEqual({pending: 0, errors: []});
     release(); await expect.poll(() => oldCompleted).toBe(true);
     await page.getByRole('link', {name: 'Analytify playlists', exact: true}).press('Enter');
     await expect(page).toHaveURL(/\/playlists$/);
@@ -82,7 +95,10 @@ for (const motion of ['no-preference', 'reduce'] as const) for (const oldOutcome
     await openSettings(page);
     await expect(account.getByRole('heading', {name: 'Current account', exact: true})).toBeVisible();
     expect(profileRequests).toBe(2);
-    await expect.poll(() => page.evaluate(() => (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe)).toEqual({pending: 0, errors: []});
+    await expect.poll(() => page.evaluate(() => {
+      const {pending, errors} = (window as Window & {analytifyTransitionProbe: {pending: number; errors: string[]}}).analytifyTransitionProbe;
+      return {pending, errors};
+    })).toEqual({pending: 0, errors: []});
     expect(transitionErrors).toEqual([]);
     await writeFile(info.outputPath('account-requests.json'), JSON.stringify({motion, oldOutcome, profileRequests, oldCompleted, oldCancelled, transitionErrors}, null, 2));
   });
