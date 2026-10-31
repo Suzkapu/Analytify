@@ -43,13 +43,13 @@ test('canonical library records navigation and interaction performance evidence'
   await page.evaluate(() => {
     performance.mark('library-search-end');
     performance.measure('library-search', 'library-search-start', 'library-search-end');
-    performance.mark('account-dialog-start');
+    performance.mark('library-search-clear-start');
   });
-  await page.getByRole('button', {name: 'Open account and data settings'}).click();
-  await page.keyboard.press('Escape');
+  await search.fill('');
+  await expect(page.getByText('Test Playlist', {exact: true})).toBeVisible();
   await page.evaluate(() => {
-    performance.mark('account-dialog-end');
-    performance.measure('account-dialog-open-close', 'account-dialog-start', 'account-dialog-end');
+    performance.mark('library-search-clear-end');
+    performance.measure('library-search-clear', 'library-search-clear-start', 'library-search-clear-end');
   });
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const metrics = await page.evaluate(() => (window as any).__releasePerformance);
@@ -76,7 +76,7 @@ test('canonical library records navigation and interaction performance evidence'
   });
   const events = JSON.parse(traceBody.toString('utf8')).traceEvents as {name: string}[];
   expect(events.some(event => event.name === 'library-search')).toBe(true);
-  expect(events.some(event => event.name === 'account-dialog-open-close')).toBe(true);
+  expect(events.some(event => event.name === 'library-search-clear')).toBe(true);
   expect(metrics.cls).toBeLessThanOrEqual(0.1);
   expect(metrics.lcp).toBeGreaterThan(0);
 });

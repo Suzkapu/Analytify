@@ -110,27 +110,8 @@ test('analysis and artist details render asynchronously hydrated data', async ({
   await expectNoBlockingAxeViolations(page);
 });
 
-test('account hub is keyboard reachable on desktop and mobile', async ({page}) => {
-  await page.goto('/playlists');
-  const account = page.getByRole('button', {name: 'Open account and data settings'});
-  await account.focus();
-  await page.keyboard.press('Enter');
-  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeVisible();
-  await expect(page.getByRole('button', {name: 'Notifications'})).toBeVisible();
-  await page.keyboard.press('Escape');
-  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeHidden();
-
-  await page.setViewportSize({width: 320, height: 800});
-  await account.click();
-  await expect(page.getByRole('dialog', {name: /Browser test user/})).toBeVisible();
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-  expect(overflow).toBeLessThanOrEqual(1);
-  await expectNoBlockingAxeViolations(page);
-});
-
 test('local data clear uses a consequence-first confirmation flow', async ({page}) => {
-  await page.goto('/playlists');
-  await page.getByRole('button', {name: 'Open account and data settings'}).click();
+  await page.goto('/settings/data');
   await page.getByRole('button', {name: 'Clear data'}).click();
   await expect(page.getByRole('alertdialog', {name: 'What would you like to clear?'})).toBeVisible();
   await page.getByRole('button', {name: /Clear this browser and log out/}).click();
@@ -139,9 +120,8 @@ test('local data clear uses a consequence-first confirmation flow', async ({page
   await expect(page).toHaveURL(/\/login$/);
 });
 
-test('cancelling backup enable leaves the account switch off', async ({page}) => {
-  await page.goto('/playlists');
-  await page.getByRole('button', {name: 'Open account and data settings'}).click();
+test('cancelling backup enable leaves the Settings switch off', async ({page}) => {
+  await page.goto('/settings/data');
   const backup = page.getByRole('switch', {name: 'Cloud Backup'});
   await expect(backup).not.toBeChecked();
   await backup.click();

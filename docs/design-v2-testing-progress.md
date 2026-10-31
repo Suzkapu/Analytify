@@ -1,3 +1,106 @@
+# Root publication repair checkpoint — 31 October 2026
+
+Repair commit: the commit containing this entry, based on `6a516492` on
+`codex/design-v2`. User authorized focused repairs after the failed pipeline.
+Removed three obsolete account-popover/sheet UI tests; retained destructive-action,
+cancellation, consent, focus, session and navigation workflows now use Settings.
+Current Settings suites retain their own responsive and accessibility checks.
+
+Fixed exact Songs matching, font readiness before navigation, glow observation
+lifetime and offscreen WebKit geometry measurement. Removed the redundant 4px
+mobile Stats inset. Canonical Figma Stats `7:97` and nested fill nodes show that
+1120px is the 1440px reference's available width, not a desktop maximum.
+Geometry checks now assert available width. No screenshots were updated.
+
+The oversized composition scenario is split into geometry, individual period
+filtering and cross-period category/navigation cases. All original category,
+empty/recovery, shared-request, Back and accessibility checks remain; original
+30-second timeouts remain. Final focused WebKit workflow run: **8 passed**, exit0
+(2.6 minutes). Earlier diagnostic runs were **14 passed/2 failed**, then
+**6 passed/2 failed** before this split; those failures are retained in evidence.
+Scoped ESLint and diff checks pass. Before interruption, agents reported 10 desktop
+and4 mobile account checks,6 Firefox/WebKit checks and30 Stats checks passing;
+their temporary raw logs were lost, so these are reported separately from retained
+workspace logs. See `testing-evidence/design-v2/root-publication-repair-manifest.json`.
+
+No full coverage rerun in this repair slice. Last measured L/S/F/B at `6a516492`:
+frontend **91.71/90.30/88.79/84.56**, worker **99.66/99.72/100/98.81**, edge
+**100/99.88/100/99.74**. The original frontend98% and full Figma parity gates
+remain incomplete. Release/security gates are unchanged. No backend deployment.
+Next slice: push this repair and inspect the existing publication pipeline;
+root activation remains unconfirmed until that pipeline succeeds.
+
+---
+
+# Root publication blocked — finished pipeline diagnosis, 30 October 2026
+
+Pushed commit `6a51649287565a8e30259235193a71138412d219`.
+[Run 41097408837](https://github.com/Suzkapu/Analytify/actions/runs/41097408837)
+finished **failure**: browser suite **580 passed / 126 failed**, 53.9 minutes.
+Deployment was skipped; v2 is **not published**. Earlier status entries below
+are historical pending checkpoints. No further local or pipeline tests were
+started after this terminal result.
+
+- 78 failures time out on `Open account and data settings`. That opener is absent
+  intentionally; current Navigation explicitly asserts its absence and exposes
+  Settings navigation. Retarget workflows without restoring the old opener.
+- Four failures use ambiguous `Songs` button matching (category choice plus
+  playlist action). Use the actual category control's exact accessible name.
+- 33 failures begin with geometry mismatches; eight begin with screenshot
+  mismatches. Mobile Stats retains an extra 4px inset justified by an obsolete
+  12px shell comment, while current shell geometry differs. Observed row width
+  is 350px vs expected 358px at 390px. Desktop content reaches 1360 vs expected
+  1120. Compare canonical Figma before changing contracts or production CSS.
+- One Firefox font-download failure and two WebKit long-name overflow failures
+  also require diagnosis. These are not assumed harmless or snapshot-only.
+
+Fresh measured coverage L/S/F/B: frontend **91.71/90.30/88.79/84.56** (all179
+production sources included); worker **99.66/99.72/100/98.81** (17 sources);
+edge **100/99.88/100/99.74** (12 sources). Frontend2636 tests passed, one
+existing skip. Worker/edge minimums pass; frontend98% and whole-product Figma
+parity remain incomplete. Real isolated Friends contracts passed.
+
+Compact failure manifest: `testing-evidence/design-v2/root-publication-failure-triage.json`.
+Next action awaits the user's clarification of their explicit stop-testing
+instruction: repair release blockers using focused checks, or keep testing
+stopped and the existing site unchanged. No gates or assertions were weakened,
+no screenshots accepted, and no backend deployment was performed.
+
+---
+
+# Root publication status — 30 October 2026
+
+Final pushed development commit: `6a51649287565a8e30259235193a71138412d219`
+on `codex/design-v2`. Main was not modified or merged. Production environment
+branch policy now permits exactly `main` and `codex/design-v2`, as authorized by
+the user's request to select either root frontend through its branch pipeline.
+
+[Publication run 41097408837](https://github.com/Suzkapu/Analytify/actions/runs/41097408837)
+is **still running** the full `accessibility:browser` stage. Earlier verify:ci,
+coverage/inventory, worker/edge coverage, isolated loading contracts and real
+isolated Friends contracts passed. Later Friends/native/Navigation/Admin browser
+steps and deployment have not finished; do not mark them passed. Root activation
+is not confirmed. The last observed live root commit was
+`98a22af02eccd900f82423e9b88cb7fd8d0bdd19`.
+
+No local tests were started after the user's stop request. Production build
+passed, including production index/preloads and bundle budgets. No backend,
+database, Edge Function or worker deployment was performed. The existing gated
+pipeline will activate v2 automatically only if all required steps pass. For a
+manual v2 publication choose `friends_contract_only: false`; run main's existing
+pipeline to restore the original interface. The main pipeline retains its own
+existing backend steps; the v2 pipeline is frontend-only.
+
+Current CI coverage artifact totals are not yet available while its job runs;
+previous measurements and known missing-source limitations remain documented
+below. Original 98%/whole-product Figma parity gates remain unfinished. Figma
+parity evidence is bounded to previously reviewed feature slices. Next action:
+inspect the terminal pipeline result and root version identity; investigate any
+release failure without weakening gates. The latest status record and this
+handoff entry are local evidence, not an additional deployment-triggering commit.
+
+---
+
 Root deployment uses the same existing `production` environment as main,
 retaining its configured production protections. Root validation accepts harmless
 trailing slashes/comments while still requiring the exact shared target. Figma

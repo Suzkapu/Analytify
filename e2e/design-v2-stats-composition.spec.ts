@@ -1,33 +1,39 @@
 import {writeFile} from 'node:fs/promises';
 import {test, expect} from './fixtures';
+import type {Page} from '@playwright/test';
 import {expectNoBlockingAxeViolations, mockSpotify, seedAuthenticatedBrowser} from './helpers/authenticated-browser';
 
 const categories = ['Songs', 'Artists', 'Genres'] as const;
 const periods = [['4 weeks', 'short_term'], ['6 months', 'medium_term'], ['1 year', 'long_term']] as const;
 
+async function prepareStats(page: Page, shared: boolean, reducedMotion: 'no-preference' | 'reduce') {
+  await page.clock.setFixedTime(new Date('2026-10-06T12:00:00Z'));
+  await page.emulateMedia({reducedMotion});
+  await mockSpotify(page);
+  await seedAuthenticatedBrowser(page);
+  const sharedRequests: unknown[] = [];
+  await page.route('https://tmmhylpexbubyznlizfs.supabase.co/**', route => {
+    if (new URL(route.request().url()).pathname === '/rest/v1/rpc/get_shared_stats_snapshot') {
+      const body = route.request().postDataJSON(); sharedRequests.push(body);
+      return route.fulfill({json: {ownerUserId: 'shared-owner', ownerDisplayName: 'Alex', snapshotDate: '2026-10-04',
+        topTracks: [{id: 'shared-song', name: `Shared Song ${body.p_range}`, artists: [{name: 'Shared Artist'}], album: {images: []}, external_urls: {spotify: 'https://open.spotify.com/track/shared-song'}}],
+        topArtists: [{id: 'shared-artist', name: `Shared Artist ${body.p_range}`, images: [], external_urls: {spotify: 'https://open.spotify.com/artist/shared-artist'}}],
+        topGenres: [{name: `Shared genre ${body.p_range}`, weight: 100}]}});
+    }
+    return route.fulfill({json: []});
+  });
+  if (shared) { await page.goto('/stats'); await expect(page.getByRole('heading', {name: 'Your top listening', exact: true})).toBeVisible(); await expect(page.getByRole('main').getByText('Test Song', {exact: true})).toBeVisible(); }
+  await page.goto(shared ? '/stats/shared-owner' : '/stats');
+  const main = page.getByRole('main');
+  await expect(main.locator('v2-stats-ranking-row')).toHaveCount(1);
+  await page.evaluate(() => document.fonts.ready);
+  expect.soft(await main.getByRole('button', {name: 'Back', exact: true}).count()).toBe(shared ? 1 : 0);
+  return {main, sharedRequests};
+}
+
 for (const shared of [false, true]) for (const reducedMotion of ['no-preference', 'reduce'] as const) {
-  test(`Stats content composition preserves ${shared ? 'shared' : 'owner'} workflows (${reducedMotion})`, async ({page}, testInfo) => {
-    await page.clock.setFixedTime(new Date('2026-10-06T12:00:00Z'));
-    await page.emulateMedia({reducedMotion});
-    await mockSpotify(page);
-    await seedAuthenticatedBrowser(page);
-    const sharedRequests: unknown[] = [];
-    await page.route('https://tmmhylpexbubyznlizfs.supabase.co/**', route => {
-      if (new URL(route.request().url()).pathname === '/rest/v1/rpc/get_shared_stats_snapshot') {
-        const body = route.request().postDataJSON(); sharedRequests.push(body);
-        return route.fulfill({json: {ownerUserId: 'shared-owner', ownerDisplayName: 'Alex', snapshotDate: '2026-10-04',
-          topTracks: [{id: 'shared-song', name: `Shared Song ${body.p_range}`, artists: [{name: 'Shared Artist'}], album: {images: []}, external_urls: {spotify: 'https://open.spotify.com/track/shared-song'}}],
-          topArtists: [{id: 'shared-artist', name: `Shared Artist ${body.p_range}`, images: [], external_urls: {spotify: 'https://open.spotify.com/artist/shared-artist'}}],
-          topGenres: [{name: `Shared genre ${body.p_range}`, weight: 100}]}});
-      }
-      return route.fulfill({json: []});
-    });
-    if (shared) { await page.goto('/stats'); await expect(page.getByRole('heading', {name: 'Your top listening', exact: true})).toBeVisible(); await expect(page.getByRole('main').getByText('Test Song', {exact: true})).toBeVisible(); }
-    await page.goto(shared ? '/stats/shared-owner' : '/stats');
-    const main = page.getByRole('main');
-    await expect(main.locator('v2-stats-ranking-row')).toHaveCount(1);
-    await page.evaluate(() => document.fonts.ready);
-    expect.soft(await main.getByRole('button', {name: 'Back', exact: true}).count()).toBe(shared ? 1 : 0);
+  test(`Stats content geometry preserves ${shared ? 'shared' : 'owner'} layout (${reducedMotion})`, async ({page}, testInfo) => {
+    const {main} = await prepareStats(page, shared, reducedMotion);
     const evidence = [];
     for (const width of [320,390,760,761,1440,1920]) for (const height of [480,1080]) {
       await page.setViewportSize({width, height});
@@ -78,11 +84,18 @@ for (const shared of [false, true]) for (const reducedMotion of ['no-preference'
       expect.soft(measured.categoryFont).toBe(20); expect.soft(measured.categoryLine).toBe(28); expect.soft(measured.resultGap).toBe(16);
       expect.soft(measured.back).toEqual(shared ? {width: 92, height: 44, imageWidth: 18, imageHeight: 18, naturalWidth: 18, naturalHeight: 18} : null);
       expect.soft(measured.create).toEqual(shared ? null : {label: 'Create playlist from these songs', width: 240, height: 48, centered: true, icon: 'pi pi-list', iconWidth: 18});
-      expect.soft(measured.pageWidth).toBe(width <= 760 ? width - 32 : Math.min(measured.availableWidth, 1120));
+      // Canonical 7:97 stretches Stats across the shell body; its 1120px
+      // reference at 1440px is not a cap on wider responsive viewports.
+      expect.soft(measured.pageWidth).toBe(width <= 760 ? width - 32 : measured.availableWidth);
       expect.soft(measured.overflow).toBeLessThanOrEqual(1);
     }
     await testInfo.attach('stats-content-composition.json', {path: testInfo.outputPath('stats-content-composition.json'), contentType: 'application/json'});
-    for (const [label, range] of periods) {
+  });
+
+  for (const [label, range] of periods) {
+    test(`Stats content composition preserves ${shared ? 'shared' : 'owner'} ${range} filtering (${reducedMotion})`, async ({page}) => {
+      await page.setViewportSize({width: 1920, height: 1080});
+      const {main} = await prepareStats(page, shared, reducedMotion);
       await page.getByRole('group', {name: 'Ranking period'}).getByRole('button', {name: label, exact: true}).click();
       for (const category of categories) {
         await page.getByRole('group', {name: 'Ranking category'}).getByRole('button', {name: category, exact: true}).click();
@@ -99,6 +112,19 @@ for (const shared of [false, true]) for (const reducedMotion of ['no-preference'
         await search.fill('');
         await expect(main.getByText(expectedName, {exact: category !== 'Genres'}).first()).toBeVisible();
       }
+      await expectNoBlockingAxeViolations(page);
+    });
+  }
+
+  test(`Stats period changes preserve ${shared ? 'shared' : 'owner'} category and navigation (${reducedMotion})`, async ({page}) => {
+    await page.setViewportSize({width: 1920, height: 1080});
+    const {main, sharedRequests} = await prepareStats(page, shared, reducedMotion);
+    await page.getByRole('group', {name: 'Ranking category'}).getByRole('button', {name: 'Genres', exact: true}).click();
+    for (const [label, range] of periods) {
+      await page.getByRole('group', {name: 'Ranking period'}).getByRole('button', {name: label, exact: true}).click();
+      await expect(main.getByText(shared ? `Shared genre ${range}` : 'pop', {exact: false}).first()).toBeVisible();
+      await expect(page.getByRole('group', {name: 'Ranking category'}).getByRole('button', {name: 'Genres', exact: true})).toHaveAttribute('aria-pressed', 'true');
+      expect.soft(await main.evaluate(element => element.querySelector('.stats-results-heading')?.textContent ?? '')).toBe('Top genres');
     }
     if (shared) expect(sharedRequests).toEqual(periods.map(([,p_range]) => ({p_owner_user_id: 'shared-owner', p_range})));
     await expectNoBlockingAxeViolations(page);

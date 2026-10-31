@@ -16,7 +16,7 @@ test('v2 Stats exposes labeled independent controls and keyboard category tabs',
   await expect(page.getByRole('main', {name: 'Your Top Listening content'})).toBeVisible();
   await expect(page.getByRole('group', {name: 'Ranking period'})).toBeVisible();
 
-  const songs = page.getByRole('button', {name: 'Songs'});
+  const songs = page.getByRole('button', {name: 'Songs', exact: true});
   await expect(songs).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('searchbox', {name: 'Search songs or artists'})).toBeVisible();
   const songHistory = page.getByRole('button', {name: 'View position history for Test Song'});

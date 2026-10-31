@@ -20,9 +20,8 @@ for (const motion of ['no-preference', 'reduce'] as const) {
         finally {replySettled = true; completed();}
       } else await route.fulfill({json: null});
     });
-    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/stats');
+    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/settings/account');
     await expect.poll(() => Boolean(old)).toBe(true);
-    await page.getByRole('button', {name: 'Open account and data settings', exact: true}).press('Enter');
     await page.getByRole('button', {name: 'Log out', exact: true}).press('Enter');
     // The held reply is released only after logout reaches login. A lifecycle
     // drain that still depends on the old response therefore cannot pass.

@@ -541,6 +541,10 @@ for (const motion of ['no-preference','reduce'] as const) {
     const evidence=[];
     for(const width of [320,360,390,768,1024,1440,1920]) for(const height of [480,1080]) {
       await page.setViewportSize({width,height});
+      // The shell scroll position survives resizing. Materialize the virtualized
+      // row before comparing its children with its current responsive bounds.
+      await row.scrollIntoViewIfNeeded();
+      await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
       const geometry=await row.evaluate(element=>{
         const bounds=element.getBoundingClientRect();
         const copy=element.querySelector('.copy')!.getBoundingClientRect();

@@ -1,0 +1,61 @@
+npm notice run spoti-front@0.0.0 npx
+npm notice run 'playwright' test --config .extra_files/root-publication.playwright.config.ts --project webkit-stats --workers 1 --grep Stats content (composition|geometry)
+
+Running 8 tests using 1 worker
+
+(node:8979) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:35:7 › Stats content geometry preserves owner layout (no-preference) (5.8s)
+  ✘  2 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves owner workflows (no-preference) (31.9s)
+(node:9342) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:35:7 › Stats content geometry preserves owner layout (reduce) (4.5s)
+  ✓  4 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves owner workflows (reduce) (7.4s)
+  ✓  5 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:35:7 › Stats content geometry preserves shared layout (no-preference) (6.7s)
+  ✘  6 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves shared workflows (no-preference) (32.1s)
+(node:10118) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:35:7 › Stats content geometry preserves shared layout (reduce) (5.0s)
+  ✓  8 [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves shared workflows (reduce) (9.4s)
+
+
+  1) [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves owner workflows (no-preference)
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .extra_files/root-publication-composition-results/design-v2-stats-compositio-4a00e-er-workflows-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .extra_files/root-publication-composition-results/design-v2-stats-compositio-4a00e-er-workflows-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .extra_files/root-publication-composition-results/design-v2-stats-compositio-4a00e-er-workflows-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace .extra_files/root-publication-composition-results/design-v2-stats-compositio-4a00e-er-workflows-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves shared workflows (no-preference)
+
+    Test timeout of 30000ms exceeded.
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .extra_files/root-publication-composition-results/design-v2-stats-compositio-1404e-ed-workflows-no-preference--webkit-stats/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .extra_files/root-publication-composition-results/design-v2-stats-compositio-1404e-ed-workflows-no-preference--webkit-stats/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    .extra_files/root-publication-composition-results/design-v2-stats-compositio-1404e-ed-workflows-no-preference--webkit-stats/trace.zip
+    Usage:
+
+        npx playwright show-trace .extra_files/root-publication-composition-results/design-v2-stats-compositio-1404e-ed-workflows-no-preference--webkit-stats/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves owner workflows (no-preference)
+    [webkit-stats] › e2e/design-v2-stats-composition.spec.ts:95:7 › Stats content composition preserves shared workflows (no-preference)
+  6 passed (1.8m)

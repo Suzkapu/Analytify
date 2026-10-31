@@ -12,11 +12,10 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       const url = new URL(request.url());
       if (request.method() === 'DELETE' || url.pathname.endsWith('/logout')) destructiveRequests.push(url.pathname);
     });
-    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/stats');
-    await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
-    const trigger = page.getByRole('button', {name: 'Open account and data settings', exact: true});
+    await seedAuthenticatedBrowser(page, {cloudIdentity: true}); await page.goto('/settings/data');
+    const trigger = page.getByRole('button', {name: 'Clear data', exact: true});
     const open = async () => {
-      await trigger.press('Enter'); await page.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
+      await trigger.press('Enter');
     };
     const choose = page.getByRole('alertdialog', {name: 'What would you like to clear?', exact: true});
     const localChoice = choose.getByRole('button', {name: /Clear this browser and log out/});
@@ -34,7 +33,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await choose.screenshot({path: info.outputPath('reopened-data-choice.png')});
     await choose.getByRole('button', {name: 'Cancel', exact: true}).press('Enter');
     await expect(page.getByRole('alertdialog')).toHaveCount(0); await expect(trigger).toBeFocused();
-    await expect(page).toHaveURL(/\/stats$/); expect(destructiveRequests).toEqual([]);
+    await expect(page).toHaveURL(/\/settings\/data$/); expect(destructiveRequests).toEqual([]);
     await writeFile(info.outputPath('confirmation-navigation.json'), JSON.stringify({motion, destructiveRequests, finalPath: new URL(page.url()).pathname}, null, 2));
   });
 }

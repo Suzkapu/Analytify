@@ -11,6 +11,9 @@ export async function expectNoBlockingAxeViolations(page: Page): Promise<void> {
 export async function seedAuthenticatedBrowser(page: Page, options: {cloudIdentity?: boolean} = {}): Promise<void> {
   await page.goto('/new/login');
   await expect(page.locator('app-login-page')).toBeVisible();
+  // Finish the login document's local font requests before the caller navigates.
+  // Firefox reports canceled in-flight font loads as console errors on unload.
+  await page.evaluate(async () => { await document.fonts.ready; });
   await page.evaluate(async settings => {
     await new Promise<void>((resolve, reject) => {
       const request = indexedDB.open('AnalytifyDB', 4);

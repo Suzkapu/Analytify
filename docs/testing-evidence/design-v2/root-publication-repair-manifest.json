@@ -1,0 +1,123 @@
+{
+  "baseCommit": "6a51649287565a8e30259235193a71138412d219",
+  "repairCommit": "commit containing this manifest",
+  "removedObsoleteTests": [
+    {
+      "file": "e2e/design-v2-library.spec.ts",
+      "test": "account hub is keyboard reachable on desktop and mobile",
+      "replacement": "e2e/design-v2-settings-account-data.spec.ts"
+    },
+    {
+      "file": "e2e/design-v2-quality.spec.ts",
+      "test": "notification and automatic-update sheets restore focus and remain accessible",
+      "replacement": [
+        "e2e/design-v2-settings-notifications.spec.ts",
+        "e2e/design-v2-settings-updates.spec.ts"
+      ]
+    },
+    {
+      "file": "e2e/design-v2-quality.spec.ts",
+      "test": "populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes",
+      "replacement": "retired sheet removed; current Updates responsive/editor/popup checks retained; this does not certify full zoom parity"
+    }
+  ],
+  "retainedWorkflows": [
+    "cloud deletion failure/retry/duplicate protection",
+    "clear confirmation Back/Cancel/focus/session preservation",
+    "backup-status cancellation on logout",
+    "delayed profile cancellation across public navigation",
+    "local clear completion",
+    "backup consent",
+    "current Settings destinations and blocked-user exclusion",
+    "library navigation/search interaction performance"
+  ],
+  "fixes": [
+    "remove obsolete Stats mobile host4px inset atop current shell16px",
+    "use canonical fill sizing rather than interpreting1440-reference1120 width as desktop cap",
+    "materialize offscreen content-visibility row before WebKit geometry measurement",
+    "disambiguate Songs category by exact accessible name",
+    "await login fonts before navigation; retain font-error assertions",
+    "observe glow destination throughout bounded test instead of expiring after360 frames",
+    "split oversized composition scenario into independent geometry and per-period workflows; retain all category/filter assertions and add cross-period category/navigation checks without increasing timeouts"
+  ],
+  "figmaAudit": {
+    "file": "5v8ckmlbfhMDWwP5sTdSXd",
+    "node": "7:97",
+    "provenance": "Stats agent read-only audit before interruption; no Figma writes",
+    "nodes": [
+      {
+        "id": "7:97",
+        "width": 1440,
+        "height": 810,
+        "layout": "HORIZONTAL",
+        "maxWidth": null
+      },
+      {
+        "id": "63:2725",
+        "width": 1184,
+        "sizingHorizontal": "FILL",
+        "layoutGrow": 1,
+        "maxWidth": null
+      },
+      {
+        "id": "120:3951",
+        "width": 1184,
+        "sizingHorizontal": "FILL",
+        "maxWidth": null
+      },
+      {
+        "id": "25:111",
+        "width": 1184,
+        "sizingHorizontal": "FILL",
+        "maxWidth": null,
+        "paddingLeft": 32,
+        "paddingRight": 32
+      },
+      {
+        "id": "139:8246",
+        "width": 1120,
+        "sizingHorizontal": "FILL",
+        "maxWidth": null
+      },
+      {
+        "id": "25:145",
+        "width": 1120,
+        "sizingHorizontal": "FILL",
+        "maxWidth": null,
+        "padding": 16
+      }
+    ]
+  },
+  "priorCompletedAgentChecks": {
+    "accountDesktop": 10,
+    "accountMobile": 4,
+    "miscFirefoxWebKit": 6,
+    "statsDesktopMobileFirefox": 30,
+    "limitation": "Temporary raw logs were lost across interruption; terminal results and test names were reported in this chat. Final WebKit portion is rerun with workspace logs."
+  },
+  "currentChecks": {
+    "lint": "passed all 13 changed TypeScript files; final composition lint also passed",
+    "diffCheck": "passed",
+    "webkitFinalWorkflows": "8 passed, exit 0; original 30-second deadlines",
+    "earlierWebkitGeometryAndOtherChecks": "14 passed / 2 failed before workflow splitting; next intermediate run 6 passed / 2 failed; retained as diagnostic evidence",
+    "fullPipeline": "not rerun locally; push will trigger existing release gates"
+  },
+  "snapshotsUpdated": false,
+  "releaseOrSecurityGatesChanged": false,
+  "sourceHashes": {
+    "e2e/design-v2-account-deletion.spec.ts": "c5092a57bbcce51cff0f8a001c9ba2952e054a4f870f1baea69170acaa22c0a2",
+    "e2e/design-v2-account-scope.spec.ts": "76d579b13a8d44ba0c0648ccfe558948cf3dda8c6bdeb402feeb28121c401dde",
+    "e2e/design-v2-backup-status-cancellation.spec.ts": "28921e0c80d07509fe161f4a620f6ca4aa2ff8a0658ef08b063fb043fd2b2cd4",
+    "e2e/design-v2-chromium-performance.spec.ts": "beae835ccd9f52771272fd2b1c292c9f508be614133b1509ef579cb48b57742f",
+    "e2e/design-v2-confirmation-navigation.spec.ts": "0c93e651208a327e1600f820d71a4dc26e499a0f0f1b21107beadf03b30f360e",
+    "e2e/design-v2-glows.spec.ts": "34ea479eddf4a8a8b5eb87a236722765739939311a36397b8736338aa7ce8496",
+    "e2e/design-v2-insights.spec.ts": "bcf0080f96b971fb9443831aba5b05d53e43ca25b93ad2a57e54e4ac273327db",
+    "e2e/design-v2-library.spec.ts": "9b6b7bc94ede993bede5f1dec602b9d0847af8a91d6a8da1ad0dcbb701d75254",
+    "e2e/design-v2-quality.spec.ts": "e0fc722b57f19f87952cfa11a5d4c48324767dd2c7528bddc9cc9d76565903b0",
+    "e2e/design-v2-shell-account-boundary.spec.ts": "a8e847a846a5957ab18656957194f92cd25a9260eb877b8f5288968b31758d0e",
+    "e2e/design-v2-stats-composition.spec.ts": "9d0d04319eefd491a604809358bfaff40a42f5dcd382d86ffd87d3b4970c4e33",
+    "e2e/design-v2-stats-flames.spec.ts": "3412829d4f815d6d733ad69db77408398e2d0af2903cc22bd6ac22097909df2c",
+    "e2e/helpers/authenticated-browser.ts": "8d9d257071d22628732f300fef5c4c845588881f0548ac853e36fc79387c48ee",
+    "src/app/features/insights/user-stats/v2-user-stats.component.scss": "6b20e7519bae4cece09353e06666ac9b0302ef9c37ec07ccc784d3e3a0a70046"
+  }
+}

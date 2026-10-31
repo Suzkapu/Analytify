@@ -1,0 +1,933 @@
+{
+  "commit": "6a51649287565a8e30259235193a71138412d219",
+  "run": "https://github.com/Suzkapu/Analytify/actions/runs/41097408837",
+  "conclusion": "failure",
+  "browser": {
+    "passed": 580,
+    "failed": 126,
+    "minutes": 53.9
+  },
+  "deployment": "skipped",
+  "frontend": {
+    "passed": 2636,
+    "skipped": 1,
+    "productionSources": 179,
+    "coverage": {
+      "lines": 91.71,
+      "statements": 90.3,
+      "functions": 88.79,
+      "branches": 84.56
+    }
+  },
+  "worker": {
+    "productionSources": 17,
+    "coverage": {
+      "lines": 99.66,
+      "statements": 99.72,
+      "functions": 100,
+      "branches": 98.81
+    }
+  },
+  "edge": {
+    "productionSources": 12,
+    "coverage": {
+      "lines": 100,
+      "statements": 99.88,
+      "functions": 100,
+      "branches": 99.74
+    }
+  },
+  "failureGroups": {
+    "Test timeout of 30000ms exceeded.": 78,
+    "Error: expect(locator).toHaveAttribute(expected) failed": 4,
+    "Error: expect(received).toBe(expected) // Object.is equality": 33,
+    "Error: expect(locator).toHaveScreenshot(expected) failed": 8,
+    "Error: expect(received).toEqual(expected) // deep equality": 1,
+    "Error: expect(received).toBeGreaterThanOrEqual(expected)": 2
+  },
+  "failures": [
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-chromium-performance.spec.ts",
+      "line": 6,
+      "test": "canonical library records navigation and interaction performance evidence",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-insights.spec.ts",
+      "line": 14,
+      "test": "v2 Stats exposes labeled independent controls and keyboard category tabs",
+      "error": "Error: expect(locator).toHaveAttribute(expected) failed"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 113,
+      "test": "account hub is keyboard reachable on desktop and mobile",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 131,
+      "test": "local data clear uses a consequence-first confirmation flow",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 142,
+      "test": "cancelling backup enable leaves the account switch off",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 56,
+      "test": "notification and automatic-update sheets restore focus and remain accessible",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 97,
+      "test": "populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 331,
+      "test": "static canonical row captures \u203a canonical artist row geometry at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 343,
+      "test": "static canonical row captures \u203a canonical flame colors and placement at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 356,
+      "test": "static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 444,
+      "test": "large original ranks wrap movement without shifting actions with motion reduce",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-genres.spec.ts",
+      "line": 119,
+      "test": "canonical genre comparisons at 390px \u2500\u2500",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "desktop",
+      "file": "e2e/design-v2-stats-search-switch.spec.ts",
+      "line": 59,
+      "test": "canonical search row keeps touch geometry when resizing short and tall windows",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-chromium-performance.spec.ts",
+      "line": 6,
+      "test": "canonical library records navigation and interaction performance evidence",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-insights.spec.ts",
+      "line": 14,
+      "test": "v2 Stats exposes labeled independent controls and keyboard category tabs",
+      "error": "Error: expect(locator).toHaveAttribute(expected) failed"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 113,
+      "test": "account hub is keyboard reachable on desktop and mobile",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 131,
+      "test": "local data clear uses a consequence-first confirmation flow",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 142,
+      "test": "cancelling backup enable leaves the account switch off",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 56,
+      "test": "notification and automatic-update sheets restore focus and remain accessible",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 97,
+      "test": "populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 331,
+      "test": "static canonical row captures \u203a canonical artist row geometry at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 343,
+      "test": "static canonical row captures \u203a canonical flame colors and placement at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 356,
+      "test": "static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 444,
+      "test": "large original ranks wrap movement without shifting actions with motion reduce",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-genres.spec.ts",
+      "line": 119,
+      "test": "canonical genre comparisons at 390px \u2500\u2500\u2500",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "mobile",
+      "file": "e2e/design-v2-stats-search-switch.spec.ts",
+      "line": 59,
+      "test": "canonical search row keeps touch geometry when resizing short and tall windows",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-insights.spec.ts",
+      "line": 14,
+      "test": "v2 Stats exposes labeled independent controls and keyboard category tabs",
+      "error": "Error: expect(locator).toHaveAttribute(expected) failed"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 113,
+      "test": "account hub is keyboard reachable on desktop and mobile",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 131,
+      "test": "local data clear uses a consequence-first confirmation flow",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 142,
+      "test": "cancelling backup enable leaves the account switch off",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 56,
+      "test": "notification and automatic-update sheets restore focus and remain accessible",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 97,
+      "test": "populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-settings-notifications.spec.ts",
+      "line": 9,
+      "test": "Notifications responsive-install independently of this device (reduce, height 1000)",
+      "error": "Error: expect(received).toEqual(expected) // deep equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 331,
+      "test": "static canonical row captures \u203a canonical artist row geometry at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 343,
+      "test": "static canonical row captures \u203a canonical flame colors and placement at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 356,
+      "test": "static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 444,
+      "test": "large original ranks wrap movement without shifting actions with motion reduce",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-genres.spec.ts",
+      "line": 119,
+      "test": "canonical genre comparisons at 390px",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "firefox-stats",
+      "file": "e2e/design-v2-stats-search-switch.spec.ts",
+      "line": 59,
+      "test": "canonical search row keeps touch geometry when resizing short and tall windows",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-deletion.spec.ts",
+      "line": 6,
+      "test": "cloud deletion preserves failure recovery and blocks duplicate submissions (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=false, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-account-scope.spec.ts",
+      "line": 6,
+      "test": "account retains settings and excludes blocked management (cloud=true, reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-backup-status-cancellation.spec.ts",
+      "line": 7,
+      "test": "logout cancels pending backup status before reaching login (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-confirmation-navigation.spec.ts",
+      "line": 6,
+      "test": "data confirmation Back, Cancel and reopening preserve the current session (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-glows.spec.ts",
+      "line": 65,
+      "test": "actual route changes move glows smoothly and preserve the independent particle timeline",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-insights.spec.ts",
+      "line": 14,
+      "test": "v2 Stats exposes labeled independent controls and keyboard category tabs",
+      "error": "Error: expect(locator).toHaveAttribute(expected) failed"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 113,
+      "test": "account hub is keyboard reachable on desktop and mobile",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 131,
+      "test": "local data clear uses a consequence-first confirmation flow",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-library.spec.ts",
+      "line": 142,
+      "test": "cancelling backup enable leaves the account switch off",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 56,
+      "test": "notification and automatic-update sheets restore focus and remain accessible",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-quality.spec.ts",
+      "line": 97,
+      "test": "populated schedule sheets retain reachable 44px controls at narrow and enlarged-text sizes",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (no-preference)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account success and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-shell-account-boundary.spec.ts",
+      "line": 6,
+      "test": "public navigation rejects delayed account failure and reloads on return (reduce)",
+      "error": "Test timeout of 30000ms exceeded."
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves owner workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (no-preference)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-composition.spec.ts",
+      "line": 9,
+      "test": "Stats content composition preserves shared workflows (reduce)",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 331,
+      "test": "static canonical row captures \u203a canonical artist row geometry at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 343,
+      "test": "static canonical row captures \u203a canonical flame colors and placement at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 356,
+      "test": "static canonical row captures \u203a canonical History action states retain geometry and keyboard recovery at 390px",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 529,
+      "test": "long ranking names grow without clipping controls or keyboard actions with motion no-preference",
+      "error": "Error: expect(received).toBeGreaterThanOrEqual(expected)"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 444,
+      "test": "large original ranks wrap movement without shifting actions with motion reduce",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-flames.spec.ts",
+      "line": 529,
+      "test": "long ranking names grow without clipping controls or keyboard actions with motion reduce",
+      "error": "Error: expect(received).toBeGreaterThanOrEqual(expected)"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-genres.spec.ts",
+      "line": 119,
+      "test": "canonical genre comparisons at 390px",
+      "error": "Error: expect(locator).toHaveScreenshot(expected) failed"
+    },
+    {
+      "project": "webkit-stats",
+      "file": "e2e/design-v2-stats-search-switch.spec.ts",
+      "line": 59,
+      "test": "canonical search row keeps touch geometry when resizing short and tall windows",
+      "error": "Error: expect(received).toBe(expected) // Object.is equality"
+    }
+  ],
+  "localTestsRerun": false
+}

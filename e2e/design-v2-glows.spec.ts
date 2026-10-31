@@ -77,13 +77,14 @@ test('actual route changes move glows smoothly and preserve the independent part
   });
   await ambient.evaluate(element => {
     (window as any).__glowFrames = []; (window as any).__glowSettled = false;
-    let frames = 0;
     const sample = () => {
       const x = parseFloat(element.style.getPropertyValue('--ambient-primary-x'));
       const y = parseFloat(element.style.getPropertyValue('--ambient-primary-y'));
       (window as any).__glowFrames.push({x, y});
       if (x === 68 && y === 30) {(window as any).__glowSettled = true; return;}
-      if (++frames < 360) requestAnimationFrame(sample);
+      // Keep observing until the latest destination settles. A frame-count cap
+      // can expire while Playwright is still clicking the second route in CI.
+      requestAnimationFrame(sample);
     };
     requestAnimationFrame(sample);
   });

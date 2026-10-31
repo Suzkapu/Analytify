@@ -28,10 +28,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
       } else await route.fulfill({status: 204, body: ''});
     });
     await seedAuthenticatedBrowser(page, {cloudIdentity: true});
-    await page.goto('/stats');
-    await expect(page.locator('.v2-ranking-list strong')).toHaveText('Test Song');
-    const trigger = page.getByRole('button', {name: 'Open account and data settings', exact: true});
-    await trigger.press('Enter');
+    await page.goto('/settings/data');
     await page.getByRole('button', {name: 'Clear data', exact: true}).press('Enter');
     await page.getByRole('button', {name: /Delete cloud data and leave shared features/}).press('Enter');
     const dialog = page.getByRole('alertdialog', {name: 'Delete cloud data and leave shared features?', exact: true});
@@ -42,7 +39,7 @@ for (const motion of ['no-preference', 'reduce'] as const) {
     await expect(dialog.getByRole('button', {name: 'Back', exact: true})).toBeDisabled();
     await remove.dispatchEvent('click');
     expect(requests).toEqual([{method: 'DELETE', table: '/rest/v1/users', actor: 'eq.de111111-1111-4111-8111-111111111111'}]);
-    await expect(page).toHaveURL(/\/stats$/);
+    await expect(page).toHaveURL(/\/settings\/data$/);
     release();
     await expect(dialog.getByRole('alert')).toContainText('Some steps may already have completed');
     await expect(remove).toBeEnabled();
