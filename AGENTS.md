@@ -9,3 +9,4 @@
 - Every addition or change to the tech stack needs explicit user approval.
 - The project is still being planned. Do not present planned features as implemented.
 - Documentation changes must be approved by the developers. Do not add approval labels to documentation.
+- Do not include the user’s personal information or personal relationships in documentation or other project files.
