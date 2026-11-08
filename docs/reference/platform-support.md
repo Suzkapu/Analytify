@@ -28,6 +28,7 @@ These are planned requirements and can still change.
 ## Website
 
 - Hosted on a Linux server.
+- Available as a PWA with Web Push notifications. Offline behavior is not decided yet.
 - Works in Chrome, Firefox, and Safari-based browsers.
 
 ## Server backend
