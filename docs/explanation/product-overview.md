@@ -4,18 +4,18 @@
 
 ## General rules
 - test-driven development, test first then code!
-- when saying playlists that always means normal playlists and your favourite tracks
+- when saying playlists, that always means normal playlists and your favourite tracks
 - AGPL license, everything used needs to be compatible with that
 - all changes between versions need to go into the change-log file
-	- add the changes on when closing the issue for them and not only at the end of an release.
-- mobile first design, designing should be done for mobile first and then use the space that.
+	- add the changes when closing the issue, not only at the end of a release
+- mobile-first design: design for mobile first, then use the available space on larger screens (details not finished yet)
 ## Privacy
 -
 ## Pictures
-- every picture needs to have a link to spotify behind it.
+- every picture needs to have a link to Spotify behind it.
 	- for example:
-		- artist needs to lead to the artists spotify profile
-		- album needs to lead to the album on spotify
-		- user profile needs to lead to the user profile on spotify
-- every picture needs an on hover event that shows a boarder, in the color of the selected theme, around it (indicates the link)
+		- artist needs to lead to the artist’s Spotify profile
+		- album needs to lead to the album on Spotify
+		- user profile needs to lead to the user profile on Spotify
+- every picture needs a hover event that shows a border, in the color of the selected theme, around it (indicates the link)
 -

@@ -4,29 +4,29 @@
 
 ## Sites
 ## Playlist view
-- look at your all of your Playlists.
-- there needs to be an dropdown to select a filter on only my playlists, saved from others, shared with me from
+- look at all of your playlists
+- there needs to be a dropdown to filter between my playlists, playlists saved from others, and playlists shared with me (details not finished yet)
 - there should be a count on how many playlists you have
-- search for each playlist
-- the search needs to be place so it can be used for all the sub-pages as well, same with sorting
+- search for a playlist
+- the search and sorting need to be placed so they can also be used on all subpages
 ### songs page
-- all songs that are in the playlist listed
-- searchbar needed to search for song titles
-- songs should have the name, artist, album if existing
-- every song need its picture
+- list all songs that are in the playlist
+- search bar needed to search for song titles
+- songs should show the name, artist, and album if available
+- every song needs its picture
 #### song onclick()
-- when clicking on a song card it should expand that card and tell some additional information about it (everything usefull the spotify api gets us)
+- when clicking on a song card, expand it and show additional useful information available from the Spotify API
 ### artists page
 - list all artists that are in the playlist
-- artists are also features on songs so not only the main artist
-- features toggle button for features or own songs
+- include featured artists on songs, not only the main artist
+- add a toggle to include featured songs or show only the artist’s own songs
 - search for artists
-- every artists needs his picuture
+- every artist needs their picture
 - needs to be displayed:
 	- artist name
-	- amount of songs he has in the playlist based on if the features toggle is on or not
+	- amount of songs the artist has in the playlist, depending on the features toggle
 #### artists onclick()
-- clicking the artists card it should expand the card and list all the songs that the artist contributed to
+- clicking an artist card should expand it and list all songs the artist contributed to
 - the features toggle needs to also apply on the expanded card
 ### albums page
 - needs to list all the albums that are in the playlist
@@ -34,11 +34,11 @@
 - needs to be displayed:
 	- cover needs to be shown
 	- artist the album belongs to (not the features here)
-	- amout of songs that are in the album that you liked
+	- amount of songs in the album that you liked
 #### albums onclick()
 - show the songs that are in the album
-- show the amout of song you liked out of the full amout of songs in the album
-- other usefull information that we get from the api like the release date, ...
+- show the amount of songs you liked out of the total amount of songs in the album
+- other useful information available from the API, such as the release date
 ### analysis page
 - show an overview of the selected playlist or favourite tracks
 - display:
@@ -54,90 +54,90 @@
 	- display the song name, picture and release date
 - show the shortest and longest song in the playlist
 	- display the song name, picture and length
-- every picture should link to the matching spotify page
+- every picture should link to the matching Spotify page
 - show a loading state while the playlist data is being analysed
 - if there is no data for a statistic show that it is unavailable
 ## Stats
 - universal calendar picker to select from
 - calendar picker should be able to select a single date to view stats from or select a time frame to compare stats to
-- universal time periode picker
+- universal time period picker
 	- 4 weeks
 	- 6 months
 	- 1 year
 - search bar for submenus to use
-- toggle for searchbar to also search in past rankings
+- toggle for search bar to also search in past rankings
 ### Songs
 - display all 100 top songs
-- each card displayed:
+- display on each card:
 	- song name
 	- artist
 	- current rank
-	- move indication when compare is selected
+	- movement indication when compare is selected
 		- green arrow up when moved up compared to selected stats
 		- red arrow down when moved down compared to selected other stats
 		- flame icon with burning animation if the song has moved up a lot
 			- there is a limit on how many songs can have this
-			- only top movers are getting displayed
+			- only display the top movers
 		- blue dot if the song is new
 			- if the song is new this turns the flame blue
 				- this goes into the same pool for the flames
 #### songs onclick()
-- open card and shows graph of past rankings of the song spezific data
+- open the card and show a graph of the song’s past rankings
 ### Artists
-- display all available top artists for the selected time periode and date
-- each card displayed:
+- display all available top artists for the selected time period and date
+- display on each card:
 	- artist picture
 	- artist name
 	- current rank
-	- move indication when compare is selected
+	- movement indication when compare is selected
 		- green arrow up when moved up compared to selected stats
 		- red arrow down when moved down compared to selected other stats
 		- flame icon with burning animation if the artist has moved up a lot
 			- there is a limit on how many artists can have this
-			- only top movers are getting displayed
+			- only display the top movers
 		- blue dot if the artist is new
 			- if the artist is new this turns the flame blue
 				- this goes into the same pool for the flames
 - search for artists by name
 - when search in past rankings is enabled also show artists that were in past rankings but are not in the selected ranking
 #### artists onclick()
-- open card and shows graph of past rankings of the artist spezific data
+- open the card and show a graph of the artist’s past rankings
 ### Genres
-- display the top genres for the selected time periode and date
+- display the top genres for the selected time period and date
 - genres are based on the genres of the top artists for the selected stats
-- each card displayed:
+- display on each card:
 	- genre name
 	- current rank
 	- percentage of the genre in the selected stats as a bar
-		- the bars 100% should be the highest genre
-			- if the nr 1 genre has 28% that should be the 100% of the bar
-			- all the others orientate on that
-	- move indication when compare is selected
+		- the highest genre should fill 100% of the bar
+			- if the number 1 genre has 28%, that should fill 100% of the bar
+			- all other bars should be relative to that
+	- movement indication when compare is selected
 		- green arrow up when moved up compared to selected stats
 		- red arrow down when moved down compared to selected other stats
 		- blue dot if the genre is new
 - search for genres by name
 #### genres onclick()
-- open card and shows graph of past rankings and percentage of the genre over time
+- open the card and show a graph of the genre’s past rankings and percentage over time
 - show the artists from the selected stats that belong to the genre
 ## History
-- each card displayed:
+- display on each card:
 	- time of listening
 	- picture of the song
 	- artist
 	- song name
 ## Login Screen #1
-- short Explaination on what the project does
-- get Started
+- short explanation of what the project does
+- get started
 ## Login Screen #2
 Endowment Effect:
-- let the user select his theme color (green default)
-- white/darkmode/system color (system color by default)
+- let the user select their theme color (green default)
+- light mode, dark mode, or system color (system color by default)
 - a small preview of:
 	- playlists overview
 	- genre stats
-	- this preview has a vertical to the right tilted line that does the splitting on playlists and genres
-	- this needs to react to the themeing changes
+	- split the playlist and genre previews with a vertical line tilted to the right
+	- the preview needs to react to theme changes
 ## Login Screen #3
 -  agree to terms checkbox
 - login button
@@ -163,7 +163,7 @@ has the "Powered by Spotify"
 Legal & Privacy linked
 
 ## Layout
-## Menu
+### Menu
 - the menu should be available on every page and show where you are currently
 - group the pages in the menu:
 	- Library
@@ -178,21 +178,21 @@ Legal & Privacy linked
 	- Tools
 		- Compare playlists
 	- Administration
-		- only shown to administrators (check needs to be server sided)
+		- only shown to administrators (check needs to be server-side)
 - each page should have an icon and a name
 - highlight the page that is currently selected
-- show the analytify logo and name in the menu
+- show the Analytify logo and name in the menu
 - show the user picture and name at the bottom of the menu
 	- clicking the user opens the settings
-### desktop
+#### desktop
 - show the menu as a sidebar on the left side
 - the sidebar should stay usable when the screen is smaller or the menu has more entries
-### mobile
+#### mobile
 - show the logo and a button to open the menu at the top
 - open the menu as a sidebar with the same grouped pages as desktop
 - allow closing the menu without selecting a page
 - show a floating navigation bar at the bottom for playlists, stats and history
 - the bottom navigation should highlight the selected page
 - menu buttons need to be usable with touch and keyboard
-## Back button
-- we need a universal back button that works for every page aligned with the apple/ios way to do this
+### Back button
+- we need a universal back button that works for every page aligned with the Apple/iOS way to do this
