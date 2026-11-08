@@ -1,0 +1,24 @@
+name: Main source branch
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  development-only:
+    name: Development branch only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check pull request source
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPO: ${{ github.repository }}
+        run: |
+          if [ "$HEAD_REF" != "development" ] || [ "$HEAD_REPO" != "$BASE_REPO" ]; then
+            echo "Pull requests to main must originate from this repository's development branch."
+            exit 1
+          fi
