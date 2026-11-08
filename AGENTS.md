@@ -1,0 +1,10 @@
+# Agent instructions
+
+- Do not approve a PR to main.
+- Only push when the user explicitly asks for it.
+- Commit completed work using conventional commit messages.
+- Do not add passwords or keys to Git.
+- Everything needs to be saved to GitHub, but pushing requires explicit user instruction.
+- Workflows should be able to run in parallel for fast testing and deployment.
+- Every addition or change to the tech stack needs explicit user approval.
+- The project is still being planned. Do not present planned features as implemented.
