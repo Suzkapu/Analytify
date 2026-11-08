@@ -12,8 +12,8 @@ export function enableApplicationHttp2(source, buildInfo) {
     while (end < lines.length && !lines[end].startsWith(`${match[1]}}`)) end++;
     if (end === lines.length) throw new Error('Unterminated Nginx server block.');
     const block = lines.slice(index + 1, end).join('\n');
-    const names = block.match(/^\s*server_name\s+([^;]+);/m)?.[1].trim().split(/\s+/) || [];
-    if (!names.includes('analytify.dynv6.net')
+    const names = new Set(block.match(/^\s*server_name\s+([^;]+);/m)?.[1].trim().split(/\s+/) || []);
+    if (!names.has('analytify.dynv6.net')
       || !/^\s*listen\s+[^;]*\bssl\b[^;]*;/m.test(block)
       || /^\s*http2\s+(?:on|off)\s*;/m.test(block)
       || /^\s*listen\s+[^;]*\bhttp2\b[^;]*;/m.test(block)) continue;

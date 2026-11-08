@@ -34,6 +34,7 @@ test('unknown builds, missing module, unrelated hosts and explicit settings rema
   assert.equal(enableApplicationHttp2(site, ''), site);
   assert.equal(enableApplicationHttp2(site, 'nginx/1.26.0'), site);
   for (const source of [site.replace('analytify.dynv6.net', 'other-analytify.dynv6.net'),
+    site.replace('analytify.dynv6.net', 'analytify.dynv6.net.example.com'),
     site.replace('server {', 'server {\n  http2 off;'), site.replace('443 ssl;', '443 ssl http2;'),
     site.replace(/ssl/g, '')]) {
     assert.equal(enableApplicationHttp2(source, info('1.26.0')), source);

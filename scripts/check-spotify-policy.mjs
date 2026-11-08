@@ -90,7 +90,7 @@ for (const requiredReference of [
   'https://developer.spotify.com/documentation/design',
   'https://developer.spotify.com/blog/2026-06-18-refresh-token-expiration',
   'https://developer.spotify.com/documentation/web-api/concepts/quota-modes',
-]) assert.match(policy, new RegExp(requiredReference.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+]) assert.ok(policy.includes(requiredReference), `Missing Spotify policy reference: ${requiredReference}`);
 
 assert.match(policy, /At most five authenticated Spotify users/);
 assert.match(policy, /must be added to its allowlist/);
